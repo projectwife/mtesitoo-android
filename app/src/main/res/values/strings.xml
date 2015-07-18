@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">mtesitoo</string>
+    <string name="action_new_item">New Item</string>
+    <string name="currency_symbol">$</string>
+
+    <string name="bundle_item_key">key_item_parcel</string>
+    <string name="action_settings">Settings</string>
+
+</resources>
