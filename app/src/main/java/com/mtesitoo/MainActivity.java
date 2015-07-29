@@ -1,15 +1,28 @@
 package com.mtesitoo;
 
+import android.content.Intent;
+import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
-import com.mtesitoo.adapter.ItemListAdapter;
-import com.mtesitoo.model.Item;
+import com.mtesitoo.adapter.ProductListAdapter;
+import com.mtesitoo.model.Product;
+import com.mtesitoo.service.ModuleService;
 
+import org.apache.http.HttpResponse;
+import org.apache.http.client.ClientProtocolException;
+import org.apache.http.client.HttpClient;
+import org.apache.http.client.methods.HttpGet;
+import org.apache.http.impl.client.HttpClientBuilder;
+
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -17,10 +30,10 @@ import butterknife.ButterKnife;
 
 public class MainActivity extends ActionBarActivity {
 
-    private ItemListAdapter mItemListAdapter;
+    private ProductListAdapter mProductListAdapter;
 
-    @Bind(R.id.item_list)
-    ListView mItemList;
+    @Bind(R.id.product_list)
+    ListView mProductList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,39 +41,42 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        ArrayList<Item> items = new ArrayList<>();
+        try {
+            new HttpTask().execute().get();
+        } catch (InterruptedException e) {
+        } catch (ExecutionException e) {
+        }
 
-        Item item1 = new Item("Item 1", 100.00, 10, "Car");
-        Item item2 = new Item("Item 2", 200.00, 20, "Bus");
-        Item item3 = new Item("Item 3", 300.00, 30, "Bike");
-
-        items.add(item1);
-        items.add(item2);
-        items.add(item3);
-
-        mItemListAdapter = new ItemListAdapter(this, items);
-        mItemList.setAdapter(mItemListAdapter);
+        mProductListAdapter = new ProductListAdapter(this, new ArrayList<Product>());
+        mProductList.setAdapter(mProductListAdapter);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle action bar item clicks here. The action bar will
-        // automatically handle clicks on the Home/Up button, so long
-        // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
         if (id == R.id.action_new_item) {
+            Intent intent = new Intent(this, AddProductActivity.class);
+            startActivity(intent);
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private class HttpTask extends AsyncTask<Void, Void, ArrayList<Product>> {
+        protected ArrayList<Product> doInBackground(Void... params) {
+            return ModuleService.getlatest();
+        }
+
+        protected void onPostExecute(ArrayList<Product> products) {
+            mProductListAdapter.refresh(products);
+        }
     }
 }

@@ -1,0 +1,62 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="250dip"
+    android:paddingBottom="8dip"
+    android:paddingLeft="16dip"
+    android:paddingRight="16dip"
+    android:paddingTop="16dip">
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@drawable/seller_stock_photo">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dip"
+            android:background="#8444">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/product_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dip"
+                    android:text="Name"
+                    android:textColor="#ffffff"
+                    android:textSize="17dp" />
+
+                <TextView
+                    android:id="@+id/product_price"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dip"
+                    android:text="$$$"
+                    android:textColor="#ffffff"
+                    android:textSize="17dp" />
+
+            </LinearLayout>
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:id="@+id/product_detail"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginRight="10dip"
+                android:src="@drawable/navigation_forward" />
+
+        </LinearLayout>
+    </FrameLayout>
+</LinearLayout>
+
