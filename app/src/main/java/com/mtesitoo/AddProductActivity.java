@@ -16,6 +16,7 @@
 
 package com.mtesitoo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -31,6 +32,7 @@ import android.widget.Button;
 import com.mtesitoo.model.ProductWizard;
 
 import com.tech.freak.wizardpager.model.AbstractWizardModel;
+import com.tech.freak.wizardpager.model.ImagePage;
 import com.tech.freak.wizardpager.model.ModelCallbacks;
 import com.tech.freak.wizardpager.model.Page;
 import com.tech.freak.wizardpager.ui.PageFragmentCallbacks;
@@ -170,6 +172,18 @@ public class AddProductActivity extends ActionBarActivity implements
     protected void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putBundle("model", mWizardModel.save());
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        for (Page page : mCurrentPageSequence) {
+            if (page instanceof ImagePage) {
+                ((ImagePage) page).getPageFragment().onActivityResult(requestCode, resultCode, data);
+                break;
+            }
+        }
     }
 
     @Override

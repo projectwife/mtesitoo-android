@@ -3,6 +3,7 @@
     package="com.mtesitoo">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -23,12 +24,10 @@
             android:label="@string/app_name"></activity>
         <activity
             android:name=".AddProductActivity"
-            android:label="@string/title_activity_add_item"></activity>
+            android:configChanges="orientation|screenSize"
+            android:label="@string/title_activity_add_product"></activity>
         <activity
             android:name=".SplashActivity"
-            android:label="@string/title_activity_splash"></activity>
-        <activity
-            android:name=".FooActivity"
             android:label="@string/title_activity_splash"></activity>
     </application>
 

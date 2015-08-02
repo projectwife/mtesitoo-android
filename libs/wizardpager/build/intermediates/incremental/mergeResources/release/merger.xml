@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merger version="3"><dataSet config="20.0.0"><source path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/build/intermediates/exploded-aar/com.android.support/support-v4/20.0.0/res"/></dataSet><dataSet config="main"><source path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/src/main/res"><file name="ic_camera" path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/src/main/res/drawable-hdpi/ic_camera.png" qualifiers="hdpi" type="drawable"/><file name="ic_person" path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/src/main/res/drawable-hdpi/ic_person.png" qualifiers="hdpi" type="drawable"/><file name="ic_person" path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/src/main/res/drawable-mdpi/ic_person.png" qualifiers="mdpi" type="drawable"/><file name="ic_person" path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/src/main/res/drawable-xhdpi/ic_person.png" qualifiers="xhdpi" type="drawable"/><file name="ic_person" path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/src/main/res/drawable-xxhdpi/ic_person.png" qualifiers="xxhdpi" type="drawable"/><file name="fragment_page" path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/src/main/res/layout/fragment_page.xml" qualifiers="" type="layout"/><file name="fragment_page_geo" path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/src/main/res/layout/fragment_page_geo.xml" qualifiers="" type="layout"/><file name="fragment_page_image" path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/src/main/res/layout/fragment_page_image.xml" qualifiers="" type="layout"/><file name="fragment_page_text" path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/src/main/res/layout/fragment_page_text.xml" qualifiers="" type="layout"/><file name="list_item_review" path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/src/main/res/layout/list_item_review.xml" qualifiers="" type="layout"/><file path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/src/main/res/values/colors.xml" qualifiers=""><color name="step_pager_selected_last_tab_color">#ff669900</color><color name="step_pager_next_tab_color">#10000000</color><color name="step_pager_previous_tab_color">#4433b5e5</color><color name="text_light">#66000000</color><color name="step_pager_selected_tab_color">#ff0099cc</color><color name="review_green">#ff669900</color></file><file path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/src/main/res/values/dimens.xml" qualifiers=""><dimen name="list_item_padding_right">6dp</dimen><dimen name="step_pager_tab_width">32dp</dimen><dimen name="step_pager_tab_height">3dp</dimen><dimen name="list_item_height_small">48dp</dimen><dimen name="list_item_padding_left">6dp</dimen><dimen name="step_pager_tab_spacing">4dp</dimen></file><file path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/src/main/res/values/strings.xml" qualifiers=""><string-array name="image_photo_sources">
+        <item>Pick from gallery</item>
+        <item>Capture new photo</item>
+    </string-array><string name="geo_status_searching">Waiting GPS …</string><string name="review">Review</string><string name="geo_status_location">%1$s \n(%2$s)</string><string name="geo_status_found">Location found</string></file><file path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/src/main/res/values/styles.xml" qualifiers=""><style name="WizardPageImageContainer">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+    </style><style name="WizardPageContent">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:paddingLeft">?android:attr/listPreferredItemPaddingLeft</item>
+        <item name="android:textSize">36sp</item>
+        <item name="android:textColor">#ff0099cc</item>
+    </style><style name="WizardFormLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+        <item name="android:textColor">@color/text_light</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+    </style><style name="WizardPageTitle">
+        <item name="android:id">@android:id/title</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:paddingLeft">@dimen/list_item_padding_left</item>
+        <item name="android:textSize">36sp</item>
+        <item name="android:textColor">#ff0099cc</item>
+    </style><style name="WizardPageImage">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_gravity">center_horizontal</item>
+        <item name="android:layout_margin">@dimen/list_item_padding_left</item>
+        <item name="android:adjustViewBounds">true</item>
+        <item name="android:scaleType">centerInside</item>
+    </style><style name="WizardPageContainer">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingRight">16dp</item>
+    </style></file><file path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/src/main/res/values-v14/styles.xml" qualifiers="v14"><style name="WizardFormLabel">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">0dp</item>
+        <item name="android:textAppearance">?android:textAppearanceSmall</item>
+        <item name="android:textColor">@color/text_light</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textAllCaps">true</item>
+        <item name="android:paddingLeft">12dp</item>
+        <item name="android:paddingRight">12dp</item>
+    </style></file><file path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/src/main/res/values-v16/styles.xml" qualifiers="v16"><style name="WizardPageTitle">
+        <item name="android:id">@android:id/title</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:paddingLeft">?android:attr/listPreferredItemPaddingLeft</item>
+        <item name="android:textSize">36sp</item>
+        <item name="android:textColor">#ff0099cc</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style><style name="WizardPageContent">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">8dp</item>
+        <item name="android:paddingLeft">?android:attr/listPreferredItemPaddingLeft</item>
+        <item name="android:textSize">36sp</item>
+        <item name="android:textColor">#ff0099cc</item>
+        <item name="android:fontFamily">sans-serif-thin</item>
+    </style></file></source><source path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/build/generated/res/rs/release"/><source path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/build/generated/res/generated/release"/></dataSet><dataSet config="release"><source path="/Users/jackwu/AndroidStudioProjects/mtestitoo/libs/wizardpager/src/release/res"/></dataSet><mergedItems/></merger>

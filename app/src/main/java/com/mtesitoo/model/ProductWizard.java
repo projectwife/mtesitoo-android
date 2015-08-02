@@ -8,6 +8,7 @@ import android.content.Context;
 
 import com.tech.freak.wizardpager.model.AbstractWizardModel;
 import com.tech.freak.wizardpager.model.BranchPage;
+import com.tech.freak.wizardpager.model.ImagePage;
 import com.tech.freak.wizardpager.model.NumberPage;
 import com.tech.freak.wizardpager.model.PageList;
 import com.tech.freak.wizardpager.model.SingleFixedChoicePage;
@@ -22,14 +23,13 @@ public class ProductWizard extends AbstractWizardModel {
     protected PageList onNewRootPageList() {
         return new PageList(
 
-                new TextPage(this, "Name").setRequired(true)
-                        .setRequired(true),
+                new TextPage(this, "Name").setRequired(true),
 
-                new TextPage(this, "Description").setRequired(true)
-                        .setRequired(true),
+                new TextPage(this, "Description").setRequired(true),
 
-                new TextPage(this, "Location").setRequired(true)
-                        .setRequired(true),
+                new ImagePage(this, "Photo").setRequired(true),
+
+                new TextPage(this, "Location").setRequired(true),
 
                 new BranchPage(this, "Category")
                         .addBranch(
@@ -43,18 +43,13 @@ public class ProductWizard extends AbstractWizardModel {
                                         .setChoices("Cereal", "Fruits & Nuts",
                                                 "Vegetables")),
 
-                new SingleFixedChoicePage(this, "SI Unit").setChoices("Milligram",
-                        "Gram ", "Kilogram")
+                new SingleFixedChoicePage(this, "SI Unit").setChoices("Milligram", "Gram ", "Kilogram")
                         .setRequired(true),
 
-                new NumberPage(this, "Price per Unit").setRequired(true)
-                        .setRequired(true),
+                new NumberPage(this, "Price per Unit").setRequired(true),
 
-                new NumberPage(this, "Quantity").setRequired(true)
-                        .setRequired(true),
+                new NumberPage(this, "Quantity").setRequired(true),
 
-                new TextPage(this, "Expiration").setRequired(true)
-                        .setRequired(true));
-
+                new TextPage(this, "Expiration").setRequired(true));
     }
 }

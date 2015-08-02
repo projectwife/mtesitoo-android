@@ -6,7 +6,7 @@
 
     <string name="bundle_product_key">key_product_parcel</string>
     <string name="action_settings">Settings</string>
-    <string name="title_activity_add_item">AddItemActivity</string>
+    <string name="title_activity_add_product">AddProductActivity</string>
 
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_splash">SplashActivity</string>

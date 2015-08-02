@@ -22,6 +22,8 @@ import java.util.ArrayList;
  */
 public class ModuleService {
 
+    // TODO: Breakdown this module and integrate with the existing bridge component
+
     public static ArrayList<Product> getlatest() {
         HttpClient client = HttpClientBuilder.create().build();
         HttpGet request = new HttpGet("http://104.155.84.193/api/v1/module/latest");

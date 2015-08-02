@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/mtestitoo.iml" filepath="$PROJECT_DIR$/mtestitoo.iml" />
+      <module fileurl="file://$PROJECT_DIR$/libs/wizardpager/wizardpager.iml" filepath="$PROJECT_DIR$/libs/wizardpager/wizardpager.iml" />
     </modules>
   </component>
 </project>

@@ -1,1 +1,2 @@
-include ':app'
+include ':app', ':wizardpager'
+project(':wizardpager').projectDir = new File('libs/wizardpager')
