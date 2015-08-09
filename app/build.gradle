@@ -24,5 +24,6 @@ dependencies {
     compile 'com.jakewharton:butterknife:7.0.1'
     compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
     compile 'com.google.code.gson:gson:2.3.1'
-    compile project(":wizardpager")
+    compile project(':wizardpager')
+    compile project(':mtesitoo-backend-api')
 }

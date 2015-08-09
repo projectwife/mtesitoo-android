@@ -1,27 +1,29 @@
 package com.mtesitoo;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
 import com.mtesitoo.adapter.ProductListAdapter;
-import com.mtesitoo.model.Product;
-import com.mtesitoo.service.ModuleService;
+import com.mtesitoo.backend.api.ApiLoginService;
+import com.mtesitoo.backend.api.ApiProductService;
+import com.mtesitoo.backend.api.Callback;
+import com.mtesitoo.backend.model.Product;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutionException;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-
 public class MainActivity extends ActionBarActivity {
 
     private ProductListAdapter mProductListAdapter;
+    private static final String TAG = MainActivity.class.getSimpleName();
 
     @Bind(R.id.product_list)
     ListView mProductList;
@@ -32,11 +34,33 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        try {
-            new HttpTask().execute().get();
-        } catch (InterruptedException e) {
-        } catch (ExecutionException e) {
-        }
+        ApiLoginService apiLoginService = new ApiLoginService(this);
+        ApiProductService apiProductService = new ApiProductService(this);
+
+        apiLoginService.getAuthToken(new Callback<String>() {
+            @Override
+            public void onResult(String result) {
+                Log.d(TAG, "Got auth token: " + result);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e(TAG, "Error getting token", e);
+            }
+        });
+
+        apiProductService.getSpecials(new Callback<List<Product>>() {
+            @Override
+            public void onResult(List<Product> result) {
+                Log.d(TAG, "Products are: " + result);
+                mProductListAdapter.refresh((ArrayList<Product>) result);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e(TAG, "Error retrieving products: " + e);
+            }
+        });
 
         mProductListAdapter = new ProductListAdapter(this, new ArrayList<Product>());
         mProductList.setAdapter(mProductListAdapter);
@@ -59,15 +83,5 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
-    }
-
-    private class HttpTask extends AsyncTask<Void, Void, ArrayList<Product>> {
-        protected ArrayList<Product> doInBackground(Void... params) {
-            return ModuleService.getlatest();
-        }
-
-        protected void onPostExecute(ArrayList<Product> products) {
-            mProductListAdapter.refresh(products);
-        }
     }
 }

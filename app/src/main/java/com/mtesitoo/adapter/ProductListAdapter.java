@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.mtesitoo.ProductDetailActivity;
 import com.mtesitoo.R;
-import com.mtesitoo.model.Product;
+import com.mtesitoo.backend.model.Product;
 
 import java.util.ArrayList;
 

@@ -1,2 +1,3 @@
-include ':app', ':wizardpager'
+include ':app', ':wizardpager', ':mtesitoo-backend-api'
 project(':wizardpager').projectDir = new File('libs/wizardpager')
+project(':mtesitoo-backend-api').projectDir = new File('libs/mtesitoo-backend-api')

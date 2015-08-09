@@ -4,7 +4,7 @@ import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.widget.TextView;
 
-import com.mtesitoo.model.Product;
+import com.mtesitoo.backend.model.Product;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
