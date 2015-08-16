@@ -26,4 +26,5 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3.1'
     compile project(':wizardpager')
     compile project(':mtesitoo-backend-api')
+    compile project(':materialdrawer')
 }

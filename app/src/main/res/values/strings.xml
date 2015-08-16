@@ -10,4 +10,20 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_splash">SplashActivity</string>
+
+    <string name="drawer_item_home">Item Home</string>
+    <string name="drawer_item_settings">Item Settings</string>
+
+    <string-array name="drawer_items">
+        <item>Home</item>
+        <item>Shop</item>
+        <item>Profile</item>
+        <item>Order</item>
+        <item>New Item</item>
+        <item>Invite</item>
+        <item>Settings</item>
+        <item>Info</item>
+        <item>Help</item>
+        <item>Exit</item>
+    </string-array>
 </resources>

@@ -1,13 +1,23 @@
 package com.mtesitoo;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
+import com.mikepenz.materialdrawer.Drawer;
+import com.mikepenz.materialdrawer.DrawerBuilder;
+import com.mikepenz.materialdrawer.accountswitcher.AccountHeader;
+import com.mikepenz.materialdrawer.accountswitcher.AccountHeaderBuilder;
+import com.mikepenz.materialdrawer.model.PrimaryDrawerItem;
+import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
+import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mtesitoo.adapter.ProductListAdapter;
 import com.mtesitoo.backend.api.ApiLoginService;
 import com.mtesitoo.backend.api.ApiProductService;
@@ -34,36 +44,10 @@ public class MainActivity extends ActionBarActivity {
         setContentView(R.layout.activity_main);
         ButterKnife.bind(this);
 
-        ApiLoginService apiLoginService = new ApiLoginService(this);
-        ApiProductService apiProductService = new ApiProductService(this);
+        buildNavigationDrawer();
 
-        apiLoginService.getAuthToken(new Callback<String>() {
-            @Override
-            public void onResult(String result) {
-                Log.d(TAG, "Got auth token: " + result);
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Log.e(TAG, "Error getting token", e);
-            }
-        });
-
-        apiProductService.getSpecials(new Callback<List<Product>>() {
-            @Override
-            public void onResult(List<Product> result) {
-                Log.d(TAG, "Products are: " + result);
-                mProductListAdapter.refresh((ArrayList<Product>) result);
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Log.e(TAG, "Error retrieving products: " + e);
-            }
-        });
-
-        mProductListAdapter = new ProductListAdapter(this, new ArrayList<Product>());
-        mProductList.setAdapter(mProductListAdapter);
+        //TODO: Build tabbed view for items being sold by seller, and orders requested for seller
+        updateProductList();
     }
 
     @Override
@@ -83,5 +67,65 @@ public class MainActivity extends ActionBarActivity {
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    public void buildNavigationDrawer() {
+        //TODO: The navigation drawer style needs to be updated
+        //TODO: Add backend api service component for user authentication
+
+        AccountHeader headerResult = new AccountHeaderBuilder()
+                .withActivity(this)
+                .withTextColor(Color.BLACK)
+                .withProfileImagesClickable(false)
+                .withSelectionListEnabled(false)
+                .addProfiles(new ProfileDrawerItem()
+                        .withName("Nan Wu")
+                        .withEmail("Seller")
+                        .withNameShown(true))
+                .build();
+
+        String[] items = getResources().getStringArray(R.array.drawer_items);
+        PrimaryDrawerItem[] drawerItems = new PrimaryDrawerItem[items.length];
+
+        for (int i = 0; i < items.length; i++) {
+            drawerItems[i] = new PrimaryDrawerItem().withName(items[i]);
+        }
+
+        new DrawerBuilder()
+                .withActivity(this)
+                .withTranslucentStatusBar(false)
+                .withActionBarDrawerToggle(true)
+                .withActionBarDrawerToggleAnimated(true)
+                .withAccountHeader(headerResult)
+                .withDrawerWidthDp(250)
+                .addDrawerItems(drawerItems)
+                .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
+                    @Override
+                    public boolean onItemClick(AdapterView<?> parent, View view, int position, long id, IDrawerItem drawerItem) {
+                        return true;
+                    }
+                })
+                .build();
+    }
+
+    public void updateProductList() {
+        ApiLoginService apiLoginService = new ApiLoginService(this);
+        ApiProductService apiProductService = new ApiProductService(this);
+
+        apiLoginService.getAuthToken(null);
+        apiProductService.getSpecials(new Callback<List<Product>>() {
+            @Override
+            public void onResult(List<Product> result) {
+                mProductListAdapter.refresh((ArrayList<Product>) result);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e(TAG, "Error retrieving products: " + e);
+            }
+        });
+
+        mProductListAdapter = new ProductListAdapter(this, new ArrayList<Product>());
+        mProductList.setAdapter(mProductListAdapter);
     }
 }

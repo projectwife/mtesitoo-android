@@ -2,7 +2,6 @@ package com.mtesitoo.backend.api;
 
 import android.content.Context;
 import android.util.Base64;
-import android.util.Log;
 
 import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
@@ -48,26 +47,31 @@ public class ApiLoginService implements LoginService {
         String url = C.api.server + C.api.oauth_path;
 
         // Request a string response from the provided URL.
+        //TODO: Add support for HTTPS requests
+
         StringRequest stringRequest =
                 new StringRequest(Request.Method.POST, url, new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
-                        Log.d(TAG, "Response is: " + response);
                         JSONObject jsonResponse = null;
                         try {
                             jsonResponse = new JSONObject(response);
                             String oauthToken = jsonResponse.getString("access_token");
                             ApiLoginService.this.oauthToken = oauthToken;
-                            callback.onResult(oauthToken);
+
+                            if (callback != null)
+                                callback.onResult(oauthToken);
+
                         } catch (JSONException e) {
-                            callback.onError(e);
+                            if (callback != null)
+                                callback.onError(e);
                         }
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        Log.d(TAG, "Error getting oauth token: " + error);
-                        callback.onError(new Exception(error));
+                        if (callback != null)
+                            callback.onError(new Exception(error));
                     }
                 }) {
                     @Override
@@ -75,7 +79,6 @@ public class ApiLoginService implements LoginService {
                         HashMap<String, String> params = new HashMap<String, String>();
                         params.put("Authorization", getAuthorization());
                         params.put("Accept", "application/json; charset=utf-8");
-                        Log.d(TAG, "Headers are: " + params);
                         return params;
                     }
 
