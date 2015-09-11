@@ -29,6 +29,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.mtesitoo.backend.service.ProductService;
+import com.mtesitoo.backend.service.logic.IResponse;
+import com.mtesitoo.backend.model.Product;
 import com.mtesitoo.model.ProductWizard;
 
 import com.tech.freak.wizardpager.model.AbstractWizardModel;
@@ -49,7 +52,7 @@ public class AddProductActivity extends ActionBarActivity implements
         PageFragmentCallbacks, ReviewFragment.Callbacks, ModelCallbacks {
 
     private MyPagerAdapter mPagerAdapter;
-    private AbstractWizardModel mWizardModel = new ProductWizard(this);
+    private AbstractWizardModel mWizardModel;
     private List<Page> mCurrentPageSequence;
 
     private boolean mEditingAfterReview;
@@ -68,6 +71,18 @@ public class AddProductActivity extends ActionBarActivity implements
     public void onNextButtonClick(View view) {
         if (mPager.getCurrentItem() == mCurrentPageSequence.size()) {
             Log.w("page-wizard", mWizardModel.findByKey("Name").getData().getString(Page.SIMPLE_DATA_KEY));
+
+            ProductService apiProductService = new ProductService(this);
+            apiProductService.submitProduct(new IResponse<Product>() {
+                @Override
+                public void onResult(Product result) {
+                }
+
+                @Override
+                public void onError(Exception e) {
+                }
+            });
+
             finish();
         } else {
             if (mEditingAfterReview) {
@@ -89,12 +104,13 @@ public class AddProductActivity extends ActionBarActivity implements
         setContentView(R.layout.activity_add_product);
         ButterKnife.bind(this);
 
+        mWizardModel = new ProductWizard(this);
+
         if (savedInstanceState != null) {
             mWizardModel.load(savedInstanceState.getBundle("model"));
         }
 
         mWizardModel.registerListener(this);
-
         mPagerAdapter = new MyPagerAdapter(getSupportFragmentManager());
         mPager.setAdapter(mPagerAdapter);
 

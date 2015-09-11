@@ -1,8 +1,8 @@
 apply plugin: 'com.android.application'
 
 android {
-    compileSdkVersion 22
-    buildToolsVersion "22.0.1"
+    compileSdkVersion 23
+    buildToolsVersion '23.0.0'
 
     defaultConfig {
         applicationId "com.mtesitoo"
@@ -26,5 +26,11 @@ dependencies {
     compile 'com.google.code.gson:gson:2.3.1'
     compile project(':wizardpager')
     compile project(':mtesitoo-backend-api')
-    compile project(':materialdrawer')
+    compile 'com.mikepenz:materialdrawer:4.0.5'
+    compile('com.mikepenz:google-material-typeface:1.2.0.1') {
+        transitive = false
+    }
+    compile('com.mikepenz:fontawesome-typeface:4.4.0.1') {
+        transitive = false
+    }
 }

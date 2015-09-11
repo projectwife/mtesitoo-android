@@ -3,9 +3,8 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
-      <module fileurl="file://$PROJECT_DIR$/libs/materialdrawer/materialdrawer.iml" filepath="$PROJECT_DIR$/libs/materialdrawer/materialdrawer.iml" />
+      <module fileurl="file://$PROJECT_DIR$/mtesitoo-android.iml" filepath="$PROJECT_DIR$/mtesitoo-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/libs/mtesitoo-backend-api/mtesitoo-backend-api.iml" filepath="$PROJECT_DIR$/libs/mtesitoo-backend-api/mtesitoo-backend-api.iml" />
-      <module fileurl="file://$PROJECT_DIR$/mtestitoo.iml" filepath="$PROJECT_DIR$/mtestitoo.iml" />
       <module fileurl="file://$PROJECT_DIR$/libs/wizardpager/wizardpager.iml" filepath="$PROJECT_DIR$/libs/wizardpager/wizardpager.iml" />
     </modules>
   </component>

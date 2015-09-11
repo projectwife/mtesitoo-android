@@ -6,6 +6,7 @@ package com.mtesitoo.model;
 
 import android.content.Context;
 
+import com.mtesitoo.R;
 import com.tech.freak.wizardpager.model.AbstractWizardModel;
 import com.tech.freak.wizardpager.model.BranchPage;
 import com.tech.freak.wizardpager.model.ImagePage;
@@ -21,35 +22,49 @@ public class ProductWizard extends AbstractWizardModel {
 
     @Override
     protected PageList onNewRootPageList() {
+
         return new PageList(
+                new TextPage(this, this.mContext.getString(R.string.page_name)).setRequired(true),
 
-                new TextPage(this, "Name").setRequired(true),
+                new TextPage(this, this.mContext.getString(R.string.page_description)).setRequired(true),
 
-                new TextPage(this, "Description").setRequired(true),
+                new ImagePage(this, this.mContext.getString(R.string.page_photo)).setRequired(true),
 
-                new ImagePage(this, "Photo").setRequired(true),
+                new TextPage(this, this.mContext.getString(R.string.page_location)).setRequired(true),
 
-                new TextPage(this, "Location").setRequired(true),
-
-                new BranchPage(this, "Category")
+                new BranchPage(this, this.mContext.getString(R.string.page_category))
                         .addBranch(
-                                "Animal",
-                                new SingleFixedChoicePage(this, "Animal Category")
-                                        .setChoices("Bees", "Dairy",
-                                                "Meat", "Fish and Seafood"))
+                                this.mContext.getString(R.string.select_animal),
+                                new SingleFixedChoicePage(this, this.mContext.getString(R.string.page_animal_category))
+                                        .setChoices(
+                                                this.mContext.getString(R.string.select_bees),
+                                                this.mContext.getString(R.string.select_dairy),
+                                                this.mContext.getString(R.string.select_meat),
+                                                this.mContext.getString(R.string.select_fish_seafood)
+                                        )
+                        )
                         .addBranch(
-                                "Plant",
-                                new SingleFixedChoicePage(this, "Plant Category")
-                                        .setChoices("Cereal", "Fruits & Nuts",
-                                                "Vegetables")),
+                                this.mContext.getString(R.string.select_plant),
+                                new SingleFixedChoicePage(this, this.mContext.getString(R.string.page_plant_category))
+                                        .setChoices(
+                                                this.mContext.getString(R.string.select_cereal),
+                                                this.mContext.getString(R.string.select_fruits_nuts),
+                                                this.mContext.getString(R.string.select_vegetables)
+                                        )
+                        ),
 
-                new SingleFixedChoicePage(this, "SI Unit").setChoices("Milligram", "Gram ", "Kilogram")
+                new SingleFixedChoicePage(this, this.mContext.getString(R.string.page_si_unit))
+                        .setChoices(
+                                this.mContext.getString(R.string.select_milligram),
+                                this.mContext.getString(R.string.select_gram),
+                                this.mContext.getString(R.string.select_kilogram)
+                        )
                         .setRequired(true),
 
-                new NumberPage(this, "Price per Unit").setRequired(true),
+                new NumberPage(this, this.mContext.getString(R.string.page_price_per_unit)).setRequired(true),
 
-                new NumberPage(this, "Quantity").setRequired(true),
+                new NumberPage(this, this.mContext.getString(R.string.page_quantity)).setRequired(true),
 
-                new TextPage(this, "Expiration").setRequired(true));
+                new TextPage(this, this.mContext.getString(R.string.page_expiration)).setRequired(true));
     }
 }

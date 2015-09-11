@@ -1,6 +1,17 @@
 <resources>
     <string name="app_name">mtesitoo-backend-api</string>
 
-    <string name="hello_world">Hello world!</string>
-    <string name="action_settings">Settings</string>
+    <string name="server">http://104.155.84.193/api/v1</string>
+    <string name="path_module_latest">/module/latest</string>
+    <string name="path_oauth2_token">/oauth2/token</string>
+
+    <string name="client_id">mtesitooclientid</string>
+    <string name="client_secret">mtesitooclientsecret</string>
+
+    <string name="header_authorization">Authorization</string>
+    <string name="header_accept">Accept</string>
+
+    <string name="application_json">application/json; charset=utf-8</string>
+    <string name="basic_auth">Basic</string>
+    <string name="bearer">Bearer</string>
 </resources>
