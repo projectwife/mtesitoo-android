@@ -32,7 +32,6 @@ public class Product implements Parcelable {
     private final Seller mSeller;
 
     private Product(Parcel in) {
-
         this.mName = in.readString();
         this.mDescription = in.readString();
         this.mLocation = in.readString();

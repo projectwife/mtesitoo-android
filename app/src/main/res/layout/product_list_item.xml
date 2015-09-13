@@ -10,7 +10,7 @@
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/seller_stock_photo">
+        android:background="@drawable/stock_product">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -59,4 +59,3 @@
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>
-

@@ -1,31 +1,55 @@
 package com.mtesitoo.backend.model;
 
 import android.net.Uri;
+import android.os.Parcel;
+import android.os.Parcelable;
 
 import java.math.BigDecimal;
 
 /**
- * Model object for a Mtesitoo farmer/seeller. TODO(danieldanciu): for now I just added some random
- * fields, it's TBD what actually goes into this class.
+ * Model object for a Mtesitoo farmer/seller.
  */
-public class Seller {
+public class Seller implements Parcelable {
     public static final Seller DUMMY = new Seller("John Doe", new BigDecimal("5"), Uri.parse(""),
             "Gambiastreet 11", "+43 344 334 333", "john@doe.com");
-    private final String name;
-    private final BigDecimal rating;
-    private final Uri thumbnail;
-    private final String address;
-    private final String phoneNumber;
-    private final String email;
+
+    private final String mName;
+    private final BigDecimal mRating;
+    private final Uri mThumbnail;
+    private final String mAddress;
+    private final String mPhoneNumber;
+    private final String mEmail;
+
+    private Seller(Parcel in) {
+        this.mName = in.readString();
+        this.mRating = new BigDecimal(in.readInt());
+        this.mThumbnail = Uri.parse(in.readString());
+        this.mAddress = in.readString();
+        this.mPhoneNumber = in.readString();
+        this.mEmail = in.readString();
+    }
+
+    public static final Parcelable.Creator<Seller> CREATOR = new Parcelable.Creator<Seller>() {
+        @Override
+        public Seller createFromParcel(Parcel source) {
+            return new Seller(source);
+        }
+
+        @Override
+        public Seller[] newArray(int size) {
+            return new Seller[size];
+        }
+    };
+
 
     public Seller(String name, BigDecimal rating, Uri thumbnail, String address, String phoneNumber,
                   String email) {
-        this.name = name;
-        this.rating = rating;
-        this.thumbnail = thumbnail;
-        this.address = address;
-        this.phoneNumber = phoneNumber;
-        this.email = email;
+        this.mName = name;
+        this.mRating = rating;
+        this.mThumbnail = thumbnail;
+        this.mAddress = address;
+        this.mPhoneNumber = phoneNumber;
+        this.mEmail = email;
     }
 
     @Override
@@ -35,26 +59,34 @@ public class Seller {
 
         Seller seller = (Seller) o;
 
-        if (name != null ? !name.equals(seller.name) : seller.name != null) return false;
-        if (rating != null ? !rating.equals(seller.rating) : seller.rating != null) return false;
-        if (thumbnail != null ? !thumbnail.equals(seller.thumbnail) : seller.thumbnail != null)
+        if (mName != null ? !mName.equals(seller.mName) : seller.mName != null) return false;
+        if (mRating != null ? !mRating.equals(seller.mRating) : seller.mRating != null) return false;
+        if (mThumbnail != null ? !mThumbnail.equals(seller.mThumbnail) : seller.mThumbnail != null)
             return false;
-        if (address != null ? !address.equals(seller.address) : seller.address != null)
+        if (mAddress != null ? !mAddress.equals(seller.mAddress) : seller.mAddress != null)
             return false;
-        if (phoneNumber != null ? !phoneNumber.equals(seller.phoneNumber) : seller.phoneNumber != null)
+        if (mPhoneNumber != null ? !mPhoneNumber.equals(seller.mPhoneNumber) : seller.mPhoneNumber != null)
             return false;
-        return !(email != null ? !email.equals(seller.email) : seller.email != null);
-
+        return !(mEmail != null ? !mEmail.equals(seller.mEmail) : seller.mEmail != null);
     }
 
     @Override
     public int hashCode() {
-        int result = name != null ? name.hashCode() : 0;
-        result = 31 * result + (rating != null ? rating.hashCode() : 0);
-        result = 31 * result + (thumbnail != null ? thumbnail.hashCode() : 0);
-        result = 31 * result + (address != null ? address.hashCode() : 0);
-        result = 31 * result + (phoneNumber != null ? phoneNumber.hashCode() : 0);
-        result = 31 * result + (email != null ? email.hashCode() : 0);
+        int result = mName != null ? mName.hashCode() : 0;
+        result = 31 * result + (mRating != null ? mRating.hashCode() : 0);
+        result = 31 * result + (mThumbnail != null ? mThumbnail.hashCode() : 0);
+        result = 31 * result + (mAddress != null ? mAddress.hashCode() : 0);
+        result = 31 * result + (mPhoneNumber != null ? mPhoneNumber.hashCode() : 0);
+        result = 31 * result + (mEmail != null ? mEmail.hashCode() : 0);
         return result;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
     }
 }

@@ -23,4 +23,11 @@
     <string name="drawer_item_info">Info</string>
     <string name="drawer_item_help">Help</string>
     <string name="drawer_item_exit">Exit</string>
+    <string name="title_activity_profile">ProfileActivity</string>
+
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_order">OrderActivity</string>
+    <string name="title_activity_order_detail">OrderDetailActivity</string>
+    <string name="title_activity_info">InfoActivity</string>
+    <string name="title_activity_help">HelpActivity</string>
 </resources>
