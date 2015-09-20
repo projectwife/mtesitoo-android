@@ -9,6 +9,6 @@ import com.mtesitoo.backend.model.Product;
  * The callback results are returned on the main thread.
  */
 public interface IProductService {
-    void getProducts(IResponse<List<Product>> callback);
-    void submitProduct(IResponse<Product> callback);
+    void getProducts(int id, IResponse<List<Product>> callback);
+    void submitProduct(Product product, IResponse<Product> callback);
 }

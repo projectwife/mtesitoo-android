@@ -17,6 +17,7 @@
 package com.mtesitoo;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -30,6 +31,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 
 import com.mtesitoo.backend.service.ProductService;
+import com.mtesitoo.backend.service.logic.IProductService;
 import com.mtesitoo.backend.service.logic.IResponse;
 import com.mtesitoo.backend.model.Product;
 import com.mtesitoo.model.ProductWizard;
@@ -42,6 +44,7 @@ import com.tech.freak.wizardpager.ui.PageFragmentCallbacks;
 import com.tech.freak.wizardpager.ui.ReviewFragment;
 import com.tech.freak.wizardpager.ui.StepPagerStrip;
 
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -71,9 +74,17 @@ public class AddProductActivity extends ActionBarActivity implements
     public void onNextButtonClick(View view) {
         if (mPager.getCurrentItem() == mCurrentPageSequence.size()) {
             Log.w("page-wizard", mWizardModel.findByKey("Name").getData().getString(Page.SIMPLE_DATA_KEY));
+            String name = mWizardModel.findByKey("Name").getData().getString(Page.SIMPLE_DATA_KEY);
+            String description = mWizardModel.findByKey("Description").getData().getString(Page.SIMPLE_DATA_KEY);
+            String category = mWizardModel.findByKey("Category").getData().getString(Page.SIMPLE_DATA_KEY);
+            String pricePerUnit = mWizardModel.findByKey("Price per Unit").getData().getString(Page.SIMPLE_DATA_KEY);
+            String quantity = mWizardModel.findByKey("Quantity").getData().getString(Page.SIMPLE_DATA_KEY);
 
-            ProductService apiProductService = new ProductService(this);
-            apiProductService.submitProduct(new IResponse<Product>() {
+            Product product = new Product(name, description, "Location", category, "SI Unit",
+                    pricePerUnit, Integer.parseInt(quantity), new Date(), Uri.parse("Uri"));
+
+            IProductService apiProductService = new ProductService(this);
+            apiProductService.submitProduct(product, new IResponse<Product>() {
                 @Override
                 public void onResult(Product result) {
                 }

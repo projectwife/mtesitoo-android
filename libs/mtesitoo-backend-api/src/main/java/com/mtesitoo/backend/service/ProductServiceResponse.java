@@ -19,9 +19,7 @@ import java.util.List;
  */
 public class ProductServiceResponse implements IProductServiceResponse {
     public List<Product> parseResponse(String response) throws JSONException {
-        JSONObject jsonResponse = null;
-        jsonResponse = new JSONObject(response);
-        JSONArray jsonProducts = jsonResponse.getJSONArray("products");
+        JSONArray jsonProducts = new JSONArray(response);
 
         List<Product> result = new ArrayList<>(jsonProducts.length());
         for (int i = 0; i < jsonProducts.length(); ++i) {
@@ -35,9 +33,7 @@ public class ProductServiceResponse implements IProductServiceResponse {
                             "SI Unit",
                             jsonProduct.getString("price"), 100,
                             new Date(),
-                            Uri.parse(jsonProduct.getString("thumb_image")),
-                            null,
-                            Seller.DUMMY
+                            Uri.parse(jsonProduct.getString("thumb_image"))
                     );
             result.add(product);
         }

@@ -5,6 +5,5 @@ package com.mtesitoo.backend.service.logic;
  */
 public interface IResponse<T> {
     void onResult(T result);
-
     void onError(Exception e);
 }

@@ -25,7 +25,9 @@ import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mtesitoo.adapter.ProductListAdapter;
+import com.mtesitoo.backend.model.Seller;
 import com.mtesitoo.backend.service.ProductService;
+import com.mtesitoo.backend.service.logic.IProductService;
 import com.mtesitoo.backend.service.logic.IResponse;
 import com.mtesitoo.backend.model.Product;
 
@@ -36,12 +38,14 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
-
     private static final String TAG = HomeActivity.class.getSimpleName();
-    private AccountHeader headerResult = null;
-    private Drawer result = null;
+
     private ProductListAdapter mProductListAdapter;
     private Context mContext;
+    private Seller mSeller;
+
+    private AccountHeader headerResult = null;
+    private Drawer result = null;
 
     @Bind(R.id.product_list)
     ListView mProductList;
@@ -55,6 +59,7 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
         mContext = this;
+        mSeller = getIntent().getExtras().getParcelable(getString(R.string.bundle_seller_key));
 
         setSupportActionBar(toolbar);
         buildNavigationDrawer();
@@ -82,7 +87,7 @@ public class HomeActivity extends AppCompatActivity {
 
     public void buildNavigationDrawer() {
         final IProfile profile = new ProfileDrawerItem()
-                .withName(getString(R.string.test_user))
+                .withName(mSeller.getUsername())
                 .withEmail(getString(R.string.role_seller));
 
         headerResult = new AccountHeaderBuilder()
@@ -144,9 +149,9 @@ public class HomeActivity extends AppCompatActivity {
     }
 
     public void updateProductList() {
-        ProductService productService = new ProductService(this);
+        IProductService productService = new ProductService(this);
 
-        productService.getProducts(new IResponse<List<Product>>() {
+        productService.getProducts(mSeller.getId(), new IResponse<List<Product>>() {
             @Override
             public void onResult(List<Product> result) {
                 mProductListAdapter.refresh((ArrayList<Product>) result);

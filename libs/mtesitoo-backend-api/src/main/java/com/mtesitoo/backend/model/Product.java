@@ -23,14 +23,6 @@ public class Product implements Parcelable {
     private final Date mExpiration;
     private final Uri mThumbnail;
 
-    /**
-     * Only exists if this is a special offer.
-     */
-    @Nullable
-    private final BigDecimal mSpecialPrice;
-
-    private final Seller mSeller;
-
     private Product(Parcel in) {
         this.mName = in.readString();
         this.mDescription = in.readString();
@@ -42,8 +34,6 @@ public class Product implements Parcelable {
         this.mExpiration = new Date(in.readLong());
 
         this.mThumbnail = null;
-        this.mSpecialPrice = null;
-        this.mSeller = null;
     }
 
     public static final Parcelable.Creator<Product> CREATOR = new Parcelable.Creator<Product>() {
@@ -69,12 +59,9 @@ public class Product implements Parcelable {
      * @param quantity     product quantity (e.g. 100)
      * @param expiration   product post expiration (e.g. YYYY-MM-DD)
      * @param thumbnail    url of the product's thumbnail
-     * @param specialPrice special price, if this is a special offer, {@code null otherwise}
-     * @param seller       product owner
      */
     public Product(String name, String description, String location, String category, String siUnit,
-                   String pricePerUnit, Integer quantity, Date expiration, Uri thumbnail,
-                   @Nullable BigDecimal specialPrice, Seller seller) {
+                   String pricePerUnit, Integer quantity, Date expiration, Uri thumbnail) {
         mName = name;
         mDescription = description;
         mLocation = location;
@@ -85,8 +72,6 @@ public class Product implements Parcelable {
         mExpiration = expiration;
 
         mThumbnail = thumbnail;
-        mSpecialPrice = specialPrice;
-        mSeller = seller;
     }
 
     public String getName() {
@@ -125,20 +110,10 @@ public class Product implements Parcelable {
         return mThumbnail;
     }
 
-    @Nullable
-    public BigDecimal getSpecialPrice() {
-        return mSpecialPrice;
-    }
-
-    public Seller getSeller() {
-        return mSeller;
-    }
-
     @Override
     public String toString() {
         return "Product{" + "name='" + mName + '\'' + ", description='" + mDescription + '\''
-                + ", price='" + mPricePerUnit + '\'' + ", thumbnail=" + mThumbnail + ", specialPrice="
-                + mSpecialPrice + ", seller=" + mSeller + '}';
+                + ", price='" + mPricePerUnit + '\'' + ", thumbnail=" + mThumbnail;
     }
 
     @Override
@@ -152,18 +127,14 @@ public class Product implements Parcelable {
 
         if (!mName.equals(product.mName))
             return false;
-        if (mDescription != null ? !mDescription.equals(product.mDescription)
-                : product.mDescription != null)
-            return false;
-        return !(mSeller != null ? !mSeller.equals(product.mSeller) : product.mSeller != null);
-
+        return (mDescription != null ? !mDescription.equals(product.mDescription)
+                : product.mDescription != null);
     }
 
     @Override
     public int hashCode() {
         int result = mName.hashCode();
         result = 31 * result + (mDescription != null ? mDescription.hashCode() : 0);
-        result = 31 * result + (mSeller != null ? mSeller.hashCode() : 0);
         return result;
     }
 
