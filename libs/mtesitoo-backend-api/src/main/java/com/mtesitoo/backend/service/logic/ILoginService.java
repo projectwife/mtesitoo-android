@@ -6,5 +6,7 @@ package com.mtesitoo.backend.service.logic;
  * @author danieldanciu
  */
 public interface ILoginService {
-    void getAuthToken(final IResponse<String> callback);
+    void getAuthToken(IResponse<String> callback);
+
+    void authenticateUser(String username, String password, IResponse<String> callback);
 }

@@ -3,7 +3,6 @@ package com.mtesitoo.backend.service;
 import android.net.Uri;
 
 import com.mtesitoo.backend.model.Product;
-import com.mtesitoo.backend.model.Seller;
 import com.mtesitoo.backend.service.logic.IProductServiceResponse;
 
 import org.json.JSONArray;

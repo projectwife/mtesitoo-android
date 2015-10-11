@@ -18,7 +18,7 @@
         android:background="@android:color/white" />
 
     <LinearLayout
-        android:id="@+id/email_address_holder"
+        android:id="@+id/user_name_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
@@ -26,7 +26,7 @@
         android:orientation="horizontal">
 
         <EditText
-            android:id="@+id/email_address"
+            android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
@@ -35,7 +35,7 @@
             android:background="#66a966"
             android:ems="10"
             android:gravity="center_horizontal"
-            android:hint="Email"
+            android:hint="User Name"
             android:inputType="textEmailAddress"
             android:textColor="@android:color/white"
             android:textColorHint="@android:color/white"
@@ -48,7 +48,7 @@
         android:id="@+id/line_break_2"
         android:layout_width="225dip"
         android:layout_height="1dip"
-        android:layout_below="@+id/email_address_holder"
+        android:layout_below="@+id/user_name_holder"
         android:layout_centerHorizontal="true"
         android:background="@android:color/white" />
 

@@ -30,6 +30,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
+import com.mtesitoo.backend.cache.CategoryCache;
+import com.mtesitoo.backend.cache.logic.ICategoryCache;
+import com.mtesitoo.backend.model.Category;
 import com.mtesitoo.backend.service.ProductService;
 import com.mtesitoo.backend.service.logic.IProductService;
 import com.mtesitoo.backend.service.logic.IResponse;
@@ -73,20 +76,30 @@ public class AddProductActivity extends ActionBarActivity implements
     @OnClick(R.id.next_button)
     public void onNextButtonClick(View view) {
         if (mPager.getCurrentItem() == mCurrentPageSequence.size()) {
-            Log.w("page-wizard", mWizardModel.findByKey("Name").getData().getString(Page.SIMPLE_DATA_KEY));
-            String name = mWizardModel.findByKey("Name").getData().getString(Page.SIMPLE_DATA_KEY);
-            String description = mWizardModel.findByKey("Description").getData().getString(Page.SIMPLE_DATA_KEY);
-            String category = mWizardModel.findByKey("Category").getData().getString(Page.SIMPLE_DATA_KEY);
-            String pricePerUnit = mWizardModel.findByKey("Price per Unit").getData().getString(Page.SIMPLE_DATA_KEY);
-            String quantity = mWizardModel.findByKey("Quantity").getData().getString(Page.SIMPLE_DATA_KEY);
+            String name = mWizardModel.findByKey(this.getString(R.string.page_name)).getData().getString(Page.SIMPLE_DATA_KEY);
+            String description = mWizardModel.findByKey(this.getString(R.string.page_description)).getData().getString(Page.SIMPLE_DATA_KEY);
+            String category = mWizardModel.findByKey(this.getString(R.string.page_category)).getData().getString(Page.SIMPLE_DATA_KEY);
+            String pricePerUnit = mWizardModel.findByKey(this.getString(R.string.page_price_per_unit)).getData().getString(Page.SIMPLE_DATA_KEY);
+            String quantity = mWizardModel.findByKey(this.getString(R.string.page_quantity)).getData().getString(Page.SIMPLE_DATA_KEY);
+
+            ICategoryCache cache = new CategoryCache(this);
+            List<Category> categories = cache.getCategories();
+
+            for (Category c : categories) {
+                if (c.getName().equals(category)) {
+                    category = Integer.toString(c.getId());
+                    break;
+                }
+            }
 
             Product product = new Product(name, description, "Location", category, "SI Unit",
                     pricePerUnit, Integer.parseInt(quantity), new Date(), Uri.parse("Uri"));
 
-            IProductService apiProductService = new ProductService(this);
-            apiProductService.submitProduct(product, new IResponse<Product>() {
+            IProductService productService = new ProductService(this);
+            productService.submitProduct(product, new IResponse<Product>() {
                 @Override
                 public void onResult(Product result) {
+
                 }
 
                 @Override

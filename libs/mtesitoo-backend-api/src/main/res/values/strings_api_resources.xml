@@ -1,0 +1,8 @@
+<resources>
+    <string name="server">http://104.155.84.193/api/v1</string>
+    <string name="path_oauth2_token">/oauth2/token</string>
+    <string name="path_product_product">/product/product</string>
+    <string name="path_product_vendor">/product/vendor</string>
+    <string name="path_product_category">/product/category</string>
+    <string name="path_admin_login">/admin/login</string>
+</resources>

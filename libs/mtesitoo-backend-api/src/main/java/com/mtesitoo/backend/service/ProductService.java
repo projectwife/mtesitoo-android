@@ -6,12 +6,15 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import com.mtesitoo.backend.R;
 import com.mtesitoo.backend.model.header.Authorization;
 import com.mtesitoo.backend.model.AuthorizedStringRequest;
 import com.mtesitoo.backend.model.URL;
+import com.mtesitoo.backend.model.url.ProductProductURL;
 import com.mtesitoo.backend.model.url.ProductVendorProductsURL;
 import com.mtesitoo.backend.service.logic.IProductServiceResponse;
 import com.mtesitoo.backend.service.logic.IResponse;
@@ -77,10 +80,28 @@ public class ProductService extends Service implements IProductService {
     }
 
     @Override
-    public void submitProduct(Product product, final IResponse<Product> callback) {
+    public void submitProduct(final Product product, final IResponse<Product> callback) {
         mILoginService.getAuthToken(new IResponse<String>() {
             @Override
             public void onResult(final String result) {
+                URL url = new ProductProductURL(mContext, R.string.path_product_product);
+
+                AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.POST, url.toString(), listener, errorListener) {
+                    @Override
+                    protected Map<String, String> getParams() {
+                        Map<String, String> params = new HashMap<>();
+                        params.put(mContext.getString(R.string.params_product_name), product.getName());
+                        params.put(mContext.getString(R.string.params_product_description), product.getDescription());
+                        params.put(mContext.getString(R.string.params_product_price), product.getPricePerUnit());
+                        params.put(mContext.getString(R.string.params_product_quantity), Integer.toString(product.getQuantity()));
+                        params.put(mContext.getString(R.string.params_product_category_ids), product.getCategory());
+
+                        return params;
+                    }
+                };
+
+                stringRequest.setAuthorization(new Authorization(mContext, result).toString());
+                mRequestQueue.add(stringRequest);
             }
 
             @Override

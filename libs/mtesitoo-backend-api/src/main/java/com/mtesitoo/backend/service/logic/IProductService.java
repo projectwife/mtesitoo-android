@@ -10,5 +10,6 @@ import com.mtesitoo.backend.model.Product;
  */
 public interface IProductService {
     void getProducts(int id, IResponse<List<Product>> callback);
+
     void submitProduct(Product product, IResponse<Product> callback);
 }

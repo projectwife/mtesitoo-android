@@ -2,12 +2,10 @@ package com.mtesitoo.backend.model;
 
 import android.net.Uri;
 
-import java.math.BigDecimal;
 import java.util.Date;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.Nullable;
 
 /**
  * Model object for a Mtesitoo product.

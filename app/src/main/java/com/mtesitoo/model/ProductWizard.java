@@ -7,6 +7,9 @@ package com.mtesitoo.model;
 import android.content.Context;
 
 import com.mtesitoo.R;
+import com.mtesitoo.backend.cache.CategoryCache;
+import com.mtesitoo.backend.cache.logic.ICategoryCache;
+import com.mtesitoo.backend.model.Category;
 import com.tech.freak.wizardpager.model.AbstractWizardModel;
 import com.tech.freak.wizardpager.model.BranchPage;
 import com.tech.freak.wizardpager.model.ImagePage;
@@ -15,6 +18,9 @@ import com.tech.freak.wizardpager.model.PageList;
 import com.tech.freak.wizardpager.model.SingleFixedChoicePage;
 import com.tech.freak.wizardpager.model.TextPage;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ProductWizard extends AbstractWizardModel {
     public ProductWizard(Context context) {
         super(context);
@@ -22,49 +28,38 @@ public class ProductWizard extends AbstractWizardModel {
 
     @Override
     protected PageList onNewRootPageList() {
+        ICategoryCache cache = new CategoryCache(mContext);
+        List<Category> categories = cache.getCategories();
+        String[] categoryNames = new String[categories.size()];
+
+        for (int i = 0; i < categories.size(); i++) {
+            categoryNames[i] = categories.get(i).getName();
+        }
 
         return new PageList(
-                new TextPage(this, this.mContext.getString(R.string.page_name)).setRequired(true),
+                new TextPage(this, mContext.getString(R.string.page_name)).setRequired(true),
 
-                new TextPage(this, this.mContext.getString(R.string.page_description)).setRequired(true),
+                new TextPage(this, mContext.getString(R.string.page_description)).setRequired(true),
 
-                new ImagePage(this, this.mContext.getString(R.string.page_photo)).setRequired(true),
+//                new ImagePage(this, mContext.getString(R.string.page_photo)).setRequired(true),
 
-                new TextPage(this, this.mContext.getString(R.string.page_location)).setRequired(true),
+//                new TextPage(this, mContext.getString(R.string.page_location)).setRequired(true),
 
-                new BranchPage(this, this.mContext.getString(R.string.page_category))
-                        .addBranch(
-                                this.mContext.getString(R.string.select_animal),
-                                new SingleFixedChoicePage(this, this.mContext.getString(R.string.page_animal_category))
-                                        .setChoices(
-                                                this.mContext.getString(R.string.select_bees),
-                                                this.mContext.getString(R.string.select_dairy),
-                                                this.mContext.getString(R.string.select_meat),
-                                                this.mContext.getString(R.string.select_fish_seafood)
-                                        )
-                        )
-                        .addBranch(
-                                this.mContext.getString(R.string.select_plant),
-                                new SingleFixedChoicePage(this, this.mContext.getString(R.string.page_plant_category))
-                                        .setChoices(
-                                                this.mContext.getString(R.string.select_cereal),
-                                                this.mContext.getString(R.string.select_fruits_nuts),
-                                                this.mContext.getString(R.string.select_vegetables)
-                                        )
-                        ),
+                new SingleFixedChoicePage(this, mContext.getString(R.string.page_category))
+                        .setChoices(categoryNames),
 
-                new SingleFixedChoicePage(this, this.mContext.getString(R.string.page_si_unit))
+/*                new SingleFixedChoicePage(this, mContext.getString(R.string.page_si_unit))
                         .setChoices(
                                 this.mContext.getString(R.string.select_milligram),
                                 this.mContext.getString(R.string.select_gram),
                                 this.mContext.getString(R.string.select_kilogram)
                         )
                         .setRequired(true),
+*/
+                new NumberPage(this, mContext.getString(R.string.page_price_per_unit)).setRequired(true),
 
-                new NumberPage(this, this.mContext.getString(R.string.page_price_per_unit)).setRequired(true),
+                new NumberPage(this, mContext.getString(R.string.page_quantity)).setRequired(true));
 
-                new NumberPage(this, this.mContext.getString(R.string.page_quantity)).setRequired(true),
-
-                new TextPage(this, this.mContext.getString(R.string.page_expiration)).setRequired(true));
+//                new TextPage(this, mContext.getString(R.string.page_expiration)).setRequired(true));
     }
 }
