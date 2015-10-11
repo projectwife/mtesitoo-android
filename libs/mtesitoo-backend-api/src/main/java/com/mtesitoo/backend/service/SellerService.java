@@ -53,19 +53,10 @@ public class SellerService extends Service implements ISellerService {
     @Override
     public void getSellerInfo(final int sellerId, final IResponse<Seller> callback) {
         mCallback = callback;
-        mILoginService.getAuthToken(new IResponse<String>() {
-            @Override
-            public void onResult(final String result) {
-                URL url = new ProductVendorURL(mContext, R.string.path_product_vendor, sellerId);
-                AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.GET, url.toString(), listener, errorListener);
-                stringRequest.setAuthorization(new Authorization(mContext, result).toString());
-                mRequestQueue.add(stringRequest);
-            }
+        URL url = new ProductVendorURL(mContext, R.string.path_product_vendor, sellerId);
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.GET, url.toString(), listener, errorListener);
 
-            @Override
-            public void onError(Exception e) {
-                callback.onError(e);
-            }
-        });
+        stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
+        mRequestQueue.add(stringRequest);
     }
 }

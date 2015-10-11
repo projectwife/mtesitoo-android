@@ -29,7 +29,7 @@ public class CategoryCache extends Cache implements ICategoryCache {
             set.add(Integer.toString(category.getId()) + ":" + category.getName());
         }
 
-        mEditor.putStringSet(mContext.getString(R.string.shared_preference_key_categories), set);        mPrefs = PreferenceManager.getDefaultSharedPreferences(mContext);
+        mEditor.putStringSet(mContext.getString(R.string.shared_preference_key_categories), set);
         mEditor.apply();
     }
 

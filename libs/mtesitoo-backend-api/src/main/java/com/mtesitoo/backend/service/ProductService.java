@@ -63,51 +63,31 @@ public class ProductService extends Service implements IProductService {
     @Override
     public void getProducts(final int sellerId, final IResponse<List<Product>> callback) {
         mCallback = callback;
-        mILoginService.getAuthToken(new IResponse<String>() {
-            @Override
-            public void onResult(final String result) {
-                URL url = new ProductVendorProductsURL(mContext, R.string.path_product_vendor, sellerId);
-                AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.GET, url.toString(), listener, errorListener);
-                stringRequest.setAuthorization(new Authorization(mContext, result).toString());
-                mRequestQueue.add(stringRequest);
-            }
+        URL url = new ProductVendorProductsURL(mContext, R.string.path_product_vendor, sellerId);
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.GET, url.toString(), listener, errorListener);
 
-            @Override
-            public void onError(Exception e) {
-                callback.onError(e);
-            }
-        });
+        stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
+        mRequestQueue.add(stringRequest);
     }
 
     @Override
     public void submitProduct(final Product product, final IResponse<Product> callback) {
-        mILoginService.getAuthToken(new IResponse<String>() {
+        URL url = new ProductProductURL(mContext, R.string.path_product_product);
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.POST, url.toString(), listener, errorListener) {
             @Override
-            public void onResult(final String result) {
-                URL url = new ProductProductURL(mContext, R.string.path_product_product);
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put(mContext.getString(R.string.params_product_name), product.getName());
+                params.put(mContext.getString(R.string.params_product_description), product.getDescription());
+                params.put(mContext.getString(R.string.params_product_price), product.getPricePerUnit());
+                params.put(mContext.getString(R.string.params_product_quantity), Integer.toString(product.getQuantity()));
+                params.put(mContext.getString(R.string.params_product_category_ids), product.getCategory());
 
-                AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.POST, url.toString(), listener, errorListener) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        Map<String, String> params = new HashMap<>();
-                        params.put(mContext.getString(R.string.params_product_name), product.getName());
-                        params.put(mContext.getString(R.string.params_product_description), product.getDescription());
-                        params.put(mContext.getString(R.string.params_product_price), product.getPricePerUnit());
-                        params.put(mContext.getString(R.string.params_product_quantity), Integer.toString(product.getQuantity()));
-                        params.put(mContext.getString(R.string.params_product_category_ids), product.getCategory());
-
-                        return params;
-                    }
-                };
-
-                stringRequest.setAuthorization(new Authorization(mContext, result).toString());
-                mRequestQueue.add(stringRequest);
+                return params;
             }
+        };
 
-            @Override
-            public void onError(Exception e) {
-                callback.onError(e);
-            }
-        });
+        stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
+        mRequestQueue.add(stringRequest);
     }
 }

@@ -57,19 +57,10 @@ public class CategoryService extends Service implements ICategoryService {
     @Override
     public void getCategories(final IResponse<List<Category>> callback) {
         mCallback = callback;
-        mILoginService.getAuthToken(new IResponse<String>() {
-            @Override
-            public void onResult(final String result) {
-                URL url = new ProductCategoryURL(mContext, R.string.path_product_category);
-                AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.GET, url.toString(), listener, errorListener);
-                stringRequest.setAuthorization(new Authorization(mContext, result).toString());
-                mRequestQueue.add(stringRequest);
-            }
+        URL url = new ProductCategoryURL(mContext, R.string.path_product_category);
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.GET, url.toString(), listener, errorListener);
 
-            @Override
-            public void onError(Exception e) {
-                callback.onError(e);
-            }
-        });
+        stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
+        mRequestQueue.add(stringRequest);
     }
 }

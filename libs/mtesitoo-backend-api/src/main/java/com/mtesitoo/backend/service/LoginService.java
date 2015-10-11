@@ -76,31 +76,21 @@ public class LoginService extends Service implements ILoginService {
     }
 
     public void authenticateUser(final String username, final String password, final IResponse<String> callback) {
-        getAuthToken(new IResponse<String>() {
+        mCallback = callback;
+        URL url = new AdminLoginURL(mContext, R.string.path_admin_login);
+
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.POST, url.toString(), authenticationListener, errorListener) {
             @Override
-            public void onResult(final String result) {
-                mCallback = callback;
-                URL url = new AdminLoginURL(mContext, R.string.path_admin_login);
-
-                AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.POST, url.toString(), authenticationListener, errorListener) {
-                    @Override
-                    protected Map<String, String> getParams() {
-                        Map<String, String> params = new HashMap<>();
-                        params.put(mContext.getString(R.string.params_admin_username), username);
-                        params.put(mContext.getString(R.string.params_admin_password), password);
-                        return params;
-                    }
-                };
-
-                stringRequest.setAuthorization(new Authorization(mContext, result).toString());
-                mRequestQueue.add(stringRequest);
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put(mContext.getString(R.string.params_admin_username), username);
+                params.put(mContext.getString(R.string.params_admin_password), password);
+                return params;
             }
+        };
 
-            @Override
-            public void onError(Exception e) {
-                callback.onError(e);
-            }
-        });
+        stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
+        mRequestQueue.add(stringRequest);
     }
 
     public void getAuthToken(final IResponse<String> callback) {
