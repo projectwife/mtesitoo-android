@@ -10,7 +10,6 @@ import com.mtesitoo.backend.model.AuthorizedStringRequest;
 import com.mtesitoo.backend.model.Category;
 import com.mtesitoo.backend.model.URL;
 import com.mtesitoo.backend.model.header.Authorization;
-import com.mtesitoo.backend.model.url.ProductCategoryURL;
 import com.mtesitoo.backend.service.logic.ICategoryService;
 import com.mtesitoo.backend.service.logic.ICategoryServiceResponse;
 import com.mtesitoo.backend.service.logic.IResponse;
@@ -57,7 +56,7 @@ public class CategoryService extends Service implements ICategoryService {
     @Override
     public void getCategories(final IResponse<List<Category>> callback) {
         mCallback = callback;
-        URL url = new ProductCategoryURL(mContext, R.string.path_product_category);
+        URL url = new URL(mContext, R.string.path_product_category);
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.GET, url.toString(), listener, errorListener);
 
         stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());

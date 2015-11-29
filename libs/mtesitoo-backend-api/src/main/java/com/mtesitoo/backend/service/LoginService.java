@@ -10,8 +10,6 @@ import com.mtesitoo.backend.R;
 import com.mtesitoo.backend.model.header.Authorization;
 import com.mtesitoo.backend.model.AuthorizedStringRequest;
 import com.mtesitoo.backend.model.URL;
-import com.mtesitoo.backend.model.url.AdminLoginURL;
-import com.mtesitoo.backend.model.url.OAuthTokenURL;
 import com.mtesitoo.backend.service.logic.ILoginServiceResponse;
 import com.mtesitoo.backend.service.logic.IResponse;
 import com.mtesitoo.backend.service.logic.ILoginService;
@@ -77,7 +75,7 @@ public class LoginService extends Service implements ILoginService {
 
     public void authenticateUser(final String username, final String password, final IResponse<String> callback) {
         mCallback = callback;
-        URL url = new AdminLoginURL(mContext, R.string.path_admin_login);
+        URL url = new URL(mContext, R.string.path_admin_login);
 
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.POST, url.toString(), authenticationListener, errorListener) {
             @Override
@@ -102,7 +100,7 @@ public class LoginService extends Service implements ILoginService {
         }
 
         //TODO: Add support for HTTPS requests
-        URL url = new OAuthTokenURL(mContext, R.string.path_oauth2_token);
+        URL url = new URL(mContext, R.string.path_oauth2_token);
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.POST, url.toString(), tokenListener, errorListener);
         stringRequest.setAuthorization(new Authorization(mContext, null).toString());
         mRequestQueue.add(stringRequest);
