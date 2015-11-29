@@ -7,7 +7,7 @@ import com.mtesitoo.backend.R;
 /**
  * Created by Nan on 9/13/2015.
  */
-public abstract class URL {
+public class URL {
     protected Context mContext;
     protected int mResId;
     protected StringBuilder mPath;
@@ -21,6 +21,10 @@ public abstract class URL {
 
     final public String getHost() {
         return mContext.getString(R.string.server);
+    }
+
+    public void append(String s) {
+        mPath.append(s);
     }
 
     @Override
