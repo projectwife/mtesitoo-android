@@ -92,7 +92,7 @@ public class AddProductActivity extends ActionBarActivity implements
                 }
             }
 
-            Product product = new Product(name, description, "Location", category, "SI Unit",
+            Product product = new Product(0, name, description, "Location", category, "SI Unit",
                     pricePerUnit, Integer.parseInt(quantity), new Date(), Uri.parse("Uri"));
 
             IProductService productService = new ProductService(this);

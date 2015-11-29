@@ -25,6 +25,7 @@ public class ProductServiceResponse implements IProductServiceResponse {
             JSONObject jsonProduct = jsonProducts.getJSONObject(i);
             Product product =
                     new Product(
+                            Integer.parseInt(jsonProduct.getString("product_id")),
                             jsonProduct.getString("name"),
                             jsonProduct.getString("description"),
                             "Location",

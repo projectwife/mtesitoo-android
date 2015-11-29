@@ -11,6 +11,7 @@ import android.os.Parcelable;
  * Model object for a Mtesitoo product.
  */
 public class Product implements Parcelable {
+    private final int mId;
     private final String mName;
     private final String mDescription;
     private final String mLocation;
@@ -22,6 +23,7 @@ public class Product implements Parcelable {
     private final Uri mThumbnail;
 
     private Product(Parcel in) {
+        this.mId = in.readInt();
         this.mName = in.readString();
         this.mDescription = in.readString();
         this.mLocation = in.readString();
@@ -58,8 +60,9 @@ public class Product implements Parcelable {
      * @param expiration   product post expiration (e.g. YYYY-MM-DD)
      * @param thumbnail    url of the product's thumbnail
      */
-    public Product(String name, String description, String location, String category, String siUnit,
+    public Product(int id, String name, String description, String location, String category, String siUnit,
                    String pricePerUnit, Integer quantity, Date expiration, Uri thumbnail) {
+        mId = id;
         mName = name;
         mDescription = description;
         mLocation = location;
@@ -68,8 +71,11 @@ public class Product implements Parcelable {
         mPricePerUnit = pricePerUnit;
         mQuantity = quantity;
         mExpiration = expiration;
-
         mThumbnail = thumbnail;
+    }
+
+    public int getId() {
+        return mId;
     }
 
     public String getName() {
@@ -104,13 +110,9 @@ public class Product implements Parcelable {
         return mExpiration;
     }
 
-    public Uri getThumbnail() {
-        return mThumbnail;
-    }
-
     @Override
     public String toString() {
-        return "Product{" + "name='" + mName + '\'' + ", description='" + mDescription + '\''
+        return "Product{" + "id+'" + mId + '\'' + "name='" + mName + '\'' + ", description='" + mDescription + '\''
                 + ", price='" + mPricePerUnit + '\'' + ", thumbnail=" + mThumbnail;
     }
 
@@ -143,6 +145,7 @@ public class Product implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mId);
         dest.writeString(mName);
         dest.writeString(mDescription);
         dest.writeString(mLocation);
