@@ -10,7 +10,7 @@ import com.mtesitoo.backend.model.header.Authorization;
 import com.mtesitoo.backend.model.AuthorizedStringRequest;
 import com.mtesitoo.backend.model.Seller;
 import com.mtesitoo.backend.model.URL;
-import com.mtesitoo.backend.model.url.ProductVendorURL;
+import com.mtesitoo.backend.model.url.VendorURL;
 import com.mtesitoo.backend.service.logic.IResponse;
 import com.mtesitoo.backend.service.logic.ISellerService;
 import com.mtesitoo.backend.service.logic.ISellerServiceResponse;
@@ -53,7 +53,7 @@ public class SellerService extends Service implements ISellerService {
     @Override
     public void getSellerInfo(final int sellerId, final IResponse<Seller> callback) {
         mCallback = callback;
-        URL url = new ProductVendorURL(mContext, R.string.path_product_vendor, sellerId);
+        URL url = new VendorURL(mContext, R.string.path_product_vendor, sellerId);
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.GET, url.toString(), listener, errorListener);
 
         stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
