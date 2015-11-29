@@ -12,4 +12,8 @@ public interface IProductService {
     void getProducts(int id, IResponse<List<Product>> callback);
 
     void submitProduct(Product product, IResponse<Product> callback);
+
+    void submitProductImage(Product product, IResponse<Product> callback);
+
+    void deleteProductImage(Product product, String fileName, IResponse<Product> callback);
 }

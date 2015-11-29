@@ -18,6 +18,8 @@
     <string name="params_product_quantity">quantity</string>
     <string name="params_product_meta_title">meta_title</string>
     <string name="params_product_category_ids">category_ids</string>
+    <string name="params_product_image_main">main_product_image</string>
+    <string name="params_product_image_sort">sort_order</string>
 
     <string name="application_json">application/json; charset=utf-8</string>
     <string name="basic_auth">Basic</string>

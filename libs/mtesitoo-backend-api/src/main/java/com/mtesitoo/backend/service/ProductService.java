@@ -14,8 +14,8 @@ import com.mtesitoo.backend.R;
 import com.mtesitoo.backend.model.header.Authorization;
 import com.mtesitoo.backend.model.AuthorizedStringRequest;
 import com.mtesitoo.backend.model.URL;
-import com.mtesitoo.backend.model.url.ProductProductURL;
-import com.mtesitoo.backend.model.url.ProductVendorProductsURL;
+import com.mtesitoo.backend.model.url.ProductImageURL;
+import com.mtesitoo.backend.model.url.VendorProductsURL;
 import com.mtesitoo.backend.service.logic.IProductServiceResponse;
 import com.mtesitoo.backend.service.logic.IResponse;
 import com.mtesitoo.backend.service.logic.IProductService;
@@ -29,7 +29,6 @@ import org.json.JSONException;
  * @author danieldanciu
  */
 public class ProductService extends Service implements IProductService {
-    private static final String TAG = ProductService.class.getSimpleName();
     private IResponse<List<Product>> mCallback;
 
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
@@ -63,7 +62,7 @@ public class ProductService extends Service implements IProductService {
     @Override
     public void getProducts(final int sellerId, final IResponse<List<Product>> callback) {
         mCallback = callback;
-        URL url = new ProductVendorProductsURL(mContext, R.string.path_product_vendor, sellerId);
+        URL url = new VendorProductsURL(mContext, R.string.path_product_vendor, sellerId);
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.GET, url.toString(), listener, errorListener);
 
         stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
@@ -72,7 +71,7 @@ public class ProductService extends Service implements IProductService {
 
     @Override
     public void submitProduct(final Product product, final IResponse<Product> callback) {
-        URL url = new ProductProductURL(mContext, R.string.path_product_product);
+        URL url = new URL(mContext, R.string.path_product_product);
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.POST, url.toString(), listener, errorListener) {
             @Override
             protected Map<String, String> getParams() {
@@ -87,6 +86,33 @@ public class ProductService extends Service implements IProductService {
             }
         };
 
+        stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
+        mRequestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void submitProductImage(final Product product, IResponse<Product> callback) {
+        URL url = new ProductImageURL(mContext, R.string.path_product_product, product.getId());
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.POST, url.toString(), null, errorListener) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put(mContext.getString(R.string.params_product_image_main), "false");
+                params.put(mContext.getString(R.string.params_product_image_sort), "1");
+                return params;
+            }
+        };
+
+        stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
+        mRequestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void deleteProductImage(final Product product, final String fileName, IResponse<Product> callback) {
+        URL url = new ProductImageURL(mContext, R.string.path_product_product, product.getId());
+        url.append("?file=" + fileName);
+
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.DELETE, url.toString(), null, errorListener);
         stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
         mRequestQueue.add(stringRequest);
     }
