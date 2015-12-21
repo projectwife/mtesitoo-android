@@ -2,11 +2,17 @@ package com.mtesitoo.backend.service;
 
 import android.content.Context;
 
+import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import com.mtesitoo.backend.R;
+import com.mtesitoo.backend.cache.Cache;
+import com.mtesitoo.backend.cache.CategoryCache;
+import com.mtesitoo.backend.cache.SessionCache;
+import com.mtesitoo.backend.cache.logic.ICategoryCache;
+import com.mtesitoo.backend.cache.logic.ISessionCache;
 import com.mtesitoo.backend.model.header.Authorization;
 import com.mtesitoo.backend.model.AuthorizedStringRequest;
 import com.mtesitoo.backend.model.URL;
@@ -84,6 +90,16 @@ public class LoginService extends Service implements ILoginService {
                 params.put(mContext.getString(R.string.params_admin_username), username);
                 params.put(mContext.getString(R.string.params_admin_password), password);
                 return params;
+            }
+
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                if(response.headers.containsKey(mContext.getString(R.string.header_set_cookie))) {
+                    ISessionCache cache = new SessionCache(mContext);
+                    cache.storeSession(response.headers.get(mContext.getString(R.string.header_set_cookie)));
+                }
+
+                return super.parseNetworkResponse(response);
             }
         };
 

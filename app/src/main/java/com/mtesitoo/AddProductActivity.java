@@ -24,7 +24,6 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -103,7 +102,8 @@ public class AddProductActivity extends ActionBarActivity implements
                 }
 
                 @Override
-                public void onError(Exception e) {
+                    public void onError(Exception e) {
+
                 }
             });
 

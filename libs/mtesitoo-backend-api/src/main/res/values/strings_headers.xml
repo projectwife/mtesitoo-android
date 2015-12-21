@@ -1,0 +1,11 @@
+<resources>
+    <string name="header_accept">Accept</string>
+    <string name="application_json">application/json; charset=utf-8</string>
+
+    <string name="header_authorization">Authorization</string>
+    <string name="basic_auth">Basic</string>
+    <string name="bearer">Bearer</string>
+
+    <string name="header_cookie">Cookie</string>
+    <string name="header_set_cookie">Set-Cookie</string>
+</resources>

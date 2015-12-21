@@ -1,7 +1,23 @@
 <resources>
     <string name="server">http://104.155.84.193/api/v1</string>
     <string name="path_oauth2_token">/oauth2/token</string>
+
     <string name="path_product_product">/product/product</string>
+    <string name="params_product_name">name</string>
+    <string name="params_product_description">description</string>
+    <string name="params_product_price">price</string>
+    <string name="params_product_quantity">quantity</string>
+    <string name="params_product_meta_title">meta_title</string>
+    <string name="params_product_category_ids">category_ids</string>
+    <string name="params_product_length_class_id">length_class_id</string>
+    <string name="params_product_weight_class_id">weight_class_id</string>
+    <string name="params_product_minimum">minimum</string>
+    <string name="params_product_image_main">main_product_image</string>
+    <string name="params_product_image_sort">sort_order</string>
+    <string name="params_product_status">status</string>
+    <string name="params_product_status_enabled">1</string>
+    <string name="params_product_status_pending">5</string>
+
     <string name="path_product_vendor">/product/vendor</string>
     <string name="path_product_category">/product/category</string>
     <string name="path_admin_login">/admin/login</string>
