@@ -1,61 +1,96 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="250dip"
-    android:paddingBottom="8dip"
-    android:paddingLeft="16dip"
-    android:paddingRight="16dip"
-    android:paddingTop="16dip">
+    android:layout_height="wrap_content"
+    android:background="#e6e6e6"
+    android:id="@+id/product_list_item"
+    android:padding="8dip">
 
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@drawable/stock_product">
+        android:background="#ffffff"
+        android:padding="10dip">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dip"
-            android:background="#8444">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <LinearLayout
+            <TextView
+                android:id="@+id/product_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:orientation="vertical">
+                android:fontFamily="sans-serif-light"
+                android:text="Product Name"
+                android:textColor="#000000"
+                android:textSize="18sp" />
+
+            <ImageView
+                android:id="@+id/product_thumbnail"
+                android:layout_width="150dip"
+                android:layout_height="150dip"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dip"
+                android:scaleType="centerCrop"
+                android:src="@drawable/stock_order" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dip"
+                android:orientation="horizontal">
 
                 <TextView
-                    android:id="@+id/product_name"
+                    android:id="@+id/product_category"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
-                    android:text="Name"
-                    android:textColor="#ffffff"
-                    android:textSize="17dp" />
+                    android:fontFamily="sans-serif-light"
+                    android:text="Product Category"
+                    android:textColor="#000000" />
 
                 <TextView
                     android:id="@+id/product_price"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginLeft="10dip"
+                    android:layout_alignParentRight="true"
+                    android:fontFamily="sans-serif-light"
                     android:text="$$$"
-                    android:textColor="#ffffff"
-                    android:textSize="17dp" />
+                    android:textColor="#000000" />
 
-            </LinearLayout>
+            </RelativeLayout>
 
             <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+                android:id="@+id/product_layout_divider"
+                android:layout_width="350dip"
+                android:layout_height="1dip"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="8dip"
+                android:background="#d9d9d9"></View>
 
-            <ImageView
-                android:id="@+id/product_detail"
-                android:layout_width="wrap_content"
+            <RelativeLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="10dip"
-                android:src="@drawable/navigation_forward" />
+                android:layout_marginTop="8dip"
+                android:orientation="horizontal">
 
+                <TextView
+                    android:id="@+id/product_see_details_link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="sans-serif-light"
+                    android:text="See details"
+                    android:textColor="#000099" />
+
+                <TextView
+                    android:id="@+id/product_see_details_ellipsis_link"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:fontFamily="sans-serif-light"
+                    android:text="..."
+                    android:textColor="#000099" />
+
+            </RelativeLayout>
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>

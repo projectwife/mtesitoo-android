@@ -2,10 +2,13 @@ package com.mtesitoo.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.mtesitoo.ProductDetailActivity;
@@ -24,13 +27,19 @@ import butterknife.OnClick;
 
 public class ProductListAdapter extends ArrayAdapter<Product> {
 
+    private static final int PADDING = 26;
+
     private Context mContext;
+    private float deviceWidth;
     private static ArrayList<Product> mProducts;
 
     public ProductListAdapter(Context context, ArrayList<Product> products) {
         super(context, 0, products);
         mContext = context;
         mProducts = products;
+
+        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
+        deviceWidth = metrics.widthPixels;
     }
 
     public void refresh(ArrayList<Product> products) {
@@ -43,14 +52,32 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
     public View getView(int position, View convertView, ViewGroup parent) {
         Product product = getItem(position);
 
-        if (convertView == null)
+        if (convertView == null) {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.product_list_item, parent, false);
+        }
+
+        if (position == 0) {
+            convertView.setPadding(PADDING, PADDING, PADDING, PADDING / 2);
+        } else {
+            convertView.setPadding(PADDING, PADDING / 2, PADDING, PADDING / 2);
+        }
 
         ViewHolder holder = new ViewHolder(convertView);
         holder.context = mContext;
         holder.product = product;
 
+        ViewGroup.LayoutParams params = holder.itemLayout.getLayoutParams();
+        params.width = (int) deviceWidth;
+
+        params = holder.layoutDivider.getLayoutParams();
+        params.width = (int) (0.85 * deviceWidth);
+
+        params = holder.productThumbnail.getLayoutParams();
+        params.height = (int) (0.4 * deviceWidth);
+        params.width = (int) (0.4 * deviceWidth);
+
         holder.productName.setText(product.getName());
+        holder.productCategory.setText(product.getCategory());
         holder.productPrice.setText(product.getPricePerUnit());
 
         return convertView;
@@ -61,12 +88,20 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         Product product;
         Context context;
 
+        @Bind(R.id.product_list_item)
+        LinearLayout itemLayout;
         @Bind(R.id.product_name)
         TextView productName;
+        @Bind(R.id.product_thumbnail)
+        ImageView productThumbnail;
+        @Bind(R.id.product_category)
+        TextView productCategory;
         @Bind(R.id.product_price)
         TextView productPrice;
+        @Bind(R.id.product_layout_divider)
+        View layoutDivider;
 
-        @OnClick(R.id.product_detail)
+        @OnClick(R.id.product_see_details_link)
         public void onClick(View view) {
             Intent intent = new Intent(context, ProductDetailActivity.class);
             intent.putExtra(context.getString(R.string.bundle_product_key), product);
