@@ -1,18 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.mtesitoo" >
+    package="com.mtesitoo">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme" >
+        android:theme="@style/AppTheme">
         <activity
             android:name=".LoginActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -21,8 +26,7 @@
         </activity>
         <activity
             android:name=".HomeActivity"
-            android:label="@string/app_name" >
-        </activity>
+            android:label="@string/app_name" />
         <activity
             android:name=".ProductDetailActivity"
             android:label="@string/app_name" />
@@ -32,24 +36,22 @@
             android:label="@string/title_activity_add_product" />
         <activity
             android:name=".ProfileActivity"
-            android:label="@string/title_activity_profile" >
-        </activity>
+            android:label="@string/title_activity_profile" />
         <activity
             android:name=".OrderActivity"
-            android:label="@string/title_activity_order" >
-        </activity>
+            android:label="@string/title_activity_order" />
         <activity
             android:name=".OrderDetailActivity"
-            android:label="@string/title_activity_order_detail" >
-        </activity>
+            android:label="@string/title_activity_order_detail" />
         <activity
             android:name=".InfoActivity"
-            android:label="@string/title_activity_info" >
-        </activity>
+            android:label="@string/title_activity_info" />
         <activity
             android:name=".HelpActivity"
-            android:label="@string/title_activity_help" >
-        </activity>
+            android:label="@string/title_activity_help" />
+        <activity
+            android:name=".ProductDetailEditActivity"
+            android:label="@string/app_name" />
     </application>
 
 </manifest>
