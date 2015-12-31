@@ -6,11 +6,9 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.ListView;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
@@ -24,31 +22,18 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
-import com.mtesitoo.adapter.ProductListAdapter;
 import com.mtesitoo.backend.model.Seller;
-import com.mtesitoo.backend.service.ProductService;
-import com.mtesitoo.backend.service.logic.IProductService;
-import com.mtesitoo.backend.service.logic.IResponse;
-import com.mtesitoo.backend.model.Product;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.mtesitoo.fragment.ProductFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
-    private static final String TAG = HomeActivity.class.getSimpleName();
-
-    private ProductListAdapter mProductListAdapter;
     private Context mContext;
     private Seller mSeller;
 
     private AccountHeader headerResult = null;
     private Drawer result = null;
-
-    @Bind(R.id.product_list)
-    ListView mProductList;
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -63,7 +48,9 @@ public class HomeActivity extends AppCompatActivity {
 
         setSupportActionBar(toolbar);
         buildNavigationDrawer();
-        updateProductList();
+
+        ProductFragment f = ProductFragment.newInstance(this, mSeller);
+        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
     }
 
     @Override
@@ -76,7 +63,7 @@ public class HomeActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_new_item) {
+        if (id == R.id.action_add_product) {
             Intent intent = new Intent(this, AddProductActivity.class);
             startActivity(intent);
             return true;
@@ -146,24 +133,5 @@ public class HomeActivity extends AppCompatActivity {
                 .build();
 
         result.updateBadge(3, new StringHolder(10 + ""));
-    }
-
-    public void updateProductList() {
-        IProductService productService = new ProductService(this);
-
-        productService.getProducts(mSeller.getId(), new IResponse<List<Product>>() {
-            @Override
-            public void onResult(List<Product> result) {
-                mProductListAdapter.refresh((ArrayList<Product>) result);
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Log.e(TAG, "Error retrieving products: " + e);
-            }
-        });
-
-        mProductListAdapter = new ProductListAdapter(this, new ArrayList<Product>());
-        mProductList.setAdapter(mProductListAdapter);
     }
 }

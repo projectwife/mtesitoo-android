@@ -1,8 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Tesitoo</string>
-    <string name="action_new_item">New Item</string>
+
+    <string name="action_add_product">Add</string>
+    <string name="action_edit_product">Edit</string>
+    <string name="action_cancel_edit_product">Cancel</string>
+    <string name="action_done_edit_product">Done</string>
+
     <string name="currency_symbol">$</string>
+    <string name="padding">26</string>
 
     <string name="bundle_product_key">key_product_parcel</string>
     <string name="bundle_seller_key">key_seller_parcel</string>
@@ -26,7 +32,6 @@
     <string name="drawer_item_exit">Exit</string>
     <string name="title_activity_profile">ProfileActivity</string>
 
-    <string name="hello_world">Hello world!</string>
     <string name="title_activity_order">OrderActivity</string>
     <string name="title_activity_order_detail">OrderDetailActivity</string>
     <string name="title_activity_info">InfoActivity</string>
