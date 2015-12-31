@@ -27,8 +27,6 @@ import butterknife.OnClick;
 
 public class ProductListAdapter extends ArrayAdapter<Product> {
 
-    private static final int PADDING = 26;
-
     private Context mContext;
     private float deviceWidth;
     private static ArrayList<Product> mProducts;
@@ -56,10 +54,11 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.product_list_item, parent, false);
         }
 
+        int padding = Integer.parseInt(mContext.getString(R.string.padding));
         if (position == 0) {
-            convertView.setPadding(PADDING, PADDING, PADDING, PADDING / 2);
+            convertView.setPadding(padding, padding, padding, padding / 2);
         } else {
-            convertView.setPadding(PADDING, PADDING / 2, PADDING, PADDING / 2);
+            convertView.setPadding(padding, padding / 2, padding, padding / 2);
         }
 
         ViewHolder holder = new ViewHolder(convertView);
