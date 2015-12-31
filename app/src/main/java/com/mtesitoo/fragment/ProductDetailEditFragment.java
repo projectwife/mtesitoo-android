@@ -1,4 +1,4 @@
-package com.mtesitoo;
+package com.mtesitoo.fragment;
 
 import android.app.DatePickerDialog;
 import android.app.Dialog;
@@ -7,10 +7,11 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v7.app.ActionBarActivity;
-import android.support.v7.widget.Toolbar;
+import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.view.LayoutInflater;
 import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +26,7 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
+import com.mtesitoo.R;
 import com.mtesitoo.backend.cache.CategoryCache;
 import com.mtesitoo.backend.cache.logic.ICategoryCache;
 import com.mtesitoo.backend.model.Category;
@@ -42,17 +44,14 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by Nan on 12/28/2015.
+ * Created by Nan on 12/31/2015.
  */
-public class ProductDetailEditActivity extends ActionBarActivity implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
-    private static final int DATE_DIALOG_ID = 999;
+public class ProductDetailEditFragment extends Fragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final String IMAGE_SUFFIX = ".jpg";
     private Product mProduct;
     private File mImage;
 
-    @Bind(R.id.toolbar)
-    Toolbar toolbar;
     @Bind(R.id.product_image_slider_edit)
     SliderLayout mImageSlider;
     @Bind(R.id.product_detail_info_border)
@@ -80,14 +79,33 @@ public class ProductDetailEditActivity extends ActionBarActivity implements Base
     @Bind(R.id.product_detail_expiration_date_edit)
     EditText mProductExpirationDate;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_product_detail_edit);
-        ButterKnife.bind(this);
-        mProduct = getIntent().getExtras().getParcelable(getString(R.string.bundle_product_key));
+    public static ProductDetailEditFragment newInstance(Context context, Product product) {
+        ProductDetailEditFragment fragment = new ProductDetailEditFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(context.getString(R.string.bundle_product_key), product);
+        fragment.setArguments(args);
+        return fragment;
+    }
 
-        setSupportActionBar(toolbar);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = inflater.inflate(R.layout.activity_product_fragment_edit, container, false);
+        ButterKnife.bind(this, view);
+        Bundle args = this.getArguments();
+        mProduct = args.getParcelable(getString(R.string.bundle_product_key));
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
         buildProductCategories();
         buildProductDatePicker();
 
@@ -105,34 +123,31 @@ public class ProductDetailEditActivity extends ActionBarActivity implements Base
     }
 
     @Override
-    protected void onStop() {
+    public void onStop() {
         mImageSlider.stopAutoCycle();
         super.onStop();
     }
 
     @Override
-    protected void onDestroy() {
+    public void onDestroy() {
         super.onDestroy();
         cleanCachedImages();
     }
 
     @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_product_detail_edit, menu);
-        return true;
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        menu.clear();
+        inflater.inflate(R.menu.menu_product_detail_edit, menu);
+        super.onCreateOptionsMenu(menu, inflater);
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_cancel_edit_product) {
-            finish();
-            return true;
-        }
-
-        if (id == R.id.action_done_edit_product) {
-            finish();
+        if (id == R.id.action_done_edit_product || id == R.id.action_cancel_edit_product) {
+            ProductDetailFragment f = ProductDetailFragment.newInstance(getActivity(), mProduct);
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
             return true;
         }
 
@@ -140,18 +155,9 @@ public class ProductDetailEditActivity extends ActionBarActivity implements Base
     }
 
     @Override
-    protected Dialog onCreateDialog(int id) {
-        switch (id) {
-            case DATE_DIALOG_ID:
-                return new DatePickerDialog(this, datePickerListener, 2015, 11, 1);
-        }
-        return null;
-    }
-
-    @Override
     public void onSliderClick(BaseSliderView slider) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(getPackageManager()) != null) {
+        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
             try {
                 buildImageFile();
             } catch (IOException ex) {
@@ -160,7 +166,7 @@ public class ProductDetailEditActivity extends ActionBarActivity implements Base
 
             if (mImage != null) {
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mImage));
-                setResult(RESULT_OK, intent);
+                getActivity().setResult(getActivity().RESULT_OK, intent);
                 startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
             }
         }
@@ -180,7 +186,7 @@ public class ProductDetailEditActivity extends ActionBarActivity implements Base
     }
 
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && data != null) {
             updateImageSlider2();
         }
@@ -196,13 +202,13 @@ public class ProductDetailEditActivity extends ActionBarActivity implements Base
     };
 
     public void buildProductCategories() {
-        ICategoryCache cache = new CategoryCache(this);
+        ICategoryCache cache = new CategoryCache(getActivity());
         List<Category> categories = cache.getCategories();
-        RadioGroup categoryButtonGroup = new RadioGroup(this);
+        RadioGroup categoryButtonGroup = new RadioGroup(getActivity());
 
         for (int i = 0; i < categories.size(); i++) {
             String name = categories.get(i).getName();
-            RadioButton categoryButton = new RadioButton(this);
+            RadioButton categoryButton = new RadioButton(getActivity());
 
             if (mProduct.getCategory() != null && mProduct.getCategory().compareTo(name) == 0) {
                 categoryButton.setSelected(true);
@@ -220,7 +226,7 @@ public class ProductDetailEditActivity extends ActionBarActivity implements Base
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus == true) {
-                    showDialog(DATE_DIALOG_ID);
+                    new DatePickerDialog(getActivity(), datePickerListener, 2015, 11, 1).show();
                 }
             }
         });
@@ -229,13 +235,13 @@ public class ProductDetailEditActivity extends ActionBarActivity implements Base
     public void buildImageFile() throws IOException {
         String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
         String imageFileName = "JPEG_" + timeStamp + "_" + IMAGE_SUFFIX;
-        FileOutputStream fos = openFileOutput(imageFileName, Context.MODE_WORLD_WRITEABLE);
+        FileOutputStream fos = getActivity().openFileOutput(imageFileName, Context.MODE_WORLD_WRITEABLE);
         fos.close();
-        mImage = new File(getFilesDir(), imageFileName);
+        mImage = new File(getActivity().getFilesDir(), imageFileName);
     }
 
     public void cleanCachedImages() {
-        File[] files = getCacheDir().listFiles();
+        File[] files = getActivity().getFilesDir().listFiles();
         if (files != null) {
             for (File file : files) {
                 if (file.getName().matches(".*?" + IMAGE_SUFFIX)) {
@@ -291,7 +297,7 @@ public class ProductDetailEditActivity extends ActionBarActivity implements Base
         urls.add("http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
 
         for (String url : urls) {
-            DefaultSliderView sliderView = new DefaultSliderView(this);
+            DefaultSliderView sliderView = new DefaultSliderView(getActivity());
             sliderView
                     .image(url)
                     .setScaleType(BaseSliderView.ScaleType.Fit)
@@ -305,7 +311,7 @@ public class ProductDetailEditActivity extends ActionBarActivity implements Base
 
     public void updateImageSlider2() {
         mImageSlider.removeAllSliders();
-        DefaultSliderView sliderView = new DefaultSliderView(this);
+        DefaultSliderView sliderView = new DefaultSliderView(getActivity());
         sliderView
                 .image(mImage)
                 .setScaleType(BaseSliderView.ScaleType.Fit)

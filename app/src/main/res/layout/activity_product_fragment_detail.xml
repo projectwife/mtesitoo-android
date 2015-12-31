@@ -1,0 +1,254 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#e6e6e6">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/toolbar">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.daimajia.slider.library.SliderLayout
+                android:id="@+id/product_image_slider"
+                android:layout_width="match_parent"
+                android:layout_height="300dip" />
+
+            <RelativeLayout
+                android:id="@+id/product_detail_info_border"
+                style="@style/CardBorderTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    style="@style/CardTheme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dip"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextBoldTheme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Name" />
+
+                        <TextView
+                            android:id="@+id/product_detail_name"
+                            style="@style/TextTheme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="..." />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dip"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextBoldTheme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Description" />
+
+                        <TextView
+                            android:id="@+id/product_detail_description"
+                            style="@style/TextTheme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="..." />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dip"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextBoldTheme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Location" />
+
+                        <TextView
+                            android:id="@+id/product_detail_location"
+                            style="@style/TextTheme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="..." />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dip"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextBoldTheme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Category" />
+
+                        <TextView
+                            android:id="@+id/product_detail_category"
+                            style="@style/TextTheme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="..." />
+                    </RelativeLayout>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/product_detail_price_border"
+                style="@style/CardBorderTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    style="@style/CardTheme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dip"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextBoldTheme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="SI Unit" />
+
+                        <TextView
+                            android:id="@+id/product_detail_unit"
+                            style="@style/TextTheme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="..." />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dip"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextBoldTheme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Quantity" />
+
+                        <TextView
+                            android:id="@+id/product_detail_quantity"
+                            style="@style/TextTheme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="..." />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dip"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextBoldTheme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Price per Unit" />
+
+                        <TextView
+                            android:id="@+id/product_detail_price"
+                            style="@style/TextTheme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="..." />
+                    </RelativeLayout>
+                </LinearLayout>
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/product_detail_date_border"
+                style="@style/CardBorderTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    style="@style/CardTheme"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dip"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextBoldTheme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Posting Date" />
+
+                        <TextView
+                            android:id="@+id/product_detail_posting_date"
+                            style="@style/TextTheme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="..." />
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dip"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextBoldTheme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Expiration Date" />
+
+                        <TextView
+                            android:id="@+id/product_detail_expiration_date"
+                            style="@style/TextTheme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:text="..." />
+                    </RelativeLayout>
+                </LinearLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
+</RelativeLayout>

@@ -4,15 +4,6 @@
     android:layout_height="match_parent"
     android:background="#e6e6e6">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:background="?attr/colorPrimary"
-        android:elevation="4dp"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light" />
-
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -195,7 +186,8 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true" />
+                            android:layout_centerVertical="true"
+                            android:inputType="number" />
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -218,7 +210,8 @@
                             android:layout_height="wrap_content"
                             android:layout_alignParentEnd="true"
                             android:layout_alignParentRight="true"
-                            android:layout_centerVertical="true" />
+                            android:layout_centerVertical="true"
+                            android:inputType="numberDecimal" />
                     </RelativeLayout>
                 </LinearLayout>
             </RelativeLayout>

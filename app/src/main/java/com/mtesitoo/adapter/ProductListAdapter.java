@@ -11,7 +11,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.mtesitoo.ProductDetailActivity;
+import com.mtesitoo.ProductActivity;
 import com.mtesitoo.R;
 import com.mtesitoo.backend.model.Product;
 
@@ -102,7 +102,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
 
         @OnClick(R.id.product_see_details_link)
         public void onClick(View view) {
-            Intent intent = new Intent(context, ProductDetailActivity.class);
+            Intent intent = new Intent(context, ProductActivity.class);
             intent.putExtra(context.getString(R.string.bundle_product_key), product);
             context.startActivity(intent);
         }

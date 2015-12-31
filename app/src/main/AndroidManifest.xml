@@ -28,7 +28,7 @@
             android:name=".HomeActivity"
             android:label="@string/app_name" />
         <activity
-            android:name=".ProductDetailActivity"
+            android:name=".ProductActivity"
             android:label="@string/app_name" />
         <activity
             android:name=".AddProductActivity"
@@ -49,9 +49,6 @@
         <activity
             android:name=".HelpActivity"
             android:label="@string/title_activity_help" />
-        <activity
-            android:name=".ProductDetailEditActivity"
-            android:label="@string/app_name" />
     </application>
 
 </manifest>
