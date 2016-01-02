@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -23,7 +24,11 @@ import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mtesitoo.backend.model.Seller;
+import com.mtesitoo.fragment.HelpFragment;
+import com.mtesitoo.fragment.InfoFragment;
+import com.mtesitoo.fragment.OrderFragment;
 import com.mtesitoo.fragment.ProductFragment;
+import com.mtesitoo.fragment.ProfileFragment;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -92,37 +97,71 @@ public class HomeActivity extends AppCompatActivity {
 
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_home).withIcon(GoogleMaterial.Icon.gmd_home).withIdentifier(1).withSelectable(false),
-                        new SectionDrawerItem().withName(R.string.drawer_item_section_header_account),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_profile).withIcon(GoogleMaterial.Icon.gmd_face).withIdentifier(2).withSelectable(false),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_orders).withIcon(GoogleMaterial.Icon.gmd_history).withIdentifier(3).withBadgeStyle(new BadgeStyle().withTextColor(Color.WHITE).withColorRes(R.color.md_red_700)),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_new).withIcon(GoogleMaterial.Icon.gmd_add).withIdentifier(4),
-                        new SectionDrawerItem().withName(R.string.drawer_item_section_header_app),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_info).withIcon(GoogleMaterial.Icon.gmd_info_outline).withIdentifier(5).withSelectable(false),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_help).withIcon(GoogleMaterial.Icon.gmd_help_outline).withIdentifier(6).withSelectable(false),
-                        new SecondaryDrawerItem().withName(R.string.drawer_item_exit).withIcon(GoogleMaterial.Icon.gmd_exit_to_app).withIdentifier(7)
+                        new SecondaryDrawerItem()
+                                .withName(R.string.drawer_item_home)
+                                .withIcon(GoogleMaterial.Icon.gmd_home)
+                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_home_index)))
+                                .withSelectable(false),
+                        new SectionDrawerItem()
+                                .withName(R.string.drawer_item_section_header_account),
+                        new SecondaryDrawerItem()
+                                .withName(R.string.drawer_item_profile)
+                                .withIcon(GoogleMaterial.Icon.gmd_face)
+                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_profile_index)))
+                                .withSelectable(false),
+                        new SecondaryDrawerItem()
+                                .withName(R.string.drawer_item_orders)
+                                .withIcon(GoogleMaterial.Icon.gmd_history)
+                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_order_index)))
+                                .withBadgeStyle(new BadgeStyle()
+                                        .withTextColor(Color.WHITE)
+                                        .withColorRes(R.color.md_red_700)),
+                        new SecondaryDrawerItem()
+                                .withName(R.string.drawer_item_new)
+                                .withIcon(GoogleMaterial.Icon.gmd_add)
+                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_add_product_index))),
+                        new SectionDrawerItem()
+                                .withName(R.string.drawer_item_section_header_app),
+                        new SecondaryDrawerItem()
+                                .withName(R.string.drawer_item_info)
+                                .withIcon(GoogleMaterial.Icon.gmd_info_outline)
+                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_info_index)))
+                                .withSelectable(false),
+                        new SecondaryDrawerItem()
+                                .withName(R.string.drawer_item_help)
+                                .withIcon(GoogleMaterial.Icon.gmd_help_outline)
+                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_help_index)))
+                                .withSelectable(false),
+                        new SecondaryDrawerItem()
+                                .withName(R.string.drawer_item_exit)
+                                .withIcon(GoogleMaterial.Icon.gmd_exit_to_app)
+                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_exit_index)))
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
                     public boolean onItemClick(View view, int position, IDrawerItem drawerItem) {
                         if (drawerItem != null) {
-                            Intent intent = null;
-                            if (drawerItem.getIdentifier() == 2) {
-                                intent = new Intent(mContext, ProfileActivity.class);
-                            } else if (drawerItem.getIdentifier() == 3) {
-                                intent = new Intent(mContext, OrderActivity.class);
-                            } else if (drawerItem.getIdentifier() == 4) {
-                                intent = new Intent(mContext, AddProductActivity.class);
-                            } else if (drawerItem.getIdentifier() == 5) {
-                                intent = new Intent(mContext, InfoActivity.class);
-                            } else if (drawerItem.getIdentifier() == 6) {
-                                intent = new Intent(mContext, HelpActivity.class);
-                            } else if (drawerItem.getIdentifier() == 7) {
+                            Fragment f = null;
+
+                            if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_home_index))) {
+                                f = ProductFragment.newInstance(mContext, mSeller);
+                            } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_profile_index))) {
+                                f = ProfileFragment.newInstance();
+                            } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_order_index))) {
+                                f = OrderFragment.newInstance(mContext, mSeller);
+                            } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_add_product_index))) {
+                                Intent intent = new Intent(mContext, AddProductActivity.class);
+                                mContext.startActivity(intent);
+                            } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_info_index))) {
+                                f = InfoFragment.newInstance();
+                            } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_help_index))) {
+                                f = HelpFragment.newInstance();
+                            } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_exit_index))) {
                                 finish();
                             }
 
-                            if (intent != null) {
-                                mContext.startActivity(intent);
+                            if (f != null) {
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                             }
                         }
 

@@ -4,6 +4,14 @@
 
     <string name="action_add_product">Add</string>
 
+    <string name="menu_item_home_index">1</string>
+    <string name="menu_item_profile_index">2</string>
+    <string name="menu_item_order_index">3</string>
+    <string name="menu_item_add_product_index">4</string>
+    <string name="menu_item_info_index">5</string>
+    <string name="menu_item_help_index">6</string>
+    <string name="menu_item_exit_index">7</string>
+
     <string name="drawer_item_section_header_browse">Browse</string>
     <string name="drawer_item_section_header_account">Account</string>
     <string name="drawer_item_section_header_app">App</string>
