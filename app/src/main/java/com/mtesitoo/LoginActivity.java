@@ -63,6 +63,7 @@ public class LoginActivity extends AppCompatActivity {
                     public void onResult(Seller result) {
                         intent.putExtra(mContext.getString(R.string.bundle_seller_key), result);
                         mContext.startActivity(intent);
+                        finish();
                     }
 
                     @Override
