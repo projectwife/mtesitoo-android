@@ -1,7 +1,6 @@
 package com.mtesitoo.fragment;
 
 import android.app.DatePickerDialog;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -31,13 +30,10 @@ import com.mtesitoo.backend.cache.CategoryCache;
 import com.mtesitoo.backend.cache.logic.ICategoryCache;
 import com.mtesitoo.backend.model.Category;
 import com.mtesitoo.backend.model.Product;
+import com.mtesitoo.helper.FileHelper;
+import com.mtesitoo.model.ImageFile;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -48,9 +44,11 @@ import butterknife.ButterKnife;
  */
 public class ProductDetailEditFragment extends Fragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final String IMAGE_SUFFIX = ".jpg";
+    private static final int MAX_IMAGES = 3;
+    private static final int IMAGE_SLIDER_DURATION = 8000;
+
     private Product mProduct;
-    private File mImage;
+    private ArrayList<ImageFile> mImages;
 
     @Bind(R.id.product_image_slider_edit)
     SliderLayout mImageSlider;
@@ -91,6 +89,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        mImages = new ArrayList<>(MAX_IMAGES);
     }
 
     @Override
@@ -108,6 +107,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
 
         buildProductCategories();
         buildProductDatePicker();
+        buildImageSlider();
 
         mProductName.setText(mProduct.getName());
         mProductDescription.setText(mProduct.getDescription());
@@ -119,7 +119,6 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
 
         updateEditTextLengths();
         updateBorderPaddings();
-        updateImageSlider();
     }
 
     @Override
@@ -131,7 +130,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     @Override
     public void onDestroy() {
         super.onDestroy();
-        cleanCachedImages();
+        FileHelper.clean(getActivity());
     }
 
     @Override
@@ -158,16 +157,19 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     public void onSliderClick(BaseSliderView slider) {
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-            try {
-                buildImageFile();
-            } catch (IOException ex) {
-                return;
-            }
+            ImageFile image = null;
 
-            if (mImage != null) {
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mImage));
-                getActivity().setResult(getActivity().RESULT_OK, intent);
-                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+            try {
+                image = mImages.get(mImageSlider.getCurrentPosition());
+            } catch (IndexOutOfBoundsException e) {
+                image = new ImageFile(getActivity());
+                mImages.add(image);
+            } finally {
+                if (image != null) {
+                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(image));
+                    getActivity().setResult(getActivity().RESULT_OK, intent);
+                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                }
             }
         }
     }
@@ -188,7 +190,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == REQUEST_IMAGE_CAPTURE && data != null) {
-            updateImageSlider2();
+            updateImageSlider();
         }
     }
 
@@ -232,23 +234,21 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         });
     }
 
-    public void buildImageFile() throws IOException {
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_" + IMAGE_SUFFIX;
-        FileOutputStream fos = getActivity().openFileOutput(imageFileName, Context.MODE_WORLD_WRITEABLE);
-        fos.close();
-        mImage = new File(getActivity().getFilesDir(), imageFileName);
-    }
+    public void buildImageSlider() {
+        ArrayList<String> urls = new ArrayList<>();
+        urls.add("http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
+        urls.add("http://tvfiles.alphacoders.com/100/hdclearart-10.png");
 
-    public void cleanCachedImages() {
-        File[] files = getActivity().getFilesDir().listFiles();
-        if (files != null) {
-            for (File file : files) {
-                if (file.getName().matches(".*?" + IMAGE_SUFFIX)) {
-                    file.delete();
-                }
-            }
+        for (String url : urls) {
+            DefaultSliderView sliderView = new DefaultSliderView(getActivity());
+            sliderView
+                    .image(url)
+                    .setScaleType(BaseSliderView.ScaleType.Fit)
+                    .setOnSliderClickListener(this);
+            mImageSlider.addSlider(sliderView);
         }
+
+        mImageSlider.setDuration(IMAGE_SLIDER_DURATION);
     }
 
     public void updateEditTextLengths() {
@@ -290,35 +290,17 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     }
 
     public void updateImageSlider() {
-        ArrayList<String> urls = new ArrayList<>();
-        urls.add("http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
-        urls.add("http://tvfiles.alphacoders.com/100/hdclearart-10.png");
-        urls.add("http://cdn3.nflximg.net/images/3093/2043093.jpg");
-        urls.add("http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
+        mImageSlider.removeAllSliders();
 
-        for (String url : urls) {
+        for (ImageFile image : mImages) {
             DefaultSliderView sliderView = new DefaultSliderView(getActivity());
             sliderView
-                    .image(url)
+                    .image(image)
                     .setScaleType(BaseSliderView.ScaleType.Fit)
                     .setOnSliderClickListener(this);
             mImageSlider.addSlider(sliderView);
         }
 
-        mImageSlider.setDuration(8000);
-        mImageSlider.addOnPageChangeListener(this);
-    }
-
-    public void updateImageSlider2() {
-        mImageSlider.removeAllSliders();
-        DefaultSliderView sliderView = new DefaultSliderView(getActivity());
-        sliderView
-                .image(mImage)
-                .setScaleType(BaseSliderView.ScaleType.Fit)
-                .setOnSliderClickListener(this);
-        mImageSlider.addSlider(sliderView);
-
-        mImageSlider.setDuration(8000);
-        mImageSlider.addOnPageChangeListener(this);
+        mImageSlider.setDuration(IMAGE_SLIDER_DURATION);
     }
 }

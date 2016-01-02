@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="action_edit_product">Edit</string>
+    <string name="action_cancel_edit_product">Cancel</string>
+    <string name="action_done_edit_product">Done</string>
+</resources>
