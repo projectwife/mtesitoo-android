@@ -24,9 +24,9 @@ public class FileHelper {
         if (files != null) {
             for (File file : files) {
                 int i = file.getName().lastIndexOf('.');
-                String type = file.getName().substring(i+1);
+                String type = file.getName().substring(i);
 
-                if (fileTypes.get(type) == true) {
+                if (fileTypes.get(type) != null && fileTypes.get(type) == true) {
                     file.delete();
                 }
             }
