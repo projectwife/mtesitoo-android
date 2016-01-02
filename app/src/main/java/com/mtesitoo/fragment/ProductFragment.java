@@ -55,7 +55,7 @@ public class ProductFragment extends ListFragment {
         updateProductList();
     }
 
-    public void updateProductList() {
+    private void updateProductList() {
         IProductService productService = new ProductService(getActivity());
 
         productService.getProducts(mSeller.getId(), new IResponse<List<Product>>() {

@@ -203,7 +203,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         }
     };
 
-    public void buildProductCategories() {
+    private void buildProductCategories() {
         ICategoryCache cache = new CategoryCache(getActivity());
         List<Category> categories = cache.getCategories();
         RadioGroup categoryButtonGroup = new RadioGroup(getActivity());
@@ -223,7 +223,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         mProductCategoryContainer.addView(categoryButtonGroup);
     }
 
-    public void buildProductDatePicker() {
+    private void buildProductDatePicker() {
         mProductExpirationDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
@@ -234,7 +234,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         });
     }
 
-    public void buildImageSlider() {
+    private void buildImageSlider() {
         ArrayList<String> urls = new ArrayList<>();
         urls.add("http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
         urls.add("http://tvfiles.alphacoders.com/100/hdclearart-10.png");
@@ -251,7 +251,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         mImageSlider.setDuration(IMAGE_SLIDER_DURATION);
     }
 
-    public void updateEditTextLengths() {
+    private void updateEditTextLengths() {
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         ViewGroup.LayoutParams params = mProductName.getLayoutParams();
         params.width = (int) (metrics.widthPixels * 0.5);
@@ -278,7 +278,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         params.width = (int) (metrics.widthPixels * 0.5);
     }
 
-    public void updateBorderPaddings() {
+    private void updateBorderPaddings() {
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         ViewGroup.LayoutParams params = mImageSlider.getLayoutParams();
         params.height = (int) (metrics.widthPixels * 0.65);
@@ -289,7 +289,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         mDateBorder.setPadding(padding, padding / 2, padding, padding);
     }
 
-    public void updateImageSlider() {
+    private void updateImageSlider() {
         mImageSlider.removeAllSliders();
 
         for (ImageFile image : mImages) {

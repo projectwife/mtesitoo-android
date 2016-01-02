@@ -121,7 +121,7 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
     public void onPageScrollStateChanged(int state) {
     }
 
-    public void updateBorderPaddings() {
+    private void updateBorderPaddings() {
         DisplayMetrics metrics = getResources().getDisplayMetrics();
         ViewGroup.LayoutParams params = mImageSlider.getLayoutParams();
         params.height = (int) (metrics.widthPixels * 0.65);
@@ -132,7 +132,7 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
         mDateBorder.setPadding(padding, padding / 2, padding, padding);
     }
 
-    public void updateImageSlider() {
+    private void updateImageSlider() {
         ArrayList<String> urls = new ArrayList<>();
         urls.add("http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
         urls.add("http://tvfiles.alphacoders.com/100/hdclearart-10.png");
