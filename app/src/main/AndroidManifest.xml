@@ -35,20 +35,8 @@
             android:configChanges="orientation|screenSize"
             android:label="@string/title_activity_add_product" />
         <activity
-            android:name=".ProfileActivity"
-            android:label="@string/title_activity_profile" />
-        <activity
             android:name=".OrderActivity"
             android:label="@string/title_activity_order" />
-        <activity
-            android:name=".OrderDetailActivity"
-            android:label="@string/title_activity_order_detail" />
-        <activity
-            android:name=".InfoActivity"
-            android:label="@string/title_activity_info" />
-        <activity
-            android:name=".HelpActivity"
-            android:label="@string/title_activity_help" />
     </application>
 
 </manifest>
