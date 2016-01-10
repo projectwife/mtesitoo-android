@@ -4,7 +4,6 @@ import android.content.Context;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
-import com.android.volley.VolleyError;
 
 import com.mtesitoo.backend.R;
 import com.mtesitoo.backend.cache.SessionCache;
@@ -12,11 +11,8 @@ import com.mtesitoo.backend.cache.logic.ISessionCache;
 import com.mtesitoo.backend.model.header.Authorization;
 import com.mtesitoo.backend.model.AuthorizedStringRequest;
 import com.mtesitoo.backend.model.URL;
-import com.mtesitoo.backend.service.logic.ILoginServiceResponse;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.ILoginRequest;
-
-import org.json.JSONException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -25,61 +21,15 @@ import java.util.Map;
  * Api-based implementation of {@link ILoginRequest}
  */
 public class LoginRequest extends Request implements ILoginRequest {
-    /**
-     * Caching oauth tokens for the lifetime of the app, since we set OpenCart to never expire tokens.
-     */
-    private String mOauthToken;
-    private ICallback<String> mCallback;
-
-    private Response.ErrorListener errorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            mCallback.onError(error);
-        }
-    };
-
-    private Response.Listener tokenListener = new Response.Listener<String>() {
-        @Override
-        public void onResponse(String response) {
-            try {
-                ILoginServiceResponse loginServiceResponse = new LoginResponse();
-                String oauthToken = loginServiceResponse.parseToken(response);
-                LoginRequest.this.mOauthToken = oauthToken;
-
-                if (mCallback != null)
-                    mCallback.onResult(oauthToken);
-            } catch (JSONException e) {
-                if (mCallback != null)
-                    mCallback.onError(e);
-            }
-        }
-    };
-
-    private Response.Listener authenticationListener = new Response.Listener<String>() {
-        @Override
-        public void onResponse(String response) {
-            try {
-                ILoginServiceResponse loginServiceResponse = new LoginResponse();
-                String vendorId = loginServiceResponse.parseResponse(response);
-
-                if (mCallback != null)
-                    mCallback.onResult(vendorId);
-            } catch (JSONException e) {
-                if (mCallback != null)
-                    mCallback.onError(e);
-            }
-        }
-    };
-
     public LoginRequest(Context context) {
         super(context);
     }
 
     public void authenticateUser(final String username, final String password, final ICallback<String> callback) {
-        mCallback = callback;
         URL url = new URL(mContext, R.string.path_admin_login);
+        LoginResponse response = new LoginResponse(callback, LoginResponse.TYPE_AUTHENTICATE);
 
-        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), authenticationListener, errorListener) {
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), response, response) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
@@ -90,7 +40,7 @@ public class LoginRequest extends Request implements ILoginRequest {
 
             @Override
             protected Response<String> parseNetworkResponse(NetworkResponse response) {
-                if(response.headers.containsKey(mContext.getString(R.string.header_set_cookie))) {
+                if (response.headers.containsKey(mContext.getString(R.string.header_set_cookie))) {
                     ISessionCache cache = new SessionCache(mContext);
                     cache.storeSession(response.headers.get(mContext.getString(R.string.header_set_cookie)));
                 }
@@ -104,16 +54,10 @@ public class LoginRequest extends Request implements ILoginRequest {
     }
 
     public void getAuthToken(final ICallback<String> callback) {
-        mCallback = callback;
-
-        if (mOauthToken != null) {
-            mCallback.onResult(mOauthToken);
-            return;
-        }
-
         //TODO: Add support for HTTPS requests
         URL url = new URL(mContext, R.string.path_oauth2_token);
-        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), tokenListener, errorListener);
+        LoginResponse response = new LoginResponse(callback, LoginResponse.TYPE_TOKEN);
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), response, response);
         stringRequest.setAuthorization(new Authorization(mContext, null).toString());
         mRequestQueue.add(stringRequest);
     }

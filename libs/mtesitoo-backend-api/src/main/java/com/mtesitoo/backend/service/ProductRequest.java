@@ -2,9 +2,6 @@ package com.mtesitoo.backend.service;
 
 import android.content.Context;
 
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +12,6 @@ import com.mtesitoo.backend.model.AuthorizedStringRequest;
 import com.mtesitoo.backend.model.URL;
 import com.mtesitoo.backend.model.url.ProductImageURL;
 import com.mtesitoo.backend.model.url.VendorProductsURL;
-import com.mtesitoo.backend.service.logic.IProductServiceResponse;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.IProductRequest;
 import com.mtesitoo.backend.model.Product;
@@ -28,31 +24,6 @@ import org.json.JSONException;
  * @author danieldanciu
  */
 public class ProductRequest extends Request implements IProductRequest {
-    private ICallback<List<Product>> mCallback;
-
-    private Response.ErrorListener errorListener = new Response.ErrorListener() {
-        @Override
-        public void onErrorResponse(VolleyError error) {
-            mCallback.onError(error);
-        }
-    };
-
-    private Response.Listener listener = new Response.Listener<String>() {
-        @Override
-        public void onResponse(String response) {
-            try {
-                IProductServiceResponse productServiceResponse = new ProductResponse();
-                List<Product> products = productServiceResponse.parseResponse(response);
-
-                if (mCallback != null)
-                    mCallback.onResult(products);
-            } catch (JSONException e) {
-                if (mCallback != null)
-                    mCallback.onError(e);
-            }
-        }
-    };
-
     public ProductRequest(Context context) {
         super(context);
         mILoginRequest = new LoginRequest(mContext);
@@ -60,9 +31,9 @@ public class ProductRequest extends Request implements IProductRequest {
 
     @Override
     public void getProducts(final int sellerId, final ICallback<List<Product>> callback) {
-        mCallback = callback;
         URL url = new VendorProductsURL(mContext, R.string.path_product_vendor, sellerId);
-        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.GET, url.toString(), listener, errorListener);
+        ProductResponse response = new ProductResponse(callback);
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.GET, url.toString(), response, response);
 
         stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
         mRequestQueue.add(stringRequest);
@@ -71,7 +42,8 @@ public class ProductRequest extends Request implements IProductRequest {
     @Override
     public void submitProduct(final Product product, final ICallback<Product> callback) {
         URL url = new URL(mContext, R.string.path_product_product);
-        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), listener, errorListener) {
+        ProductResponse response = new ProductResponse(null);
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), response, response) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
@@ -94,7 +66,8 @@ public class ProductRequest extends Request implements IProductRequest {
     @Override
     public void submitProductImage(final Product product, ICallback<Product> callback) {
         URL url = new ProductImageURL(mContext, R.string.path_product_product, product.getId());
-        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), null, errorListener) {
+        ProductResponse response = new ProductResponse(null);
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), null, response) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
@@ -111,9 +84,10 @@ public class ProductRequest extends Request implements IProductRequest {
     @Override
     public void deleteProductImage(final Product product, final String fileName, ICallback<Product> callback) {
         URL url = new ProductImageURL(mContext, R.string.path_product_product, product.getId());
+        ProductResponse response = new ProductResponse(null);
         url.append("?file=" + fileName);
 
-        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.DELETE, url.toString(), null, errorListener);
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.DELETE, url.toString(), null, response);
         stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
         mRequestQueue.add(stringRequest);
     }
