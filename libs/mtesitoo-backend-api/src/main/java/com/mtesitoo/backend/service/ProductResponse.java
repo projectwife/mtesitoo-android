@@ -16,7 +16,7 @@ import java.util.List;
 /**
  * Created by Nan on 9/7/2015.
  */
-public class ProductServiceResponse implements IProductServiceResponse {
+public class ProductResponse implements IProductServiceResponse {
     public List<Product> parseResponse(String response) throws JSONException {
         JSONArray jsonProducts = new JSONArray(response);
 

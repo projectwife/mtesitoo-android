@@ -9,7 +9,7 @@ import org.json.JSONObject;
 /**
  * Created by Nan on 9/13/2015.
  */
-public class SellerServiceResponse implements ISellerServiceResponse {
+public class SellerResponse implements ISellerServiceResponse {
     public Seller parseResponse(String response) throws JSONException {
         JSONObject jsonResponse = new JSONObject(response);
         JSONObject jsonSellerObject = jsonResponse.getJSONObject("vendor");

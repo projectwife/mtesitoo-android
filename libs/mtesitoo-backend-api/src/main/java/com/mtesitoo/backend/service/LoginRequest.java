@@ -3,22 +3,18 @@ package com.mtesitoo.backend.service;
 import android.content.Context;
 
 import com.android.volley.NetworkResponse;
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import com.mtesitoo.backend.R;
-import com.mtesitoo.backend.cache.Cache;
-import com.mtesitoo.backend.cache.CategoryCache;
 import com.mtesitoo.backend.cache.SessionCache;
-import com.mtesitoo.backend.cache.logic.ICategoryCache;
 import com.mtesitoo.backend.cache.logic.ISessionCache;
 import com.mtesitoo.backend.model.header.Authorization;
 import com.mtesitoo.backend.model.AuthorizedStringRequest;
 import com.mtesitoo.backend.model.URL;
 import com.mtesitoo.backend.service.logic.ILoginServiceResponse;
-import com.mtesitoo.backend.service.logic.IResponse;
-import com.mtesitoo.backend.service.logic.ILoginService;
+import com.mtesitoo.backend.service.logic.ICallback;
+import com.mtesitoo.backend.service.logic.ILoginRequest;
 
 import org.json.JSONException;
 
@@ -26,14 +22,14 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Api-based implementation of {@link ILoginService}
+ * Api-based implementation of {@link ILoginRequest}
  */
-public class LoginService extends Service implements ILoginService {
+public class LoginRequest extends Request implements ILoginRequest {
     /**
      * Caching oauth tokens for the lifetime of the app, since we set OpenCart to never expire tokens.
      */
     private String mOauthToken;
-    private IResponse<String> mCallback;
+    private ICallback<String> mCallback;
 
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
@@ -46,9 +42,9 @@ public class LoginService extends Service implements ILoginService {
         @Override
         public void onResponse(String response) {
             try {
-                ILoginServiceResponse loginServiceResponse = new LoginServiceResponse();
+                ILoginServiceResponse loginServiceResponse = new LoginResponse();
                 String oauthToken = loginServiceResponse.parseToken(response);
-                LoginService.this.mOauthToken = oauthToken;
+                LoginRequest.this.mOauthToken = oauthToken;
 
                 if (mCallback != null)
                     mCallback.onResult(oauthToken);
@@ -63,7 +59,7 @@ public class LoginService extends Service implements ILoginService {
         @Override
         public void onResponse(String response) {
             try {
-                ILoginServiceResponse loginServiceResponse = new LoginServiceResponse();
+                ILoginServiceResponse loginServiceResponse = new LoginResponse();
                 String vendorId = loginServiceResponse.parseResponse(response);
 
                 if (mCallback != null)
@@ -75,15 +71,15 @@ public class LoginService extends Service implements ILoginService {
         }
     };
 
-    public LoginService(Context context) {
+    public LoginRequest(Context context) {
         super(context);
     }
 
-    public void authenticateUser(final String username, final String password, final IResponse<String> callback) {
+    public void authenticateUser(final String username, final String password, final ICallback<String> callback) {
         mCallback = callback;
         URL url = new URL(mContext, R.string.path_admin_login);
 
-        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.POST, url.toString(), authenticationListener, errorListener) {
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), authenticationListener, errorListener) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
@@ -107,7 +103,7 @@ public class LoginService extends Service implements ILoginService {
         mRequestQueue.add(stringRequest);
     }
 
-    public void getAuthToken(final IResponse<String> callback) {
+    public void getAuthToken(final ICallback<String> callback) {
         mCallback = callback;
 
         if (mOauthToken != null) {
@@ -117,7 +113,7 @@ public class LoginService extends Service implements ILoginService {
 
         //TODO: Add support for HTTPS requests
         URL url = new URL(mContext, R.string.path_oauth2_token);
-        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.POST, url.toString(), tokenListener, errorListener);
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), tokenListener, errorListener);
         stringRequest.setAuthorization(new Authorization(mContext, null).toString());
         mRequestQueue.add(stringRequest);
     }

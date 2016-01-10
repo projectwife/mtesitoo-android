@@ -13,7 +13,7 @@ import java.util.List;
 /**
  * Created by Nan on 9/19/2015.
  */
-public class CategoryServiceResponse implements ICategoryServiceResponse {
+public class CategoryResponse implements ICategoryServiceResponse {
     public List<Category> parseResponse(String response) throws JSONException {
         JSONObject jsonResponse = new JSONObject(response);
         JSONArray jsonCategories = jsonResponse.getJSONArray("categories");

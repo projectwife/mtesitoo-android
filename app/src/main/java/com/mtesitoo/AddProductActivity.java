@@ -32,9 +32,9 @@ import android.widget.Button;
 import com.mtesitoo.backend.cache.CategoryCache;
 import com.mtesitoo.backend.cache.logic.ICategoryCache;
 import com.mtesitoo.backend.model.Category;
-import com.mtesitoo.backend.service.ProductService;
-import com.mtesitoo.backend.service.logic.IProductService;
-import com.mtesitoo.backend.service.logic.IResponse;
+import com.mtesitoo.backend.service.ProductRequest;
+import com.mtesitoo.backend.service.logic.IProductRequest;
+import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.model.Product;
 import com.mtesitoo.model.ProductWizard;
 
@@ -94,8 +94,8 @@ public class AddProductActivity extends ActionBarActivity implements
             Product product = new Product(0, name, description, "Location", category, "SI Unit",
                     pricePerUnit, Integer.parseInt(quantity), new Date(), Uri.parse("Uri"));
 
-            IProductService productService = new ProductService(this);
-            productService.submitProduct(product, new IResponse<Product>() {
+            IProductRequest productService = new ProductRequest(this);
+            productService.submitProduct(product, new ICallback<Product>() {
                 @Override
                 public void onResult(Product result) {
 

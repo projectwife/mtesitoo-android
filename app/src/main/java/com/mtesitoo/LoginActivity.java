@@ -13,13 +13,13 @@ import com.mtesitoo.backend.cache.logic.IAuthorizationCache;
 import com.mtesitoo.backend.cache.logic.ICategoryCache;
 import com.mtesitoo.backend.model.Category;
 import com.mtesitoo.backend.model.Seller;
-import com.mtesitoo.backend.service.CategoryService;
-import com.mtesitoo.backend.service.LoginService;
-import com.mtesitoo.backend.service.SellerService;
-import com.mtesitoo.backend.service.logic.ICategoryService;
-import com.mtesitoo.backend.service.logic.ILoginService;
-import com.mtesitoo.backend.service.logic.IResponse;
-import com.mtesitoo.backend.service.logic.ISellerService;
+import com.mtesitoo.backend.service.CategoryRequest;
+import com.mtesitoo.backend.service.LoginRequest;
+import com.mtesitoo.backend.service.SellerRequest;
+import com.mtesitoo.backend.service.logic.ICategoryRequest;
+import com.mtesitoo.backend.service.logic.ILoginRequest;
+import com.mtesitoo.backend.service.logic.ICallback;
+import com.mtesitoo.backend.service.logic.ISellerRequest;
 
 import java.util.List;
 
@@ -38,15 +38,15 @@ public class LoginActivity extends AppCompatActivity {
     @OnClick(R.id.login)
     public void onClick(View view) {
         final Intent intent = new Intent(this, HomeActivity.class);
-        final ILoginService loginService = new LoginService(this);
+        final ILoginRequest loginService = new LoginRequest(this);
 
-        loginService.authenticateUser(mUsername.getText().toString(), mPassword.getText().toString(), new IResponse<String>() {
+        loginService.authenticateUser(mUsername.getText().toString(), mPassword.getText().toString(), new ICallback<String>() {
             @Override
             public void onResult(String result) {
-                ICategoryService categoryService = new CategoryService(mContext);
-                ISellerService sellerService = new SellerService(mContext);
+                ICategoryRequest categoryService = new CategoryRequest(mContext);
+                ISellerRequest sellerService = new SellerRequest(mContext);
 
-                categoryService.getCategories(new IResponse<List<Category>>() {
+                categoryService.getCategories(new ICallback<List<Category>>() {
                     @Override
                     public void onResult(List<Category> categories) {
                         ICategoryCache cache = new CategoryCache(mContext);
@@ -58,7 +58,7 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 });
 
-                sellerService.getSellerInfo(Integer.parseInt(result), new IResponse<Seller>() {
+                sellerService.getSellerInfo(Integer.parseInt(result), new ICallback<Seller>() {
                     @Override
                     public void onResult(Seller result) {
                         intent.putExtra(mContext.getString(R.string.bundle_seller_key), result);
@@ -86,8 +86,8 @@ public class LoginActivity extends AppCompatActivity {
         ButterKnife.bind(this);
         mContext = this;
 
-        final ILoginService loginService = new LoginService(this);
-        loginService.getAuthToken(new IResponse<String>() {
+        final ILoginRequest loginService = new LoginRequest(this);
+        loginService.getAuthToken(new ICallback<String>() {
             @Override
             public void onResult(String result) {
                 IAuthorizationCache authorizationCache = new AuthorizationCache(mContext);

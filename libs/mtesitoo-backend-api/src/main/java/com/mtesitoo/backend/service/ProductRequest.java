@@ -2,7 +2,6 @@ package com.mtesitoo.backend.service;
 
 import android.content.Context;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
@@ -17,19 +16,19 @@ import com.mtesitoo.backend.model.URL;
 import com.mtesitoo.backend.model.url.ProductImageURL;
 import com.mtesitoo.backend.model.url.VendorProductsURL;
 import com.mtesitoo.backend.service.logic.IProductServiceResponse;
-import com.mtesitoo.backend.service.logic.IResponse;
-import com.mtesitoo.backend.service.logic.IProductService;
+import com.mtesitoo.backend.service.logic.ICallback;
+import com.mtesitoo.backend.service.logic.IProductRequest;
 import com.mtesitoo.backend.model.Product;
 
 import org.json.JSONException;
 
 /**
- * Opencart API-based implementation of {@link IProductService}.
+ * Opencart API-based implementation of {@link IProductRequest}.
  *
  * @author danieldanciu
  */
-public class ProductService extends Service implements IProductService {
-    private IResponse<List<Product>> mCallback;
+public class ProductRequest extends Request implements IProductRequest {
+    private ICallback<List<Product>> mCallback;
 
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
@@ -42,7 +41,7 @@ public class ProductService extends Service implements IProductService {
         @Override
         public void onResponse(String response) {
             try {
-                IProductServiceResponse productServiceResponse = new ProductServiceResponse();
+                IProductServiceResponse productServiceResponse = new ProductResponse();
                 List<Product> products = productServiceResponse.parseResponse(response);
 
                 if (mCallback != null)
@@ -54,25 +53,25 @@ public class ProductService extends Service implements IProductService {
         }
     };
 
-    public ProductService(Context context) {
+    public ProductRequest(Context context) {
         super(context);
-        mILoginService = new LoginService(mContext);
+        mILoginRequest = new LoginRequest(mContext);
     }
 
     @Override
-    public void getProducts(final int sellerId, final IResponse<List<Product>> callback) {
+    public void getProducts(final int sellerId, final ICallback<List<Product>> callback) {
         mCallback = callback;
         URL url = new VendorProductsURL(mContext, R.string.path_product_vendor, sellerId);
-        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.GET, url.toString(), listener, errorListener);
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.GET, url.toString(), listener, errorListener);
 
         stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
         mRequestQueue.add(stringRequest);
     }
 
     @Override
-    public void submitProduct(final Product product, final IResponse<Product> callback) {
+    public void submitProduct(final Product product, final ICallback<Product> callback) {
         URL url = new URL(mContext, R.string.path_product_product);
-        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.POST, url.toString(), listener, errorListener) {
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), listener, errorListener) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
@@ -93,9 +92,9 @@ public class ProductService extends Service implements IProductService {
     }
 
     @Override
-    public void submitProductImage(final Product product, IResponse<Product> callback) {
+    public void submitProductImage(final Product product, ICallback<Product> callback) {
         URL url = new ProductImageURL(mContext, R.string.path_product_product, product.getId());
-        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.POST, url.toString(), null, errorListener) {
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), null, errorListener) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
@@ -110,11 +109,11 @@ public class ProductService extends Service implements IProductService {
     }
 
     @Override
-    public void deleteProductImage(final Product product, final String fileName, IResponse<Product> callback) {
+    public void deleteProductImage(final Product product, final String fileName, ICallback<Product> callback) {
         URL url = new ProductImageURL(mContext, R.string.path_product_product, product.getId());
         url.append("?file=" + fileName);
 
-        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.DELETE, url.toString(), null, errorListener);
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.DELETE, url.toString(), null, errorListener);
         stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
         mRequestQueue.add(stringRequest);
     }

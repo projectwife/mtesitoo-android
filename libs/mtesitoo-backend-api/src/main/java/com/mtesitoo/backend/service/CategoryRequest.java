@@ -2,26 +2,26 @@ package com.mtesitoo.backend.service;
 
 import android.content.Context;
 
-import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.mtesitoo.backend.R;
-import com.mtesitoo.backend.model.header.Authorization;
 import com.mtesitoo.backend.model.AuthorizedStringRequest;
-import com.mtesitoo.backend.model.Seller;
+import com.mtesitoo.backend.model.Category;
 import com.mtesitoo.backend.model.URL;
-import com.mtesitoo.backend.model.url.VendorURL;
-import com.mtesitoo.backend.service.logic.IResponse;
-import com.mtesitoo.backend.service.logic.ISellerService;
-import com.mtesitoo.backend.service.logic.ISellerServiceResponse;
+import com.mtesitoo.backend.model.header.Authorization;
+import com.mtesitoo.backend.service.logic.ICategoryRequest;
+import com.mtesitoo.backend.service.logic.ICategoryServiceResponse;
+import com.mtesitoo.backend.service.logic.ICallback;
 
 import org.json.JSONException;
 
+import java.util.List;
+
 /**
- * Created by Nan on 9/13/2015.
+ * Created by Nan on 9/19/2015.
  */
-public class SellerService extends Service implements ISellerService {
-    private IResponse<Seller> mCallback;
+public class CategoryRequest extends Request implements ICategoryRequest {
+    private ICallback<List<Category>> mCallback;
     private Response.ErrorListener errorListener = new Response.ErrorListener() {
         @Override
         public void onErrorResponse(VolleyError error) {
@@ -33,11 +33,11 @@ public class SellerService extends Service implements ISellerService {
         @Override
         public void onResponse(String response) {
             try {
-                ISellerServiceResponse sellerServiceResponse = new SellerServiceResponse();
-                Seller seller = sellerServiceResponse.parseResponse(response);
+                ICategoryServiceResponse categoryServiceResponse = new CategoryResponse();
+                List<Category> products = categoryServiceResponse.parseResponse(response);
 
                 if (mCallback != null)
-                    mCallback.onResult(seller);
+                    mCallback.onResult(products);
             } catch (JSONException e) {
                 if (mCallback != null)
                     mCallback.onError(e);
@@ -45,16 +45,16 @@ public class SellerService extends Service implements ISellerService {
         }
     };
 
-    public SellerService(Context context) {
+    public CategoryRequest(Context context) {
         super(context);
-        mILoginService = new LoginService(mContext);
+        mILoginRequest = new LoginRequest(mContext);
     }
 
     @Override
-    public void getSellerInfo(final int sellerId, final IResponse<Seller> callback) {
+    public void getCategories(final ICallback<List<Category>> callback) {
         mCallback = callback;
-        URL url = new VendorURL(mContext, R.string.path_product_vendor, sellerId);
-        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, Request.Method.GET, url.toString(), listener, errorListener);
+        URL url = new URL(mContext, R.string.path_product_category);
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.GET, url.toString(), listener, errorListener);
 
         stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
         mRequestQueue.add(stringRequest);

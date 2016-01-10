@@ -11,9 +11,9 @@ import com.mtesitoo.R;
 import com.mtesitoo.adapter.ProductListAdapter;
 import com.mtesitoo.backend.model.Product;
 import com.mtesitoo.backend.model.Seller;
-import com.mtesitoo.backend.service.ProductService;
-import com.mtesitoo.backend.service.logic.IProductService;
-import com.mtesitoo.backend.service.logic.IResponse;
+import com.mtesitoo.backend.service.ProductRequest;
+import com.mtesitoo.backend.service.logic.IProductRequest;
+import com.mtesitoo.backend.service.logic.ICallback;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,9 +56,9 @@ public class ProductFragment extends ListFragment {
     }
 
     private void updateProductList() {
-        IProductService productService = new ProductService(getActivity());
+        IProductRequest productService = new ProductRequest(getActivity());
 
-        productService.getProducts(mSeller.getId(), new IResponse<List<Product>>() {
+        productService.getProducts(mSeller.getId(), new ICallback<List<Product>>() {
             @Override
             public void onResult(List<Product> result) {
                 mProductListAdapter.refresh((ArrayList<Product>) result);
