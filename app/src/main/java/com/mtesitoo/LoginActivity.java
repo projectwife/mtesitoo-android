@@ -9,14 +9,19 @@ import android.widget.TextView;
 
 import com.mtesitoo.backend.cache.AuthorizationCache;
 import com.mtesitoo.backend.cache.CategoryCache;
+import com.mtesitoo.backend.cache.UnitCache;
 import com.mtesitoo.backend.cache.logic.IAuthorizationCache;
 import com.mtesitoo.backend.cache.logic.ICategoryCache;
+import com.mtesitoo.backend.cache.logic.IUnitCache;
 import com.mtesitoo.backend.model.Category;
 import com.mtesitoo.backend.model.Seller;
+import com.mtesitoo.backend.model.Unit;
 import com.mtesitoo.backend.service.CategoryRequest;
+import com.mtesitoo.backend.service.CommonRequest;
 import com.mtesitoo.backend.service.LoginRequest;
 import com.mtesitoo.backend.service.SellerRequest;
 import com.mtesitoo.backend.service.logic.ICategoryRequest;
+import com.mtesitoo.backend.service.logic.ICommonRequest;
 import com.mtesitoo.backend.service.logic.ILoginRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.ISellerRequest;
@@ -45,6 +50,31 @@ public class LoginActivity extends AppCompatActivity {
             public void onResult(String result) {
                 ICategoryRequest categoryService = new CategoryRequest(mContext);
                 ISellerRequest sellerService = new SellerRequest(mContext);
+                ICommonRequest commonService = new CommonRequest(mContext);
+
+                commonService.getLengthUnits(new ICallback<List<Unit>>() {
+                    @Override
+                    public void onResult(List<Unit> units) {
+                        IUnitCache cache = new UnitCache(mContext);
+                        cache.storeLengthUnits(units);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                    }
+                });
+
+                commonService.getWeightUnits(new ICallback<List<Unit>>() {
+                    @Override
+                    public void onResult(List<Unit> units) {
+                        IUnitCache cache = new UnitCache(mContext);
+                        cache.storeWeightUnits(units);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                    }
+                });
 
                 categoryService.getCategories(new ICallback<List<Category>>() {
                     @Override
