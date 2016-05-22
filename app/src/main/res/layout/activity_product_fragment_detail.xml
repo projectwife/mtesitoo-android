@@ -18,6 +18,11 @@
                 android:id="@+id/product_image_slider"
                 android:layout_width="match_parent"
                 android:layout_height="300dip" />
+            <!--<ImageView-->
+                <!--android:id="@+id/logo"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--android:contentDescription="@null" />-->
 
             <RelativeLayout
                 android:id="@+id/product_detail_info_border"
@@ -168,6 +173,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
+
                             android:text="..." />
                     </RelativeLayout>
 
@@ -242,10 +248,10 @@
                         <TextView
                             android:id="@+id/product_detail_expiration_date"
                             style="@style/TextTheme"
-                            android:layout_width="wrap_content"
+                            android:layout_width="150dip"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:text="..." />
+                           android:text="..." />
                     </RelativeLayout>
                 </LinearLayout>
             </RelativeLayout>

@@ -18,9 +18,44 @@
     <string name="params_product_status_enabled">1</string>
     <string name="params_product_status_pending">5</string>
 
+    <string name="path_vendor_register">/vendor/register</string>
+    <string name="params_register_name">username</string>
+    <string name="params_register_password">password</string>
+    <string name="params_register_firstname">firstname</string>
+    <string name="params_register_lastname">lastname</string>
+    <string name="params_register_email">email</string>
+    <string name="params_register_address_1">address_1</string>
+    <string name="params_register_address_2">address_2</string>
+    <string name="params_register_city">city</string>
+    <string name="params_register_postcode">postcode</string>
+    <string name="params_register_country_id">country_id</string>
+    <string name="params_register_zone_id">zone_id</string>
+    <string name="params_register_telephone">telephone</string>
+    <string name="params_register_company">company</string>
+    <string name="params_register_agree">agree</string>
+
+
+
+
+
+
+
+
+
+
     <string name="path_product_vendor">/product/vendor</string>
     <string name="path_product_category">/product/category</string>
     <string name="path_admin_login">/admin/login</string>
+    <string name="path_common_country">/common/country</string>
     <string name="path_common_length">/common/length</string>
     <string name="path_common_weight">/common/weight</string>
+
+    <string name="path_order_vendor">/order/vendor</string>
+
+    <string name="params_customer_name">customer_name</string>
+    <string name="params_order_delivery_address">delivery_address</string>
+    <string name="params_order_total_price">total_price</string>
+    <string name="params_order_placed_date">order_placed_date</string>
+    <string name="params_order_payment_method">payment_method</string>
+    <string name="params_order_status">order_status</string>
 </resources>
