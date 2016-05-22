@@ -26,7 +26,6 @@ public class LoginResponse implements Response.Listener<String>, Response.ErrorL
     public void onResponse(String response) {
         try {
             String result = "";
-
             if (mType == TYPE_AUTHENTICATE) {
                 result = parseResponse(response);
             }
@@ -45,17 +44,19 @@ public class LoginResponse implements Response.Listener<String>, Response.ErrorL
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        mCallback.onError(error);
+        System.out.println("wwwwwwwwwwww error");
     }
 
     private String parseToken(String response) throws JSONException {
         JSONObject jsonResponse = new JSONObject(response);
+        System.out.println("wwwwwwwwwwww "+jsonResponse.getString("access_token"));
         return jsonResponse.getString("access_token");
     }
 
     private String parseResponse(String response) throws JSONException {
         JSONObject jsonResponse = new JSONObject(response);
         JSONObject jsonUserObject = jsonResponse.getJSONObject("user");
+        System.out.println("wwwwwwwwwwww "+jsonUserObject.getString("vendor_id"));
         return jsonUserObject.getString("vendor_id");
     }
 }

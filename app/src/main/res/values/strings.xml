@@ -4,7 +4,8 @@
 
     <string name="currency_symbol">$</string>
     <string name="padding">26</string>
-
+    <string name="padding_20">20</string>
+    <string name="padding_18">18</string>
     <string name="bundle_product_key">key_product_parcel</string>
     <string name="bundle_seller_key">key_seller_parcel</string>
     <string name="action_settings">Settings</string>

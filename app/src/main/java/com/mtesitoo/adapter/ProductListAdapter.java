@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-
+import com.squareup.picasso.Picasso;
 /**
  * Created by jackwu on 2015-07-11.
  */
@@ -30,6 +30,8 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
     private Context mContext;
     private float deviceWidth;
     private static ArrayList<Product> mProducts;
+    private String uri;
+
 
     public ProductListAdapter(Context context, ArrayList<Product> products) {
         super(context, 0, products);
@@ -78,6 +80,14 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         holder.productName.setText(product.getName());
         holder.productCategory.setText(product.getCategory());
         holder.productPrice.setText(product.getPricePerUnit());
+        uri = product.getmThumbnail().toString();
+        if(uri.contains(" ")){
+            uri = uri.replace(" ","%20");
+            Picasso.with(holder.context).load(uri).into(holder.productThumbnail);
+        }
+        else{
+            Picasso.with(holder.context).load(uri).into(holder.productThumbnail);
+        }
 
         return convertView;
     }

@@ -14,7 +14,7 @@
         android:layout_width="225dip"
         android:layout_height="1dip"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="220dip"
+        android:layout_marginTop="@dimen/activity_login_vertical_margin"
         android:background="@android:color/white" />
 
     <LinearLayout
@@ -94,5 +94,16 @@
         android:layout_marginTop="60dip"
         android:text="Login"
         android:textColor="#66a966" />
+
+
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="New User"
+        android:id="@+id/newUser"
+        android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/password_holder"
+        android:layout_alignEnd="@+id/password_holder" />
 
 </RelativeLayout>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="title_activity_registration">Registraton Activity</string>
+
+    <string name="page_username">User Name</string>
+    <string name="page_firstname">First Name</string>
+    <string name="page_lastname">Last Name</string>
+    <string name="page_password">Password</string>
+    <string name="page_confirmed">Confirmed password</string>
+    <string name="page_email">Email</string>
+    <string name="page_phonenumber">Phone Number</string>
+    <string name="page_address1">Street name</string>
+    <string name="page_address2">County</string>
+    <string name="page_Postcode">Postcode</string>
+    <string name="page_Country">Country</string>
+    <string name="page_Zone">Zone</string>
+    <string name="page_Agree">Agree all the terms?</string>
+
+
+
+
+
+</resources>

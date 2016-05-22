@@ -21,7 +21,7 @@ public class SellerRequest extends Request implements ISellerRequest {
     }
 
     @Override
-    public void getSellerInfo(final int sellerId, final ICallback<Seller> callback) {
+    public void getSellerInfo(final int sellerId, final ICallback<Seller> callback) {System.out.println("sellerId--"+sellerId);
         URL url = new VendorURL(mContext, R.string.path_product_vendor, sellerId);
         SellerResponse response = new SellerResponse(callback);
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.GET, url.toString(), response, response);

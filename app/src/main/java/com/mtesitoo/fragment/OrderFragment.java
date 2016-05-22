@@ -11,8 +11,13 @@ import com.mtesitoo.R;
 import com.mtesitoo.adapter.OrderListAdapter;
 import com.mtesitoo.backend.model.Order;
 import com.mtesitoo.backend.model.Seller;
+import com.mtesitoo.backend.service.logic.IOrderRequest;
+import com.mtesitoo.backend.service.logic.OrderRequest;
+import com.mtesitoo.backend.service.logic.ICallback;
 
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Date;
 
 /**
  * Created by Nan on 12/30/2015.
@@ -53,7 +58,29 @@ public class OrderFragment extends ListFragment {
     }
 
     private void updateOrderList() {
-        mOrderListAdapter = new OrderListAdapter(getActivity(), new ArrayList<Order>());
+
+
+        IOrderRequest orderService = new OrderRequest(getActivity());
+
+        orderService.getOrders(mSeller.getId(), new ICallback<List<Order>>() {
+            @Override
+            public void onResult(List<Order> result) {
+                mOrderListAdapter.refresh((ArrayList<Order>) result);
+            }
+
+            @Override
+            public void onError(Exception e) {
+            }
+        });
+
+
+    //static order list
+        Order order1=new Order(1,"John Dark","201 North street,Arlington,WA","Almond","","120$","60$",2,new Date(),"");
+       // Order order2=new Order(1,"John Dark","201 North street,Arlington,WA","Almond","","120$","60$",2,new Date(),"");
+        ArrayList<Order> orderList =new ArrayList<Order>();
+        orderList.add(order1);
+      // orderList.add(order2);
+        mOrderListAdapter = new OrderListAdapter(getActivity(),orderList); //new ArrayList<Order>());
         setListAdapter(mOrderListAdapter);
     }
 }

@@ -37,6 +37,7 @@
         <activity
             android:name=".OrderActivity"
             android:label="@string/title_activity_order" />
+        <activity android:name=".RegistrationActivity"></activity>
     </application>
 
 </manifest>

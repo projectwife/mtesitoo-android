@@ -126,7 +126,7 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
         ViewGroup.LayoutParams params = mImageSlider.getLayoutParams();
         params.height = (int) (metrics.widthPixels * 0.65);
 
-        int padding = Integer.parseInt(getString(R.string.padding));
+        int padding = Integer.parseInt(getString(R.string.padding_20));
         mInfoBorder.setPadding(padding, padding, padding, padding / 2);
         mPriceBorder.setPadding(padding, padding / 2, padding, padding / 2);
         mDateBorder.setPadding(padding, padding / 2, padding, padding);
