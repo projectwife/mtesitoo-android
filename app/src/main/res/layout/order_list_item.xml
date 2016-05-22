@@ -8,11 +8,13 @@
     android:paddingTop="16dip">
 
     <FrameLayout
+
         android:layout_width="match_parent"
         android:layout_height="220dip"
         android:background="@drawable/stock_order">
 
         <LinearLayout
+            android:id="@+id/l1"
             android:layout_width="match_parent"
             android:layout_height="50dip"
             android:background="#8444">
@@ -39,9 +41,46 @@
                 android:layout_gravity="center_vertical"
                 android:layout_marginRight="10dip"
                 android:src="@drawable/navigation_forward" />
-        </LinearLayout>
-    </FrameLayout>
 
+        </LinearLayout>
+
+
+
+
+
+    <!--<LinearLayout-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="50dip"-->
+        <!--android:background="#8444"-->
+        <!--android:layout_below="@+id/l1">-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/order_status"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:layout_marginLeft="10dip"-->
+            <!--android:text="Order status"-->
+            <!--android:textColor="#ffffff"-->
+            <!--android:textSize="17dp" />-->
+
+        <!--<View-->
+            <!--android:layout_width="0dp"-->
+            <!--android:layout_height="0dp"-->
+            <!--android:layout_weight="1" />-->
+
+        <!--<TextView-->
+            <!--android:id="@+id/date_placed"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_gravity="center_vertical"-->
+            <!--android:layout_marginLeft="10dip"-->
+            <!--android:text="date placed.."-->
+            <!--android:textColor="#ffffff"-->
+            <!--android:textSize="17dp" />-->
+
+    <!--</LinearLayout>-->
+    </FrameLayout>
     <View
         android:layout_width="75dp"
         android:layout_height="75dp"

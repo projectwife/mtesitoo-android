@@ -12,6 +12,55 @@ public class Seller implements Parcelable {
             "Phone Number", "Email", "Company", "Street", "City", "Postcode", "Country", "Uri");
 
     private final Integer mId;
+
+    public String getmUsername() {
+        return mUsername;
+    }
+
+    public Integer getmId() {
+        return mId;
+    }
+
+    public String getmFirstName() {
+        return mFirstName;
+    }
+
+    public String getmLastName() {
+        return mLastName;
+    }
+
+    public String getmPhoneNumber() {
+        return mPhoneNumber;
+    }
+
+    public String getmEmail() {
+        return mEmail;
+    }
+
+    public String getmCompany() {
+        return mCompany;
+    }
+
+    public String getmCity() {
+        return mCity;
+    }
+
+    public String getmStreet() {
+        return mStreet;
+    }
+
+    public String getmPostcode() {
+        return mPostcode;
+    }
+
+    public String getmCountry() {
+        return mCountry;
+    }
+
+    public Uri getmThumbnail() {
+        return mThumbnail;
+    }
+
     private final String mUsername;
     private final String mFirstName;
     private final String mLastName;
@@ -21,8 +70,30 @@ public class Seller implements Parcelable {
     private final String mStreet;
     private final String mCity;
     private final String mPostcode;
-    private final String mCountry;
     private final Uri mThumbnail;
+
+    public String getmPassword() {
+        return mPassword;
+    }
+
+    //Samuel added
+    private  String mPassword;
+
+    public String getmZoneId() {
+        return mZoneId;
+    }
+
+    public String getmAgree() {
+        return mAgree;
+    }
+
+    public String getmCoutry() {
+        return mCountry;
+    }
+
+    private String mZoneId;
+    private String mAgree;
+    private String mCountry;
 
     private Seller(Parcel in) {
         this.mId = in.readInt();
@@ -67,6 +138,28 @@ public class Seller implements Parcelable {
         mPostcode = postCode;
         mCountry = country;
         mThumbnail = Uri.parse(uri);
+    }
+    //Seller for registration
+    public Seller(Integer id, String username, String firstName, String lastName,
+                  String phoneNumber, String email, String company, String street, String city,
+                  String postCode, String uri,String password, String zoneId,String  agree,String country) {
+        mId = id;
+        mUsername = username;
+        mFirstName = firstName;
+        mLastName = lastName;
+        mPhoneNumber = phoneNumber;
+        mEmail = email;
+        mCompany = company;
+        mStreet = street;
+        mCity = city;
+        mPostcode = postCode;
+        mThumbnail = Uri.parse(uri);
+
+        mPassword=password;
+        mZoneId=zoneId;
+        mAgree=agree;
+        mCountry=country;
+
     }
 
     @Override

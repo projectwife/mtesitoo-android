@@ -30,8 +30,9 @@ public class ProductRequest extends Request implements IProductRequest {
     }
 
     @Override
-    public void getProducts(final int sellerId, final ICallback<List<Product>> callback) {
+    public void getProducts(final int sellerId, final ICallback<List<Product>> callback) { System.out.println("sellerId--11--"+sellerId);
         URL url = new VendorProductsURL(mContext, R.string.path_product_vendor, sellerId);
+        System.out.println("VendorProductsURL--11--"+url);
         ProductResponse response = new ProductResponse(callback);
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.GET, url.toString(), response, response);
 
@@ -41,7 +42,11 @@ public class ProductRequest extends Request implements IProductRequest {
 
     @Override
     public void submitProduct(final Product product, final ICallback<Product> callback) {
+
+        System.out.println("product--"+product);
         URL url = new URL(mContext, R.string.path_product_product);
+
+        System.out.println("submitProduct--url--"+url);
         ProductResponse response = new ProductResponse(null);
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), response, response) {
             @Override

@@ -110,6 +110,11 @@ public class Product implements Parcelable {
         return mExpiration;
     }
 
+
+    public Uri getmThumbnail() {
+        return mThumbnail;
+    }
+
     @Override
     public String toString() {
         return "Product{" + "id+'" + mId + '\'' + "name='" + mName + '\'' + ", description='" + mDescription + '\''
