@@ -1,6 +1,7 @@
 package com.mtesitoo.backend.service;
 
 import android.content.Context;
+import android.util.Log;
 
 import com.mtesitoo.backend.R;
 import com.mtesitoo.backend.model.header.Authorization;
@@ -21,7 +22,8 @@ public class SellerRequest extends Request implements ISellerRequest {
     }
 
     @Override
-    public void getSellerInfo(final int sellerId, final ICallback<Seller> callback) {System.out.println("sellerId--"+sellerId);
+    public void getSellerInfo(final int sellerId, final ICallback<Seller> callback) {
+        Log.d("getSellrInfo - SellerId",String.valueOf(sellerId));
         URL url = new VendorURL(mContext, R.string.path_product_vendor, sellerId);
         SellerResponse response = new SellerResponse(callback);
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.GET, url.toString(), response, response);

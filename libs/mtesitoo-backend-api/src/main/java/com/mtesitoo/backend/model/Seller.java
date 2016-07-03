@@ -239,4 +239,25 @@ public class Seller implements Parcelable {
     public String getUsername() {
         return mUsername;
     }
+
+    @Override
+    public String toString() {
+        return "Seller{" +
+                "mId=" + mId +
+                ", mUsername='" + mUsername + '\'' +
+                ", mFirstName='" + mFirstName + '\'' +
+                ", mLastName='" + mLastName + '\'' +
+                ", mPhoneNumber='" + mPhoneNumber + '\'' +
+                ", mEmail='" + mEmail + '\'' +
+                ", mCompany='" + mCompany + '\'' +
+                ", mStreet='" + mStreet + '\'' +
+                ", mCity='" + mCity + '\'' +
+                ", mPostcode='" + mPostcode + '\'' +
+                ", mThumbnail=" + mThumbnail +
+                ", mPassword='" + mPassword + '\'' +
+                ", mZoneId='" + mZoneId + '\'' +
+                ", mAgree='" + mAgree + '\'' +
+                ", mCountry='" + mCountry + '\'' +
+                '}';
+    }
 }

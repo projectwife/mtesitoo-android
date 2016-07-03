@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 
+import android.util.Log;
 import android.view.View;
 
 import android.widget.Button;
@@ -54,7 +55,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class LoginActivity extends AppCompatActivity  implements View.OnClickListener{
+public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private Context mContext;
     //Samuel 18/05/2016
     //protected Context mContext;
@@ -70,8 +71,7 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
-            case  R.id.login: {
-                // do something for button 1 click
+            case R.id.login: {
                 final Intent intent = new Intent(this, HomeActivity.class);
                 final ILoginRequest loginService = new LoginRequest(this);
 
@@ -79,11 +79,10 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
                     @Override
                     public void onResult(String result) {
 
-                        System.out.println("result---"+result);
+                        Log.d("LOGIN - RESULT", result);
                         ICategoryRequest categoryService = new CategoryRequest(mContext);
                         ISellerRequest sellerService = new SellerRequest(mContext);
                         ICommonRequest commonService = new CommonRequest(mContext);
-
 
                         commonService.getLengthUnits(new ICallback<List<Unit>>() {
                             @Override
@@ -124,7 +123,8 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
 
                         sellerService.getSellerInfo(Integer.parseInt(result), new ICallback<Seller>() {
                             @Override
-                            public void onResult(Seller result) {System.out.println("seller result--"+result);
+                            public void onResult(Seller result) {
+                                Log.d("Login - Seller Info",result.toString());
                                 intent.putExtra(mContext.getString(R.string.bundle_seller_key), result);
                                 mContext.startActivity(intent);
                                 finish();
@@ -135,28 +135,24 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
 
                             }
                         });
-
-
                     }
 
                     @Override
-                    public void onError(Exception e) {  System.out.println("in onError---");
-                        Toast.makeText(mContext,e.getMessage(),Toast.LENGTH_LONG).show();
+                    public void onError(Exception e) {
+                        System.out.println("in onError---");
+                        Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
                 break;
             }
 
             case R.id.newUser: {
-                // do something for button 2 click
-
                 ICountriesCache cache = new CountriesCache(mContext);
                 List<Countries> countries = cache.getCountries();
                 final String[] countriesNames = new String[countries.size()];
 
                 for (int i = 0; i < countries.size(); i++) {
                     countriesNames[i] = countries.get(i).getName();
-                    //  System.out.println("s11"+countries.get(i).getName());
                 }
 
                 Arrays.sort(countriesNames);
@@ -166,19 +162,19 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
                 builder.setItems(countriesNames, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        mEditor.putString("SelectedCountries",countriesNames [which]);
+                        mEditor.putString("SelectedCountries", countriesNames[which]);
                         mEditor.apply();
-                        IZoneRequest zoneService=new ZoneRequest(mContext);
+                        IZoneRequest zoneService = new ZoneRequest(mContext);
 
                         zoneService.getZones(new ICallback<List<Zone>>() {
                             @Override
                             public void onResult(List<Zone> zones) {
 
-                                IZonesCache zonesCache=new ZoneCache(mContext);
+                                IZonesCache zonesCache = new ZoneCache(mContext);
                                 zonesCache.storeZones(zones);
 
                                 List<Zone> zones1 = zones;
-                                zonesNames= new String[zones1.size()];
+                                zonesNames = new String[zones1.size()];
 
                                 for (int i = 0; i < zones1.size(); i++) {
                                     zonesNames[i] = zones1.get(i).getName();
@@ -198,19 +194,14 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
                 builder.show();
                 break;
             }
-            
+
         }
 
     }
 
 
-
-
-
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
-        System.out.println("in onCreate---");
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
@@ -221,28 +212,21 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
         newUser.setOnClickListener(this);
         mContext = this;
 
-        //Samuel 18/05/2016
         mPrefs = this.getSharedPreferences("pref", Context.MODE_PRIVATE);
         mEditor = mPrefs.edit();
-        //Samuel 18/05/16
-        ICountriesRequest countriesService=new CountriesRequest(mContext);
-
-        System.out.println("Counrtries1");
+        ICountriesRequest countriesService = new CountriesRequest(mContext);
 
         countriesService.getCountries(new ICallback<List<Countries>>() {
             @Override
             public void onResult(List<Countries> countries) {
-                ICountriesCache cache= new CountriesCache(mContext);
+                ICountriesCache cache = new CountriesCache(mContext);
                 cache.storeCountries(countries);
-                String s1="";
+                String s1 = "";
 
                 for (Countries country : countries) {
-                    s1=s1+country.getName();
+                    s1 = s1 + country.getName();
                 }
-               // System.out.println("Counrtries"+s1);
-               // Toast.makeText(mContext,s1,Toast.LENGTH_LONG).show();
             }
-
 
             @Override
             public void onError(Exception e) {
@@ -250,16 +234,13 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
         });
 
 
-
         final ILoginRequest loginService = new LoginRequest(this);
         loginService.getAuthToken(new ICallback<String>() {
             @Override
-            public void onResult(String result) { System.out.println(" result123---"+result);
+            public void onResult(String result) {
                 IAuthorizationCache authorizationCache = new AuthorizationCache(mContext);
                 if (authorizationCache.getAuthorization() == null) {
-                    System.out.println("dddd"+result);
                     authorizationCache.storeAuthorization(result);
-
                 }
             }
 
