@@ -450,7 +450,7 @@ public class RegistrationActivity extends ActionBarActivity implements
                 sellerService.getSellerInfo(Integer.parseInt(result), new ICallback<Seller>() {
                     @Override
                     public void onResult(Seller result) {
-                        System.out.println("seller result--" + result);
+                        Log.d("getSellerInfo",result.toString());
                         intent.putExtra(mContext.getString(R.string.bundle_seller_key), result);
                         mContext.startActivity(intent);
                         finish();
@@ -458,13 +458,14 @@ public class RegistrationActivity extends ActionBarActivity implements
 
                     @Override
                     public void onError(Exception e) {
+                        Log.e("getSellerInfo", e.toString());
                     }
                 });
             }
 
             @Override
             public void onError(Exception e) {
-                System.out.println("in onError---");
+                Log.e("authenticateUser",e.toString());
                 Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });

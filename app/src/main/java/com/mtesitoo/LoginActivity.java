@@ -132,7 +132,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                             @Override
                             public void onError(Exception e) {
-
+                                Log.e("getSellerInfo", e.toString());
                             }
                         });
                     }
@@ -147,6 +147,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
 
             case R.id.newUser: {
+                //Todo: fix country not being uploaded - move it to address area of the form
+                //Todo: allow user to pick between seller and buyer profiles
+
                 ICountriesCache cache = new CountriesCache(mContext);
                 List<Countries> countries = cache.getCountries();
                 final String[] countriesNames = new String[countries.size()];

@@ -45,7 +45,7 @@ public class LoginRequest extends Request implements ILoginRequest {
             @Override
             protected Response<String> parseNetworkResponse(NetworkResponse response) {
                 if (response.headers.containsKey(mContext.getString(R.string.header_set_cookie))) {
-                    Log.d("NETWORK - RESPONSE", response.toString());
+                    Log.d("NETWORK RESPONSE CODE", String.valueOf(response.statusCode));
                     ISessionCache cache = new SessionCache(mContext);
                     cache.storeSession(response.headers.get(mContext.getString(R.string.header_set_cookie)));
                 }
