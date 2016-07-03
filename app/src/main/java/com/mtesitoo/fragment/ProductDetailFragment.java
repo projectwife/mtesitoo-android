@@ -134,10 +134,11 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
 
     private void updateImageSlider() {
         ArrayList<String> urls = new ArrayList<>();
-        urls.add("http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
-        urls.add("http://tvfiles.alphacoders.com/100/hdclearart-10.png");
-        urls.add("http://cdn3.nflximg.net/images/3093/2043093.jpg");
-        urls.add("http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
+        //Todo: get actual product image URLs
+        urls.add("http://www.firepitessentials.com/wp-content/themes/456ecology/assets//img/no-product-image.png");
+        urls.add("http://thefoodtrust.org/uploads/media_items/produce-placeholder-3.825.360.c.jpg");
+        urls.add("http://thefoodtrust.org/uploads/media_items/produce-placeholder-4.825.360.c.jpg");
+        urls.add("http://thefoodtrust.org/uploads/media_items/produce-placeholder-7-1.825.360.c.jpg");
 
         for (String url : urls) {
             DefaultSliderView sliderView = new DefaultSliderView(getActivity());
