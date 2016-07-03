@@ -43,6 +43,9 @@ import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.ISellerRequest;
 import com.mtesitoo.backend.service.logic.IZoneRequest;
 
+import java.text.Collator;
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -156,16 +159,16 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
                     //  System.out.println("s11"+countries.get(i).getName());
                 }
 
+                Arrays.sort(countriesNames);
+
                 final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-                builder.setTitle("Where r You From? ");
+                builder.setTitle("Where are you from?");
                 builder.setItems(countriesNames, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         mEditor.putString("SelectedCountries",countriesNames [which]);
                         mEditor.apply();
-                        //Samuel 18/05/16
                         IZoneRequest zoneService=new ZoneRequest(mContext);
-                       // System.out.println("Counrtries11111");
 
                         zoneService.getZones(new ICallback<List<Zone>>() {
                             @Override
@@ -179,20 +182,13 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
 
                                 for (int i = 0; i < zones1.size(); i++) {
                                     zonesNames[i] = zones1.get(i).getName();
-                                    //System.out.println("s111111111111"+zones1.get(i).getName());
                                 }
-
                             }
-
 
                             @Override
                             public void onError(Exception e) {
                             }
                         });
-
-
-
-
 
                         final Intent intent = new Intent(mContext, RegistrationActivity.class);
                         mContext.startActivity(intent);
@@ -202,8 +198,7 @@ public class LoginActivity extends AppCompatActivity  implements View.OnClickLis
                 builder.show();
                 break;
             }
-
-            //.... etc
+            
         }
 
     }
