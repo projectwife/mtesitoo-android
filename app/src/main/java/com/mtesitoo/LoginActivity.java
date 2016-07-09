@@ -158,7 +158,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     countriesNames[i] = countries.get(i).getName();
                 }
 
-                //Arrays.sort(countriesNames);
+                Arrays.sort(countriesNames);
 
                 final AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Where are you from?");
