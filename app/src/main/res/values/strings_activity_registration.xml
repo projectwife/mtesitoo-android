@@ -10,7 +10,7 @@
     <string name="page_email">Email</string>
     <string name="page_phonenumber">Phone Number</string>
     <string name="page_address1">Street name</string>
-    <string name="page_address2">County</string>
+    <string name="page_address2">City</string>
     <string name="page_Postcode">Postcode</string>
     <string name="page_Country">Country</string>
     <string name="page_Zone">Zone</string>

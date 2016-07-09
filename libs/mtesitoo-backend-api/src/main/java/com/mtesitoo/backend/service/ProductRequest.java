@@ -1,6 +1,7 @@
 package com.mtesitoo.backend.service;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.List;
@@ -30,23 +31,21 @@ public class ProductRequest extends Request implements IProductRequest {
     }
 
     @Override
-    public void getProducts(final int sellerId, final ICallback<List<Product>> callback) { System.out.println("sellerId--11--"+sellerId);
+    public void getProducts(final int sellerId, final ICallback<List<Product>> callback) {
+        Log.d("getProducts - SellerId",String.valueOf(sellerId));
         URL url = new VendorProductsURL(mContext, R.string.path_product_vendor, sellerId);
-        System.out.println("VendorProductsURL--11--"+url);
+        Log.d("Vendor Products URL",url.toString());
         ProductResponse response = new ProductResponse(callback);
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.GET, url.toString(), response, response);
-
         stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
         mRequestQueue.add(stringRequest);
     }
 
     @Override
     public void submitProduct(final Product product, final ICallback<Product> callback) {
-
-        System.out.println("product--"+product);
+        Log.d("Product",product.toString());
         URL url = new URL(mContext, R.string.path_product_product);
-
-        System.out.println("submitProduct--url--"+url);
+        Log.d("Submit Product URL",url.toString());
         ProductResponse response = new ProductResponse(null);
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), response, response) {
             @Override

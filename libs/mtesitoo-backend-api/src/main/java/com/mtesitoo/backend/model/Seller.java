@@ -77,7 +77,7 @@ public class Seller implements Parcelable {
     }
 
     //Samuel added
-    private  String mPassword;
+    private String mPassword;
 
     public String getmZoneId() {
         return mZoneId;
@@ -139,10 +139,11 @@ public class Seller implements Parcelable {
         mCountry = country;
         mThumbnail = Uri.parse(uri);
     }
+
     //Seller for registration
     public Seller(Integer id, String username, String firstName, String lastName,
                   String phoneNumber, String email, String company, String street, String city,
-                  String postCode, String uri,String password, String zoneId,String  agree,String country) {
+                  String postCode, String uri, String password, String zoneId, String agree, String country) {
         mId = id;
         mUsername = username;
         mFirstName = firstName;
@@ -155,10 +156,10 @@ public class Seller implements Parcelable {
         mPostcode = postCode;
         mThumbnail = Uri.parse(uri);
 
-        mPassword=password;
-        mZoneId=zoneId;
-        mAgree=agree;
-        mCountry=country;
+        mPassword = password;
+        mZoneId = zoneId;
+        mAgree = agree;
+        mCountry = country;
 
     }
 
@@ -238,5 +239,26 @@ public class Seller implements Parcelable {
 
     public String getUsername() {
         return mUsername;
+    }
+
+    @Override
+    public String toString() {
+        return "Seller{" +
+                "mId=" + mId +
+                ", mUsername='" + mUsername + '\'' +
+                ", mFirstName='" + mFirstName + '\'' +
+                ", mLastName='" + mLastName + '\'' +
+                ", mPhoneNumber='" + mPhoneNumber + '\'' +
+                ", mEmail='" + mEmail + '\'' +
+                ", mCompany='" + mCompany + '\'' +
+                ", mStreet='" + mStreet + '\'' +
+                ", mCity='" + mCity + '\'' +
+                ", mPostcode='" + mPostcode + '\'' +
+                ", mThumbnail=" + mThumbnail +
+                ", mPassword='" + mPassword + '\'' +
+                ", mZoneId='" + mZoneId + '\'' +
+                ", mAgree='" + mAgree + '\'' +
+                ", mCountry='" + mCountry + '\'' +
+                '}';
     }
 }

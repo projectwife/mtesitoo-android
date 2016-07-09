@@ -23,9 +23,6 @@ public class RegistrationWizard extends AbstractWizardModel {
 
     public RegistrationWizard(Context context) {
         super(context);
-
-
-
     }
 
     @Override
@@ -34,23 +31,14 @@ public class RegistrationWizard extends AbstractWizardModel {
         IZonesCache zonesCache=new ZoneCache(mContext);
         List<Zone> zones= zonesCache.GetZones();
         String[] zonesNames=new String[zones.size()];
+
         for (int i = 0; i <zones.size() ; i++) {
             zonesNames[i]=zones.get(i).getName();
-            //System.out.println("s111111111111111wozhez"+zones.get(i).getName());
         }
          //Agree
         String[] agreeNames=new String[2];;
         agreeNames[0]="Yes";
         agreeNames[1]="No";
-
-        String[] testName=new String[2];;
-        testName[0]="Yes";
-        testName[1]="No";
-
-        //getZoneID
-
-
-        //System.out.println("Geting Countries value selected:   "+s);
 
         return new PageList(
 

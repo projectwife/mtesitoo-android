@@ -77,6 +77,7 @@ import com.tech.freak.wizardpager.ui.StepPagerStrip;
 
 import java.util.Date;
 import java.util.List;
+
 import android.os.Handler;
 
 
@@ -116,8 +117,8 @@ public class RegistrationActivity extends ActionBarActivity implements
             String firstname = mWizardModel.findByKey(this.getString(R.string.page_firstname)).getData().getString(Page.SIMPLE_DATA_KEY);
             String lastname = mWizardModel.findByKey(this.getString(R.string.page_lastname)).getData().getString(Page.SIMPLE_DATA_KEY);
             String page_password = mWizardModel.findByKey(this.getString(R.string.page_password)).getData().getString(Page.SIMPLE_DATA_KEY);
-            String country=mPrefs.getString("SelectedCountries","195");
-            String zone=mWizardModel.findByKey(this.getString(R.string.page_Zone)).getData().getString(Page.SIMPLE_DATA_KEY);
+            String country = mPrefs.getString("SelectedCountries", "195");
+            String zone = mWizardModel.findByKey(this.getString(R.string.page_Zone)).getData().getString(Page.SIMPLE_DATA_KEY);
             String page_phonenumber = mWizardModel.findByKey(this.getString(R.string.page_phonenumber)).getData().getString(Page.SIMPLE_DATA_KEY);
             String page_email = mWizardModel.findByKey(this.getString(R.string.page_email)).getData().getString(Page.SIMPLE_DATA_KEY);
             String Address1 = mWizardModel.findByKey(this.getString(R.string.page_address1)).getData().getString(Page.SIMPLE_DATA_KEY);
@@ -126,7 +127,7 @@ public class RegistrationActivity extends ActionBarActivity implements
             String page_Agree = mWizardModel.findByKey(this.getString(R.string.page_Agree)).getData().getString(Page.SIMPLE_DATA_KEY);
 
 
-           /* ICountriesCache cache = new CountriesCache(this);
+            ICountriesCache cache = new CountriesCache(this);
             List<Countries> countries = cache.getCountries();
 
             for (Countries c : countries) {
@@ -134,9 +135,10 @@ public class RegistrationActivity extends ActionBarActivity implements
                     country = Integer.toString(c.getId());
                     break;
                 }
-            }*/
-            IZonesCache zonesCache=new ZoneCache(this);
-            List<Zone> zones=zonesCache.GetZones();
+            }
+
+            IZonesCache zonesCache = new ZoneCache(this);
+            List<Zone> zones = zonesCache.GetZones();
             for (Zone c : zones) {
                 if (c.getName().equals(zone)) {
                     zone = Integer.toString(c.getId());
@@ -144,33 +146,25 @@ public class RegistrationActivity extends ActionBarActivity implements
                 }
             }
 
+            final Seller seller = new Seller(0, username, firstname, lastname,
+                    page_phonenumber, page_email, "Company", Address1, Address2,
+                    page_Postcode, "uri", page_password, zone, "1", country);
 
-           final Seller seller=new Seller(0, username,firstname, lastname,
-                   page_phonenumber , page_email,"Company", Address1, Address2,
-                   page_Postcode,"uri",page_password, zone,"1",country);
-
-            IRegistrationRequest registrationService=new RegistrationRequest(this);
+            IRegistrationRequest registrationService = new RegistrationRequest(this);
             registrationService.submitSeller(seller, new ICallback<Seller>() {
                 @Override
                 public void onResult(Seller result) {
+                    Toast.makeText(mContext, R.string.register_successful, Toast.LENGTH_LONG).show();
 
+                    startNewLogin(seller, mContext);
+                    finish();
                 }
 
                 @Override
                 public void onError(Exception e) {
-                    Toast.makeText(mContext,e.getMessage(),Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
-
-            myHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //Do something after 100ms
-                    System.out.println("i am holding and waiting");
-                    startNewLogin(seller,mContext);
-                    finish();
-                }
-            }, 3000);
 
         } else {
             if (mEditingAfterReview) {
@@ -191,17 +185,10 @@ public class RegistrationActivity extends ActionBarActivity implements
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_registration);
         ButterKnife.bind(this);
-        mContext=this;
+        mContext = this;
         myHandler = new Handler();
-        //System.out.println("i am here");
-        //Samuel 18/05/2016
         mPrefs = this.getSharedPreferences("pref", Context.MODE_PRIVATE);
         mEditor = mPrefs.edit();
-
-
-
-
-
         mWizardModel = new RegistrationWizard(this);
 
         if (savedInstanceState != null) {
@@ -404,17 +391,15 @@ public class RegistrationActivity extends ActionBarActivity implements
             return mCutOffPage;
         }
     }
-    public void startNewLogin(Seller seller,final Context mContext)
-    {
-        // do something for button 1 click
+
+    public void startNewLogin(Seller seller, final Context mContext) {
         final Intent intent = new Intent(this, HomeActivity.class);
         final ILoginRequest loginService = new LoginRequest(this);
 
         loginService.authenticateUser(seller.getUsername(), seller.getmPassword(), new ICallback<String>() {
             @Override
             public void onResult(String result) {
-
-                System.out.println("result---"+result);
+                Log.d("LOGIN RESULT", result);
                 ICategoryRequest categoryService = new CategoryRequest(mContext);
                 ISellerRequest sellerService = new SellerRequest(mContext);
                 ICommonRequest commonService = new CommonRequest(mContext);
@@ -451,7 +436,6 @@ public class RegistrationActivity extends ActionBarActivity implements
                         cache.storeCategories(categories);
                     }
 
-
                     @Override
                     public void onError(Exception e) {
                     }
@@ -459,7 +443,8 @@ public class RegistrationActivity extends ActionBarActivity implements
 
                 sellerService.getSellerInfo(Integer.parseInt(result), new ICallback<Seller>() {
                     @Override
-                    public void onResult(Seller result) {System.out.println("seller result--"+result);
+                    public void onResult(Seller result) {
+                        Log.d("getSellerInfo", result.toString());
                         intent.putExtra(mContext.getString(R.string.bundle_seller_key), result);
                         mContext.startActivity(intent);
                         finish();
@@ -467,16 +452,15 @@ public class RegistrationActivity extends ActionBarActivity implements
 
                     @Override
                     public void onError(Exception e) {
-
+                        Log.e("getSellerInfo", e.toString());
                     }
                 });
-
-
             }
 
             @Override
-            public void onError(Exception e) {  System.out.println("in onError---");
-                Toast.makeText(mContext,e.getMessage(),Toast.LENGTH_LONG).show();
+            public void onError(Exception e) {
+                Log.e("authenticateUser", e.toString());
+                Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
 

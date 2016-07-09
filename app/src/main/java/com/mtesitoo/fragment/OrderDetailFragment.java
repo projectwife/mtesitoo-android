@@ -30,7 +30,6 @@ public class OrderDetailFragment extends Fragment implements BaseSliderView.OnSl
 
  private Order mOrder;
 
-
     @Bind(R.id.product_image_slider)
     SliderLayout mImageSlider;
     @Bind(R.id.product_detail_info_border)

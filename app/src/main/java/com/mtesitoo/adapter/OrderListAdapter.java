@@ -64,9 +64,6 @@ public class OrderListAdapter extends ArrayAdapter<Order> {
         Context context;
         TextView name;
 
-
-
-
         @OnClick(R.id.product_detail)
         public void onClick(View view) {
             Intent intent = new Intent(context, OrderActivity.class);
