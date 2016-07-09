@@ -57,14 +57,13 @@ import butterknife.OnClick;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private Context mContext;
-    //Samuel 18/05/2016
-    //protected Context mContext;
     protected SharedPreferences.Editor mEditor;
     protected SharedPreferences mPrefs;
     String[] zonesNames;
 
     @Bind(R.id.user_name)
     TextView mUsername;
+    
     @Bind(R.id.password)
     TextView mPassword;
 
@@ -93,6 +92,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                             @Override
                             public void onError(Exception e) {
+                                Log.e("LengthUnits", e.toString());
                             }
                         });
 
@@ -105,6 +105,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                             @Override
                             public void onError(Exception e) {
+                                Log.e("WeightUnits", e.toString());
                             }
                         });
 
@@ -115,16 +116,16 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 cache.storeCategories(categories);
                             }
 
-
                             @Override
                             public void onError(Exception e) {
+                                Log.e("Categories", e.toString());
                             }
                         });
 
                         sellerService.getSellerInfo(Integer.parseInt(result), new ICallback<Seller>() {
                             @Override
                             public void onResult(Seller result) {
-                                Log.d("Login - Seller Info",result.toString());
+                                Log.d("Login - Seller Info", result.toString());
                                 intent.putExtra(mContext.getString(R.string.bundle_seller_key), result);
                                 mContext.startActivity(intent);
                                 finish();
@@ -139,7 +140,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     @Override
                     public void onError(Exception e) {
-                        System.out.println("in onError---");
+                        Log.e("AuthenticateUser", e.toString());
                         Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
@@ -190,7 +191,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                             @Override
                             public void onError(Exception e) {
-                                Log.e("Zones",e.toString());
+                                Log.e("Zones", e.toString());
                             }
                         });
 
@@ -235,6 +236,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onError(Exception e) {
+                Log.e("Countries", e.toString());
             }
         });
 
@@ -251,6 +253,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onError(Exception e) {
+                Log.e("Login", e.toString());
             }
         });
     }

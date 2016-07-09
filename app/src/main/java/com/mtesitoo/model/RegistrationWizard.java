@@ -31,6 +31,7 @@ public class RegistrationWizard extends AbstractWizardModel {
         IZonesCache zonesCache=new ZoneCache(mContext);
         List<Zone> zones= zonesCache.GetZones();
         String[] zonesNames=new String[zones.size()];
+
         for (int i = 0; i <zones.size() ; i++) {
             zonesNames[i]=zones.get(i).getName();
         }
@@ -38,10 +39,6 @@ public class RegistrationWizard extends AbstractWizardModel {
         String[] agreeNames=new String[2];;
         agreeNames[0]="Yes";
         agreeNames[1]="No";
-
-        String[] testName=new String[2];;
-        testName[0]="Yes";
-        testName[1]="No";
 
         return new PageList(
 
