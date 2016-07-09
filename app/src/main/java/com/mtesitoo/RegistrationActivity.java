@@ -127,7 +127,7 @@ public class RegistrationActivity extends ActionBarActivity implements
             String page_Agree = mWizardModel.findByKey(this.getString(R.string.page_Agree)).getData().getString(Page.SIMPLE_DATA_KEY);
 
 
-           /* ICountriesCache cache = new CountriesCache(this);
+            ICountriesCache cache = new CountriesCache(this);
             List<Countries> countries = cache.getCountries();
 
             for (Countries c : countries) {
@@ -135,7 +135,8 @@ public class RegistrationActivity extends ActionBarActivity implements
                     country = Integer.toString(c.getId());
                     break;
                 }
-            }*/
+            }
+
             IZonesCache zonesCache = new ZoneCache(this);
             List<Zone> zones = zonesCache.GetZones();
             for (Zone c : zones) {
@@ -153,7 +154,7 @@ public class RegistrationActivity extends ActionBarActivity implements
             registrationService.submitSeller(seller, new ICallback<Seller>() {
                 @Override
                 public void onResult(Seller result) {
-
+                    Toast.makeText(mContext, R.string.register_successful, Toast.LENGTH_LONG).show();
                 }
 
                 @Override

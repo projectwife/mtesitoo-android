@@ -147,7 +147,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
 
             case R.id.newUser: {
-                //Todo: fix country not being uploaded - move it to address area of the form
                 //Todo: allow user to pick between seller and buyer profiles
 
                 ICountriesCache cache = new CountriesCache(mContext);
@@ -158,7 +157,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     countriesNames[i] = countries.get(i).getName();
                 }
 
-                Arrays.sort(countriesNames);
+                //Arrays.sort(countriesNames);
 
                 final AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Where are you from?");
@@ -167,6 +166,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     public void onClick(DialogInterface dialog, int which) {
                         mEditor.putString("SelectedCountries", countriesNames[which]);
                         mEditor.apply();
+
                         IZoneRequest zoneService = new ZoneRequest(mContext);
 
                         zoneService.getZones(new ICallback<List<Zone>>() {
@@ -182,16 +182,18 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                 for (int i = 0; i < zones1.size(); i++) {
                                     zonesNames[i] = zones1.get(i).getName();
                                 }
+
+                                final Intent intent = new Intent(mContext, RegistrationActivity.class);
+                                mContext.startActivity(intent);
+                                finish();
                             }
 
                             @Override
                             public void onError(Exception e) {
+                                Log.e("Zones",e.toString());
                             }
                         });
 
-                        final Intent intent = new Intent(mContext, RegistrationActivity.class);
-                        mContext.startActivity(intent);
-                        finish();
                     }
                 });
                 builder.show();
