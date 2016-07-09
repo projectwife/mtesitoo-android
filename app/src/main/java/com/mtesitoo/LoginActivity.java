@@ -63,7 +63,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @Bind(R.id.user_name)
     TextView mUsername;
-    
+
     @Bind(R.id.password)
     TextView mPassword;
 

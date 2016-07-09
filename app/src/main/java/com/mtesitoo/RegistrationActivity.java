@@ -155,6 +155,9 @@ public class RegistrationActivity extends ActionBarActivity implements
                 @Override
                 public void onResult(Seller result) {
                     Toast.makeText(mContext, R.string.register_successful, Toast.LENGTH_LONG).show();
+
+                    startNewLogin(seller, mContext);
+                    finish();
                 }
 
                 @Override
@@ -162,16 +165,6 @@ public class RegistrationActivity extends ActionBarActivity implements
                     Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
-
-            myHandler.postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    //Do something after 100ms
-                    System.out.println("i am holding and waiting");
-                    startNewLogin(seller, mContext);
-                    finish();
-                }
-            }, 3000);
 
         } else {
             if (mEditingAfterReview) {
@@ -451,7 +444,7 @@ public class RegistrationActivity extends ActionBarActivity implements
                 sellerService.getSellerInfo(Integer.parseInt(result), new ICallback<Seller>() {
                     @Override
                     public void onResult(Seller result) {
-                        Log.d("getSellerInfo",result.toString());
+                        Log.d("getSellerInfo", result.toString());
                         intent.putExtra(mContext.getString(R.string.bundle_seller_key), result);
                         mContext.startActivity(intent);
                         finish();
@@ -466,7 +459,7 @@ public class RegistrationActivity extends ActionBarActivity implements
 
             @Override
             public void onError(Exception e) {
-                Log.e("authenticateUser",e.toString());
+                Log.e("authenticateUser", e.toString());
                 Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
             }
         });
