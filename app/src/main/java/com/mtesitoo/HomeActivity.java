@@ -146,7 +146,7 @@ public class HomeActivity extends AppCompatActivity {
                             if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_home_index))) {
                                 f = ProductFragment.newInstance(mContext, mSeller);
                             } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_profile_index))) {
-                                f = ProfileFragment.newInstance();
+                                f = ProfileFragment.newInstance(mContext, mSeller);
                             } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_order_index))) {
                                 f = OrderFragment.newInstance(mContext, mSeller);
                             } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_add_product_index))) {

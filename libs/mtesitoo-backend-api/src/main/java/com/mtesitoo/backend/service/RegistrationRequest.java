@@ -49,10 +49,10 @@ public class RegistrationRequest extends Request implements IRegistrationRequest
                     params.put(mContext.getString(R.string.params_register_lastname), seller.getmLastName());
                 if (seller.getmEmail() != null)
                     params.put(mContext.getString(R.string.params_register_email), seller.getmEmail());
-                if (seller.getmStreet() != null)
-                    params.put(mContext.getString(R.string.params_register_address_1), seller.getmStreet());
-                if (seller.getmCity() != null)
-                    params.put(mContext.getString(R.string.params_register_address_2), seller.getmCity());
+                if (seller.getmAddress1() != null)
+                    params.put(mContext.getString(R.string.params_register_address_1), seller.getmAddress1());
+                if (seller.getmAddress2() != null)
+                    params.put(mContext.getString(R.string.params_register_address_2), seller.getmAddress2());
                 if (seller.getmCity() != null)
                     params.put(mContext.getString(R.string.params_register_city), seller.getmCity());
                 if (seller.getmPostcode() != null)
