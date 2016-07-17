@@ -1,6 +1,7 @@
-package com.mtesitoo.backend.service.logic;
+package com.mtesitoo.backend.service;
 
 import android.content.Context;
+import android.util.Log;
 
 import java.util.HashMap;
 import java.util.List;
@@ -10,13 +11,11 @@ import com.mtesitoo.backend.R;
 import com.mtesitoo.backend.model.header.Authorization;
 import com.mtesitoo.backend.model.AuthorizedStringRequest;
 import com.mtesitoo.backend.model.URL;
-import com.mtesitoo.backend.model.url.ProductImageURL;
 import com.mtesitoo.backend.model.url.VendorOrdersURL;
 import com.mtesitoo.backend.service.logic.ICallback;
 
 import com.mtesitoo.backend.model.Order;
-import com.mtesitoo.backend.service.*;
-
+import com.mtesitoo.backend.service.logic.IOrderRequest;
 
 
 /**
@@ -62,16 +61,14 @@ public class OrderRequest  extends Request implements IOrderRequest {
 
     @Override
     public void getOrders(final int sellerId, ICallback<List<Order>> callback) {
-
-        URL url = new VendorOrdersURL(mContext, R.string.path_order_vendor, sellerId);
+        Log.d("getOrders - SellerId",String.valueOf(sellerId));
+        URL url = new VendorOrdersURL(mContext, R.string.path_order_vendor);
+        Log.d("Vendor Orders URL",url.toString());
         OrderResponse response = new OrderResponse(callback);
 
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.GET, url.toString(), response, response);
 
         stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
         mRequestQueue.add(stringRequest);
-
-
-
     }
 }

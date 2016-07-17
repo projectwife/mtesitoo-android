@@ -1,11 +1,13 @@
-package com.mtesitoo.backend.service.logic;
+package com.mtesitoo.backend.service;
 
 import android.net.Uri;
+import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.mtesitoo.backend.model.Order;
 import com.mtesitoo.backend.model.Product;
+import com.mtesitoo.backend.service.logic.ICallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -50,10 +52,11 @@ public class OrderResponse implements Response.Listener<String>, Response.ErrorL
         List<Order> result = new ArrayList<>(jsonOrders.length());
         for (int i = 0; i < jsonOrders.length(); ++i) {
             JSONObject jsonOrder = jsonOrders.getJSONObject(i);
+            Log.d("JSON definition file",jsonOrder.toString());
             Order order =
                     new Order(
-                            1,
-                            "Customer Name",
+                            Integer.parseInt(jsonOrder.getString("order_id")),
+                            jsonOrder.getString("customer"),
                             "Delivery Address",
                             "Product Name",
                             "Order Status",
