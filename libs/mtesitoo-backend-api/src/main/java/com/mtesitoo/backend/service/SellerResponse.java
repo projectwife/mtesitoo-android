@@ -1,7 +1,5 @@
 package com.mtesitoo.backend.service;
 
-import android.util.Log;
-
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.mtesitoo.backend.model.Seller;
@@ -22,21 +20,20 @@ public class SellerResponse implements Response.Listener<String>, Response.Error
 
     @Override
     public void onResponse(String response) {
+        System.out.println(response);
         try {
             Seller seller = parseResponse(response);
-            if (mCallback != null)
+           if (mCallback != null)
                 mCallback.onResult(seller);
         } catch (JSONException e) {
-            if (mCallback != null){
-                Log.e("Seller Parsing", response);
+            if (mCallback != null)
                 mCallback.onError(e);
-            }
         }
     }
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        mCallback.onError(error);
+       mCallback.onError(error);
     }
 
     private Seller parseResponse(String response) throws JSONException {
@@ -44,6 +41,7 @@ public class SellerResponse implements Response.Listener<String>, Response.Error
         JSONObject jsonSellerObject = jsonResponse.getJSONObject("vendor");
         JSONObject jsonSellerAddressObject = jsonSellerObject.getJSONObject("address");
         JSONObject jsonSellerAddressCountryObject = jsonSellerAddressObject.getJSONObject("country");
+        JSONObject jsonSellerAddressStateObject = jsonSellerAddressObject.getJSONObject("zone");
 
         return new Seller(Integer.parseInt(
                 jsonSellerObject.getString("vendor_id")),
@@ -54,9 +52,12 @@ public class SellerResponse implements Response.Listener<String>, Response.Error
                 jsonSellerObject.getString("email"),
                 jsonSellerObject.getString("company"),
                 jsonSellerAddressObject.getString("address_1"),
+                jsonSellerAddressObject.getString("address_2"),
                 jsonSellerAddressObject.getString("city"),
+                jsonSellerAddressStateObject.getString("name"),
                 jsonSellerAddressObject.getString("postcode"),
                 jsonSellerAddressCountryObject.getString("name"),
-                "URI");
+                jsonSellerObject.getString("description"),
+                jsonSellerObject.getString("thumb"));
     }
 }

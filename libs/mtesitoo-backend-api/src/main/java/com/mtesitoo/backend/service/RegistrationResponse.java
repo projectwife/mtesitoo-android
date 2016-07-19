@@ -38,22 +38,4 @@ public class RegistrationResponse implements Response.Listener<String>, Response
     public void onErrorResponse(VolleyError error) {
         mCallback.onError(error);
     }
-
-    public List<Seller> parseResponse(String response) throws JSONException {
-        JSONArray jsonProducts = new JSONArray(response);
-
-        List<Seller> result = new ArrayList<>(jsonProducts.length());
-        for (int i = 0; i < jsonProducts.length(); ++i) {
-            JSONObject jsonProduct = jsonProducts.getJSONObject(i);
-            Seller seller =
-                    new Seller(Integer.parseInt(jsonProduct.getString("product_id")),
-                            jsonProduct.getString("name"),
-                            "1", "2",
-                            "3", "4", "3", "1", "1", "2",
-                            "3", "4");
-            result.add(seller);
-        }
-
-        return result;
-    }
 }

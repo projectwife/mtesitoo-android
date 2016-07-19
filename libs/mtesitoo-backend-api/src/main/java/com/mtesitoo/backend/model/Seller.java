@@ -9,7 +9,7 @@ import android.os.Parcelable;
  */
 public class Seller implements Parcelable {
     public static final Seller DUMMY = new Seller(1, "User Name", "First Name", "Last Name",
-            "Phone Number", "Email", "Company", "Street", "City", "Postcode", "Country", "Uri");
+            "Phone Number", "Email", "Company", "Address1", "Address2", "City", "State", "Postcode", "Country", "Description", "Uri");
 
     private final Integer mId;
 
@@ -45,8 +45,16 @@ public class Seller implements Parcelable {
         return mCity;
     }
 
-    public String getmStreet() {
-        return mStreet;
+    public String getmState() {
+        return mState;
+    }
+
+    public String getmAddress1() {
+        return mAddress1;
+    }
+
+    public String getmAddress2() {
+        return mAddress2;
     }
 
     public String getmPostcode() {
@@ -55,6 +63,10 @@ public class Seller implements Parcelable {
 
     public String getmCountry() {
         return mCountry;
+    }
+
+    public String getmDescription() {
+        return mDescription;
     }
 
     public Uri getmThumbnail() {
@@ -67,9 +79,12 @@ public class Seller implements Parcelable {
     private final String mPhoneNumber;
     private final String mEmail;
     private final String mCompany;
-    private final String mStreet;
+    private final String mAddress1;
+    private final String mAddress2;
     private final String mCity;
+    private final String mState;
     private final String mPostcode;
+    private final String mDescription;
     private final Uri mThumbnail;
 
     public String getmPassword() {
@@ -77,7 +92,7 @@ public class Seller implements Parcelable {
     }
 
     //Samuel added
-    private String mPassword;
+    private  String mPassword;
 
     public String getmZoneId() {
         return mZoneId;
@@ -103,10 +118,13 @@ public class Seller implements Parcelable {
         this.mPhoneNumber = in.readString();
         this.mEmail = in.readString();
         this.mCompany = in.readString();
-        this.mStreet = in.readString();
+        this.mAddress1 = in.readString();
+        this.mAddress2 = in.readString();
         this.mCity = in.readString();
+        this.mState = in.readString();
         this.mPostcode = in.readString();
         this.mCountry = in.readString();
+        this.mDescription = in.readString();
         this.mThumbnail = Uri.parse(in.readString());
     }
 
@@ -124,8 +142,8 @@ public class Seller implements Parcelable {
 
 
     public Seller(Integer id, String username, String firstName, String lastName,
-                  String phoneNumber, String email, String company, String street, String city,
-                  String postCode, String country, String uri) {
+                  String phoneNumber, String email, String company, String address1, String address2, String city, String state,
+                  String postCode, String country, String description, String uri) {
         mId = id;
         mUsername = username;
         mFirstName = firstName;
@@ -133,17 +151,35 @@ public class Seller implements Parcelable {
         mPhoneNumber = phoneNumber;
         mEmail = email;
         mCompany = company;
-        mStreet = street;
+        mAddress1 = address1;
+        mAddress2 = address2;
         mCity = city;
+        mState = state;
         mPostcode = postCode;
         mCountry = country;
+        mDescription = description;
         mThumbnail = Uri.parse(uri);
-    }
 
+        System.out.println("mId " + mId);
+        System.out.println("mUsername " + mUsername);
+        System.out.println("mFirstName " + mFirstName);
+        System.out.println("mLastName "  + mLastName);
+        System.out.println("mPhoneNumber " + mPhoneNumber);
+        System.out.println("mEmail " + mEmail);
+        System.out.println("mCompany " + mCompany);
+        System.out.println("mAddress1 " + mAddress1);
+        System.out.println("mAddress2 " + mAddress2);
+        System.out.println("mCity " + mCity);
+        System.out.println("mState " + mState);
+        System.out.println("mPostcode " + mPostcode);
+        System.out.println("mCountry " + mCountry);
+        System.out.println("mDescription " + mDescription);
+        System.out.println("mThumbnail " + uri);
+    }
     //Seller for registration
     public Seller(Integer id, String username, String firstName, String lastName,
-                  String phoneNumber, String email, String company, String street, String city,
-                  String postCode, String uri, String password, String zoneId, String agree, String country) {
+                  String phoneNumber, String email, String company, String address1, String address2, String city, String state,
+                  String postCode, String uri,String password, String zoneId,String  agree, String country, String description) {
         mId = id;
         mUsername = username;
         mFirstName = firstName;
@@ -151,15 +187,18 @@ public class Seller implements Parcelable {
         mPhoneNumber = phoneNumber;
         mEmail = email;
         mCompany = company;
-        mStreet = street;
+        mAddress1 = address1;
+        mAddress2 = address2;
         mCity = city;
+        mState = state;
         mPostcode = postCode;
         mThumbnail = Uri.parse(uri);
 
-        mPassword = password;
-        mZoneId = zoneId;
-        mAgree = agree;
-        mCountry = country;
+        mPassword=password;
+        mZoneId=zoneId;
+        mAgree=agree;
+        mCountry=country;
+        mDescription = description;
 
     }
 
@@ -183,13 +222,19 @@ public class Seller implements Parcelable {
             return false;
         if (mCompany != null ? !mCompany.equals(seller.mCompany) : seller.mCompany != null)
             return false;
-        if (mStreet != null ? !mStreet.equals(seller.mStreet) : seller.mStreet != null)
+        if (mAddress1 != null ? !mAddress1.equals(seller.mAddress1) : seller.mAddress1 != null)
+            return false;
+        if (mAddress2 != null ? !mAddress2.equals(seller.mAddress2) : seller.mAddress2 != null)
             return false;
         if (mCity != null ? !mCity.equals(seller.mCity) : seller.mCity != null)
+            return false;
+        if (mState != null ? !mState.equals(seller.mCity) : seller.mState != null)
             return false;
         if (mPostcode != null ? !mPostcode.equals(seller.mPostcode) : seller.mPostcode != null)
             return false;
         if (mCountry != null ? !mCountry.equals(seller.mCountry) : seller.mCountry != null)
+            return false;
+        if (mDescription != null ? !mDescription.equals(seller.mDescription) : seller.mDescription != null)
             return false;
         return !(mThumbnail != null ? !mThumbnail.toString().equals(seller.mThumbnail.toString()) : seller.mThumbnail != null);
     }
@@ -203,10 +248,13 @@ public class Seller implements Parcelable {
         result = 31 * result + (mPhoneNumber != null ? mPhoneNumber.hashCode() : 0);
         result = 31 * result + (mEmail != null ? mEmail.hashCode() : 0);
         result = 31 * result + (mCompany != null ? mCompany.hashCode() : 0);
-        result = 31 * result + (mStreet != null ? mStreet.hashCode() : 0);
+        result = 31 * result + (mAddress1 != null ? mAddress1.hashCode() : 0);
+        result = 31 * result + (mAddress2 != null ? mAddress2.hashCode() : 0);
         result = 31 * result + (mCity != null ? mCity.hashCode() : 0);
+        result = 31 * result + (mState != null ? mState.hashCode() : 0);
         result = 31 * result + (mPostcode != null ? mPostcode.hashCode() : 0);
         result = 31 * result + (mCountry != null ? mCountry.hashCode() : 0);
+        result = 31 * result + (mDescription != null ? mDescription.hashCode() : 0);
         result = 31 * result + (mThumbnail != null ? mThumbnail.hashCode() : 0);
 
         return result;
@@ -226,10 +274,13 @@ public class Seller implements Parcelable {
         dest.writeString(mPhoneNumber);
         dest.writeString(mEmail);
         dest.writeString(mCompany);
-        dest.writeString(mStreet);
+        dest.writeString(mAddress1);
+        dest.writeString(mAddress2);
         dest.writeString(mCity);
+        dest.writeString(mState);
         dest.writeString(mPostcode);
         dest.writeString(mCountry);
+        dest.writeString(mDescription);
         dest.writeString(mThumbnail.toString());
     }
 
@@ -251,7 +302,6 @@ public class Seller implements Parcelable {
                 ", mPhoneNumber='" + mPhoneNumber + '\'' +
                 ", mEmail='" + mEmail + '\'' +
                 ", mCompany='" + mCompany + '\'' +
-                ", mStreet='" + mStreet + '\'' +
                 ", mCity='" + mCity + '\'' +
                 ", mPostcode='" + mPostcode + '\'' +
                 ", mThumbnail=" + mThumbnail +
