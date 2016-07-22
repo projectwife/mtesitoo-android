@@ -18,7 +18,7 @@ public class Order implements Parcelable {
     private final String mDeliveryAddress;
     private final String mProductName;
     private final String mOrderStatus;
-    private final String mTotalPrice;
+    private final double mTotalPrice;
     private final String mProductPrice;
     private final Integer mProductQuantity;
     private final Date mDateOrderPlaced;
@@ -32,7 +32,7 @@ public class Order implements Parcelable {
         this.mDeliveryAddress =in.readString();
         this.mProductName = in.readString();
         this.mOrderStatus = in.readString();
-        this.mTotalPrice = in.readString();
+        this.mTotalPrice = in.readDouble();
         this.mProductPrice = in.readString();
         this.mProductQuantity = in.readInt();
         this.mDateOrderPlaced =new Date(in.readLong());
@@ -40,7 +40,7 @@ public class Order implements Parcelable {
 
     }
 
-    public Order(int mId, String mCustomerName, String mDeliveryAddress, String mProductName, String mOrderStatus, String mTotalPrice, String mProductPrice, Integer mProductQuantity, Date mDateOrderPlaced, String mPaymentMethod) {
+    public Order(int mId, String mCustomerName, String mDeliveryAddress, String mProductName, String mOrderStatus, double mTotalPrice, String mProductPrice, Integer mProductQuantity, Date mDateOrderPlaced, String mPaymentMethod) {
         this.mId = mId;
         this.mCustomerName = mCustomerName;
         this.mDeliveryAddress = mDeliveryAddress;
@@ -74,7 +74,7 @@ public class Order implements Parcelable {
         return mOrderStatus;
     }
 
-    public String getmTotalPrice() {
+    public double getmTotalPrice() {
         return mTotalPrice;
     }
 
@@ -140,7 +140,7 @@ public class Order implements Parcelable {
         dest.writeString(mDeliveryAddress);
         dest.writeString(mProductName);
         dest.writeString(mOrderStatus);
-        dest.writeString(mTotalPrice);
+        dest.writeDouble(mTotalPrice);
         dest.writeString(mProductPrice);
         dest.writeInt(mProductQuantity);
         dest.writeLong(mDateOrderPlaced.getTime());

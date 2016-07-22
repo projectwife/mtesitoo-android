@@ -43,7 +43,7 @@ public class OrderRequest  extends Request implements IOrderRequest {
                 params.put(mContext.getString(R.string.params_product_price), order.getmProductPrice());
                 params.put(mContext.getString(R.string.params_product_quantity), Integer.toString(order.getmProductQuantity()));
                 params.put(mContext.getString(R.string.params_order_delivery_address), order.getmDeliveryAddress());
-                params.put(mContext.getString(R.string.params_order_total_price), order.getmTotalPrice());
+                params.put(mContext.getString(R.string.params_order_total_price), Double.toString(order.getmTotalPrice()));
                 //params.put(mContext.getString(R.string.params_order_placed_date), order.getmDateOrderPlaced().toString());
                 params.put(mContext.getString(R.string.params_order_payment_method), order.getmPaymentMethod());
                 params.put(mContext.getString(R.string.params_order_status), order.getmOrderStatus());

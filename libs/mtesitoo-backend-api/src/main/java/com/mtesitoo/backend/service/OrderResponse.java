@@ -52,15 +52,17 @@ public class OrderResponse implements Response.Listener<String>, Response.ErrorL
         List<Order> result = new ArrayList<>(jsonOrders.length());
         for (int i = 0; i < jsonOrders.length(); ++i) {
             JSONObject jsonOrder = jsonOrders.getJSONObject(i);
+            //TODO NAILY REMOVE BEFORE SUBMISSION
             Log.d("JSON definition file",jsonOrder.toString());
+            //TODO NAILY replace new Date() by properly formatted date
             Order order =
                     new Order(
-                            Integer.parseInt(jsonOrder.getString("order_id")),
+                            jsonOrder.getInt("order_id"),//Integer.parseInt(jsonOrder.getString("order_id")),
                             jsonOrder.getString("customer"),
                             "Delivery Address",
                             "Product Name",
-                            "Order Status",
-                            "Total Price",
+                            jsonOrder.getString("status"),
+                            jsonOrder.getDouble("total"),
                             "Product Price",
                             2,
                             new Date(),
