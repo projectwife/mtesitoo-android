@@ -17,7 +17,6 @@ import com.mtesitoo.backend.service.logic.ICallback;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Date;
 
 /**
  * Created by Nan on 12/30/2015.
@@ -71,14 +70,7 @@ public class OrderFragment extends ListFragment {
             }
         });
 
-
-    //static order list
-        /*Order order1=new Order(1,"John Dark","201 North street,Arlington,WA","Almond","","120$","60$",2,new Date(),"");
-        Order order2=new Order(2,"Jane Doe","67 Cumberland Street, Boston","Pears", "Order status","520$","70$",20,new Date(),"Payment method");
-        ArrayList<Order> orderList =new ArrayList<Order>();
-        orderList.add(order1);
-        orderList.add(order2);*/
-        mOrderListAdapter = new OrderListAdapter(getActivity(),new ArrayList<Order>()); //orderList
+        mOrderListAdapter = new OrderListAdapter(getActivity(),new ArrayList<Order>());
         setListAdapter(mOrderListAdapter);
     }
 }

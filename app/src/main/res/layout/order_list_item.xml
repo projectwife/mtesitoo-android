@@ -6,61 +6,106 @@
     android:layout_height="wrap_content"
     android:background="#e6e6e6" >
 
-    <FrameLayout
+    <LinearLayout
         style="@style/CardTheme"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/l1"
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/TextTitleTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/customer_name"
+                android:textStyle="bold" />
 
             <TextView
                 android:id="@+id/customer_Name"
                 style="@style/TextTitleTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Customer Name"
+                android:layout_alignParentRight="true"
                 android:textStyle="bold" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/TextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/total_price" />
 
             <TextView
                 android:id="@+id/order_total_price"
                 style="@style/TextTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Total Price" />
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/TextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/order_status" />
 
             <TextView
                 android:id="@+id/order_status"
                 style="@style/TextTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Order Status" />
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <TextView
+                style="@style/TextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/date_order_placed" />
 
             <TextView
                 android:id="@+id/date_ordered"
                 style="@style/TextTheme"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Ordered on" />
+                android:layout_alignParentRight="true" />
+        </RelativeLayout>
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+        <View
+            android:id="@+id/order_layout_divider"
+            android:layout_width="wrap_content"
+            android:layout_height="1dip"
+            android:layout_marginTop="8dip"
+            android:layout_marginBottom="8dip"
+            android:background="#d9d9d9" />
 
-        </LinearLayout>
+        <TextView
+            android:id="@+id/order_details_link"
+            style="@style/TextLinkTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/see_more_details"
+            android:textStyle="bold" />
 
-        <ImageView
-            android:id="@+id/product_detail"
-            android:layout_width="57dp"
-            android:layout_height="57dp"
-            android:layout_gravity="right|center_vertical"
-            android:layout_marginRight="10dip"
-            android:src="@drawable/navigation_forward" />
-
-    </FrameLayout>
+    </LinearLayout>
 
 </RelativeLayout>

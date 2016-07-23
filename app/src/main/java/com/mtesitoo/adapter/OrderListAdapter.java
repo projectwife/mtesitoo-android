@@ -13,6 +13,7 @@ import com.mtesitoo.OrderActivity;
 import com.mtesitoo.R;
 import com.mtesitoo.backend.model.Order;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -61,11 +62,10 @@ public class OrderListAdapter extends ArrayAdapter<Order> {
         holder.context = mContext;
         holder.order = order;
 
-        holder.name.setText("Name : " + order.getmCustomerName());
-        //TODO Naily - What's the currency?
-        holder.totalPrice.setText("Order Total : " + order.getmTotalPrice());
-        holder.orderStatus.setText("Order Status : " + order.getmOrderStatus());
-        holder.dateOrdered.setText("Ordered on : "+order.getmDateOrderPlaced());
+        holder.name.setText(order.getmCustomerName());
+        holder.totalPrice.setText(String.format("%s%,.2f", mContext.getString(R.string.currency_symbol), order.getmTotalPrice()));
+        holder.orderStatus.setText(order.getmOrderStatus());
+        holder.dateOrdered.setText(new SimpleDateFormat("dd MMM yyyy").format(order.getmDateOrderPlaced()));
 
         return convertView;
     }
@@ -79,7 +79,7 @@ public class OrderListAdapter extends ArrayAdapter<Order> {
         @Bind(R.id.order_status)      TextView orderStatus;
         @Bind(R.id.date_ordered)      TextView dateOrdered;
 
-        @OnClick(R.id.product_detail)
+        @OnClick(R.id.order_details_link)
         public void onClick(View view) {
             Intent intent = new Intent(context, OrderActivity.class);
             intent.putExtra(context.getString(R.string.bundle_product_key), order);

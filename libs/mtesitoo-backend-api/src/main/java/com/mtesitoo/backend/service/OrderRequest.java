@@ -61,9 +61,7 @@ public class OrderRequest  extends Request implements IOrderRequest {
 
     @Override
     public void getOrders(final int sellerId, ICallback<List<Order>> callback) {
-        Log.d("getOrders - SellerId",String.valueOf(sellerId));
         URL url = new VendorOrdersURL(mContext, R.string.path_order_vendor);
-        Log.d("Vendor Orders URL",url.toString());
         OrderResponse response = new OrderResponse(callback);
 
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.GET, url.toString(), response, response);

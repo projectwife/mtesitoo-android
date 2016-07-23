@@ -52,8 +52,8 @@ public class OrderResponse implements Response.Listener<String>, Response.ErrorL
         List<Order> result = new ArrayList<>(jsonOrders.length());
         for (int i = 0; i < jsonOrders.length(); ++i) {
             JSONObject jsonOrder = jsonOrders.getJSONObject(i);
-            //TODO NAILY REMOVE BEFORE SUBMISSION
-            Log.d("JSON definition file",jsonOrder.toString());
+            //TODO NAILY COMMENT OUT BEFORE SUBMISSION
+            //Log.d("JSON definition file",jsonOrder.toString());
             //TODO NAILY replace new Date() by properly formatted date
             Order order =
                     new Order(
