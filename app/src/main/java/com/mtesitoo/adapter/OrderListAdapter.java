@@ -12,8 +12,8 @@ import android.widget.TextView;
 import com.mtesitoo.OrderActivity;
 import com.mtesitoo.R;
 import com.mtesitoo.backend.model.Order;
+import com.mtesitoo.helper.FormatHelper;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 
 import butterknife.Bind;
@@ -63,9 +63,9 @@ public class OrderListAdapter extends ArrayAdapter<Order> {
         holder.order = order;
 
         holder.name.setText(order.getmCustomerName());
-        holder.totalPrice.setText(String.format("%s%,.2f", mContext.getString(R.string.currency_symbol), order.getmTotalPrice()));
+        holder.totalPrice.setText(FormatHelper.formatPrice(mContext.getString(R.string.currency_symbol), order.getmTotalPrice()));
         holder.orderStatus.setText(order.getmOrderStatus());
-        holder.dateOrdered.setText(new SimpleDateFormat("dd MMM yyyy").format(order.getmDateOrderPlaced()));
+        holder.dateOrdered.setText(FormatHelper.formatDate(order.getmDateOrderPlaced()));
 
         return convertView;
     }
