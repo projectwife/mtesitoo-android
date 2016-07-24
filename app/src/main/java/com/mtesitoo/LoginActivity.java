@@ -15,6 +15,10 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.LoginEvent;
+import com.crashlytics.android.answers.SignUpEvent;
 import com.mtesitoo.backend.cache.AuthorizationCache;
 import com.mtesitoo.backend.cache.CategoryCache;
 import com.mtesitoo.backend.cache.CountriesCache;
@@ -44,6 +48,7 @@ import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.ISellerRequest;
 import com.mtesitoo.backend.service.logic.IZoneRequest;
 
+import io.fabric.sdk.android.Fabric;
 import java.text.Collator;
 import java.util.Arrays;
 import java.util.Collections;
@@ -126,6 +131,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             @Override
                             public void onResult(Seller result) {
                                 Log.d("Login - Seller Info", result.toString());
+
+                                logUser(result);
+                                logSuccessLogin(result);
                                 intent.putExtra(mContext.getString(R.string.bundle_seller_key), result);
                                 mContext.startActivity(intent);
                                 finish();
@@ -141,6 +149,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     @Override
                     public void onError(Exception e) {
                         Log.e("AuthenticateUser", e.toString());
+                        logFailLogin(mUsername.getText().toString(),e);
                         Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
@@ -158,7 +167,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     countriesNames[i] = countries.get(i).getName();
                 }
 
-                //Arrays.sort(countriesNames);
+                Arrays.sort(countriesNames);
 
                 final AlertDialog.Builder builder = new AlertDialog.Builder(this);
                 builder.setTitle("Where are you from?");
@@ -209,6 +218,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Fabric.with(this, new Crashlytics());
         setContentView(R.layout.activity_login);
 
         ButterKnife.bind(this);
@@ -257,4 +267,24 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         });
     }
+
+    private void logUser(Seller seller) {
+        Crashlytics.setUserIdentifier(String.valueOf(seller.getId()));
+        Crashlytics.setUserEmail(seller.getmEmail());
+        Crashlytics.setUserName(seller.getUsername());
+    }
+
+    private void logSuccessLogin(Seller seller) {
+        Answers.getInstance().logLogin(new LoginEvent()
+                .putSuccess(true)
+                .putCustomAttribute("Username", seller.getUsername()));
+    }
+
+    private void logFailLogin(String username, Exception e) {
+        Answers.getInstance().logLogin(new LoginEvent()
+                .putSuccess(false)
+                .putCustomAttribute("Username", username)
+                .putCustomAttribute("Exception", e.getMessage()));
+    }
+
 }
