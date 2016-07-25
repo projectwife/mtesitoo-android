@@ -35,6 +35,9 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.crashlytics.android.Crashlytics;
+import com.crashlytics.android.answers.Answers;
+import com.crashlytics.android.answers.SignUpEvent;
 import com.mtesitoo.backend.cache.CategoryCache;
 import com.mtesitoo.backend.cache.CountriesCache;
 import com.mtesitoo.backend.cache.UnitCache;
@@ -156,12 +159,15 @@ public class RegistrationActivity extends ActionBarActivity implements
                 public void onResult(Seller result) {
                     Toast.makeText(mContext, R.string.register_successful, Toast.LENGTH_LONG).show();
 
+                    logSuccessRegistration(seller);
+                    logUser(seller);
                     startNewLogin(seller, mContext);
                     finish();
                 }
 
                 @Override
                 public void onError(Exception e) {
+                    logFailRegistration(seller);
                     Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
                 }
             });
@@ -174,6 +180,8 @@ public class RegistrationActivity extends ActionBarActivity implements
             }
         }
     }
+
+
 
     @OnClick(R.id.prev_button)
     public void onPrevButtonClick(View view) {
@@ -445,6 +453,7 @@ public class RegistrationActivity extends ActionBarActivity implements
                     @Override
                     public void onResult(Seller result) {
                         Log.d("getSellerInfo", result.toString());
+                        logUser(result);
                         intent.putExtra(mContext.getString(R.string.bundle_seller_key), result);
                         mContext.startActivity(intent);
                         finish();
@@ -464,6 +473,26 @@ public class RegistrationActivity extends ActionBarActivity implements
             }
         });
 
+    }
+
+    private void logUser(Seller seller) {
+        Crashlytics.setUserIdentifier(String.valueOf(seller.getId()));
+        Crashlytics.setUserEmail(seller.getmEmail());
+        Crashlytics.setUserName(seller.getUsername());
+    }
+
+    private void logSuccessRegistration(Seller seller) {
+        Answers.getInstance().logSignUp(new SignUpEvent()
+                .putSuccess(true)
+                .putCustomAttribute("Email", seller.getmEmail())
+                .putCustomAttribute("Username", seller.getUsername()));
+    }
+
+    private void logFailRegistration(Seller seller) {
+        Answers.getInstance().logSignUp(new SignUpEvent()
+                .putSuccess(false)
+                .putCustomAttribute("Email", seller.getmEmail())
+                .putCustomAttribute("Username", seller.getUsername()));
     }
 
 }

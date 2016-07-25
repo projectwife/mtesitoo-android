@@ -59,8 +59,15 @@ public class LoginResponse implements Response.Listener<String>, Response.ErrorL
 
     private String parseResponse(String response) throws JSONException {
         JSONObject jsonResponse = new JSONObject(response);
-        JSONObject jsonUserObject = jsonResponse.getJSONObject("user");
-        Log.d("NETWORK - VENDOR ID", jsonUserObject.getString("vendor_id"));
+        JSONObject jsonUserObject;
+        try{
+            jsonUserObject = jsonResponse.getJSONObject("user");
+            Log.d("NETWORK - VENDOR ID", jsonUserObject.getString("vendor_id"));
+        }catch(Exception e){
+            String errorMessage = jsonResponse.getJSONObject("errors").getString("message");
+            throw new JSONException(errorMessage);
+        }
+
         return jsonUserObject.getString("vendor_id");
     }
 }
