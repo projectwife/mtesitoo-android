@@ -12,4 +12,11 @@
 
     <string name="title_activity_order">OrderActivity</string>
     <string name="register_successful">Registered successfully, welcome!</string>
+
+    <string name="order_id">Order id</string>
+    <string name="customer_name">Customer</string>
+    <string name="total_price">Total Price</string>
+    <string name="order_status">Order Status</string>
+    <string name="date_order_placed">Ordered On</string>
+    <string name="see_more_details">See Details</string>
 </resources>

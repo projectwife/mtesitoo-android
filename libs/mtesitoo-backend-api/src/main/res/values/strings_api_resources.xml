@@ -50,7 +50,7 @@
     <string name="path_common_length">/common/length</string>
     <string name="path_common_weight">/common/weight</string>
 
-    <string name="path_order_vendor">/order/vendor</string>
+    <string name="path_order_vendor">/vendor/order</string>
 
     <string name="params_customer_name">customer_name</string>
     <string name="params_order_delivery_address">delivery_address</string>

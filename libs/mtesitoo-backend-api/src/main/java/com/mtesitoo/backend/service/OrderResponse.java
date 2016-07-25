@@ -1,16 +1,18 @@
-package com.mtesitoo.backend.service.logic;
+package com.mtesitoo.backend.service;
 
 import android.net.Uri;
+import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.mtesitoo.backend.model.Order;
-import com.mtesitoo.backend.model.Product;
+import com.mtesitoo.backend.service.logic.ICallback;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -50,17 +52,19 @@ public class OrderResponse implements Response.Listener<String>, Response.ErrorL
         List<Order> result = new ArrayList<>(jsonOrders.length());
         for (int i = 0; i < jsonOrders.length(); ++i) {
             JSONObject jsonOrder = jsonOrders.getJSONObject(i);
+            //TODO NAILY COMMENT OUT BEFORE SUBMISSION
+            //Log.d("JSON definition file",jsonOrder.toString());
             Order order =
                     new Order(
-                            1,
-                            "Customer Name",
+                            jsonOrder.getInt("order_id"),
+                            jsonOrder.getString("customer"),
                             "Delivery Address",
                             "Product Name",
-                            "Order Status",
-                            "Total Price",
+                            jsonOrder.getString("status"),
+                            jsonOrder.getDouble("total"),
                             "Product Price",
                             2,
-                            new Date(),
+                            FormatJsonDate(jsonOrder.getString("date_added")),
                             "Payment Method"
 
                     );
@@ -68,5 +72,29 @@ public class OrderResponse implements Response.Listener<String>, Response.ErrorL
         }
 
         return result;
+    }
+
+    private static Date FormatJsonDate(String dateString)
+    {
+        // Represents the current date format as specified by the string in the json definition file
+        // e.g. "date_added":"2016-05-21 22:32:25"
+        String dateStringFormat = "yyyy-MM-dd hh:mm:sss";
+
+        Date date;
+
+        try
+        {
+            date = new SimpleDateFormat(dateStringFormat).parse(dateString);
+        }
+        catch (java.text.ParseException e)
+        {
+            // If exception fires, make sure that the format specified by dateStringFormat matches
+            // the format in the json definition file.
+            // At time of writing (Jul-2016), this is what we get back: "date_added":"2016-05-08 22:41:05"
+            Log.e("FormatHelper", "Error - " + e.getMessage());
+            date = new Date();
+        }
+
+        return date;
     }
 }

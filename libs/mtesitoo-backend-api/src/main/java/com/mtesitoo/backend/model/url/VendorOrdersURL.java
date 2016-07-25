@@ -8,9 +8,7 @@ import android.content.Context;
  * Created by User on 27-04-2016.
  */
 public class VendorOrdersURL extends URL {
-    public VendorOrdersURL(Context context, int resId, int sellerId) {
+    public VendorOrdersURL(Context context, int resId) {
         super(context, resId);
-        mPath.append("/" + Integer.toString(sellerId));
-        mPath.append("/orders");
     }
 }

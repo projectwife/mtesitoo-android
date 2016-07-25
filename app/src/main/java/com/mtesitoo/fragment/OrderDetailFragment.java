@@ -89,7 +89,7 @@ public class OrderDetailFragment extends Fragment implements BaseSliderView.OnSl
         mOrder = args.getParcelable(getString(R.string.bundle_product_key));
         mProductName.setText(mOrder.getmProductName());
         mCustomerName.setText(mOrder.getmCustomerName());
-        mTotal.setText(mOrder.getmTotalPrice());
+        mTotal.setText(Double.toString(mOrder.getmTotalPrice()));
         mDeliveryAddress.setText(mOrder.getmDeliveryAddress());
         mOrderStatus.setText(mOrder.getmOrderStatus());
         mProductQuantity.setText(mOrder.getmProductQuantity().toString());
