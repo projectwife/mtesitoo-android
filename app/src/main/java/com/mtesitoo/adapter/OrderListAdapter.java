@@ -62,6 +62,7 @@ public class OrderListAdapter extends ArrayAdapter<Order> {
         holder.context = mContext;
         holder.order = order;
 
+        holder.orderId.setText(Integer.toString(order.getmId()));
         holder.name.setText(order.getmCustomerName());
         holder.totalPrice.setText(FormatHelper.formatPrice(mContext.getString(R.string.currency_symbol), order.getmTotalPrice()));
         holder.orderStatus.setText(order.getmOrderStatus());
@@ -74,6 +75,7 @@ public class OrderListAdapter extends ArrayAdapter<Order> {
         Order order;
         Context context;
 
+        @Bind(R.id.order_id)          TextView orderId;
         @Bind(R.id.customer_Name)     TextView name;
         @Bind(R.id.order_total_price) TextView totalPrice;
         @Bind(R.id.order_status)      TextView orderStatus;
