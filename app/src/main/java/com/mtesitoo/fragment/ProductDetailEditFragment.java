@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -130,7 +131,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     @Override
     public void onDestroy() {
         super.onDestroy();
-        FileHelper.clean(getActivity());
+        //FileHelper.clean(getActivity());
     }
 
     @Override
@@ -155,21 +156,28 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
 
     @Override
     public void onSliderClick(BaseSliderView slider) {
+
+//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+//        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
+//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+//        }
+
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
             ImageFile image = null;
 
             try {
+                image = new ImageFile(getActivity());
                 image = mImages.get(mImageSlider.getCurrentPosition());
             } catch (IndexOutOfBoundsException e) {
-                image = new ImageFile(getActivity());
-                mImages.add(image);
-            } finally {
-                if (image != null) {
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(image));
-                    getActivity().setResult(getActivity().RESULT_OK, intent);
-                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-                }
+                Log.d("IMAGE_CAPTURE","Issue creating image file");
+            }
+
+            if (image != null) {
+                Uri imgUri = Uri.fromFile(image);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+                //getActivity().setResult(getActivity().RESULT_OK, intent);
+                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
             }
         }
     }
@@ -189,7 +197,8 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && data != null) {
+        if (resultCode == getActivity().RESULT_OK && requestCode == REQUEST_IMAGE_CAPTURE && data != null) {
+            Uri imageUri = data.getData();
             updateImageSlider();
         }
     }
@@ -236,8 +245,11 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
 
     private void buildImageSlider() {
         ArrayList<String> urls = new ArrayList<>();
-        urls.add("http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
-        urls.add("http://tvfiles.alphacoders.com/100/hdclearart-10.png");
+        //Todo: get actual product image URLs
+        urls.add("http://www.firepitessentials.com/wp-content/themes/456ecology/assets//img/no-product-image.png");
+        urls.add("http://thefoodtrust.org/uploads/media_items/produce-placeholder-3.825.360.c.jpg");
+        urls.add("http://thefoodtrust.org/uploads/media_items/produce-placeholder-4.825.360.c.jpg");
+        urls.add("http://thefoodtrust.org/uploads/media_items/produce-placeholder-7-1.825.360.c.jpg");
 
         for (String url : urls) {
             DefaultSliderView sliderView = new DefaultSliderView(getActivity());

@@ -14,6 +14,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class ProductActivity extends AppCompatActivity {
+
     private Product mProduct;
 
     @Bind(R.id.toolbar)
@@ -49,4 +50,5 @@ public class ProductActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }
