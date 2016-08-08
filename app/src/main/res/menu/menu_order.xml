@@ -1,6 +1,33 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools" tools:context="com.mtesitoo.OrderActivity">
-    <item android:id="@+id/action_settings" android:title="@string/action_settings"
-        android:orderInCategory="100" app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_filterBy"
+        android:title="@string/menu_item_order_filterBy"
+        app:showAsAction="always"
+        android:orderInCategory="1" >
+        <menu>
+            <group
+                android:id="@+id/group_filterBy"
+                android:checkableBehavior="single">
+                <item
+                    android:id="@+id/action_filterByPending"
+                    android:title="@string/menu_item_order_filterBy_Pending"
+                    android:checked="true" />
+                <item
+                    android:id="@+id/action_filterByShipped"
+                    android:title="@string/menu_item_order_filterBy_Shipped" />
+                <item
+                    android:id="@+id/action_filterByComplete"
+                    android:title="@string/menu_item_order_filterBy_Complete" />
+                <item
+                    android:id="@+id/action_filterByCanceled"
+                    android:title="@string/menu_item_order_filterBy_Canceled" />
+                <item
+                    android:id="@+id/action_filterByClear"
+                    android:title="@string/menu_item_order_filterBy_Clear" />
+            </group>
+        </menu>
+    </item>
 </menu>

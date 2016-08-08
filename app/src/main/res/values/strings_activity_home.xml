@@ -25,4 +25,11 @@
     <string name="drawer_item_info">Info</string>
     <string name="drawer_item_help">Help</string>
     <string name="drawer_item_exit">Exit</string>
+
+    <string name="menu_item_order_filterBy">Filter By</string>
+    <string name="menu_item_order_filterBy_Pending">Pending</string>
+    <string name="menu_item_order_filterBy_Shipped">Shipped</string>
+    <string name="menu_item_order_filterBy_Complete">Complete</string>
+    <string name="menu_item_order_filterBy_Canceled">Canceled</string>
+    <string name="menu_item_order_filterBy_Clear">All Orders</string>
 </resources>

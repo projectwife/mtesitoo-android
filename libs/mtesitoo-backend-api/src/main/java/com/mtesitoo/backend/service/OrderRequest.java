@@ -11,6 +11,7 @@ import com.mtesitoo.backend.R;
 import com.mtesitoo.backend.model.header.Authorization;
 import com.mtesitoo.backend.model.AuthorizedStringRequest;
 import com.mtesitoo.backend.model.URL;
+import com.mtesitoo.backend.model.OrderStatus;
 import com.mtesitoo.backend.model.url.VendorOrdersURL;
 import com.mtesitoo.backend.service.logic.ICallback;
 
@@ -19,7 +20,7 @@ import com.mtesitoo.backend.service.logic.IOrderRequest;
 
 
 /**
- * Created by User on 26-04-2016.
+ * Created by User on 26-04-2016
  */
 public class OrderRequest  extends Request implements IOrderRequest {
     public OrderRequest(Context context) {
@@ -60,8 +61,11 @@ public class OrderRequest  extends Request implements IOrderRequest {
     }
 
     @Override
-    public void getOrders(final int sellerId, ICallback<List<Order>> callback) {
-        URL url = new VendorOrdersURL(mContext, R.string.path_order_vendor);
+    public void getOrders(final int sellerId, OrderStatus orderStatus, ICallback<List<Order>> callback) {
+        Log.d("getOrders - orderStatus", orderStatus.toString());
+        URL url = new VendorOrdersURL(mContext, orderStatus);
+        Log.d("Vendor Orders URL",url.toString());
+
         OrderResponse response = new OrderResponse(callback);
 
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.GET, url.toString(), response, response);
