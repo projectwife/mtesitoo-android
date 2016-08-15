@@ -48,12 +48,13 @@ public class OrderResponse implements Response.Listener<String>, Response.ErrorL
 
     public List<Order> parseResponse(String response) throws JSONException {
         JSONArray jsonOrders = new JSONArray(response);
+        Log.d("aRRAY response string", response);
 
         List<Order> result = new ArrayList<>(jsonOrders.length());
         for (int i = 0; i < jsonOrders.length(); ++i) {
             JSONObject jsonOrder = jsonOrders.getJSONObject(i);
             //TODO NAILY COMMENT OUT BEFORE SUBMISSION
-            //Log.d("JSON definition file",jsonOrder.toString());
+            Log.d("JSON definition file",jsonOrder.toString());
             Order order =
                     new Order(
                             jsonOrder.getInt("order_id"),

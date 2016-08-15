@@ -63,7 +63,7 @@ public class OrderListAdapter extends ArrayAdapter<Order> {
         holder.order = order;
 
         holder.orderId.setText(Integer.toString(order.getmId()));
-        holder.name.setText(order.getmCustomerName());
+        holder.name.setText(order.getCustomerName());
         holder.totalPrice.setText(FormatHelper.formatPrice(mContext.getString(R.string.currency_symbol), order.getmTotalPrice()));
         holder.orderStatus.setText(order.getmOrderStatus());
         holder.dateOrdered.setText(FormatHelper.formatDate(order.getmDateOrderPlaced()));
@@ -76,10 +76,10 @@ public class OrderListAdapter extends ArrayAdapter<Order> {
         Context context;
 
         @Bind(R.id.order_id)          TextView orderId;
-        @Bind(R.id.customer_Name)     TextView name;
-        @Bind(R.id.order_total_price) TextView totalPrice;
-        @Bind(R.id.order_status)      TextView orderStatus;
-        @Bind(R.id.date_ordered)      TextView dateOrdered;
+        @Bind(R.id.order_customer_name)     TextView name;
+        @Bind(R.id.order_total_price)      TextView totalPrice;
+        @Bind(R.id.order_status)  TextView orderStatus;
+        @Bind(R.id.order_date_ordered)      TextView dateOrdered;
 
         @OnClick(R.id.order_details_link)
         public void onClick(View view) {
