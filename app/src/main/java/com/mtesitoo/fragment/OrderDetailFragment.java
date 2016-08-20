@@ -3,22 +3,26 @@ package com.mtesitoo.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.daimajia.slider.library.SliderLayout;
-import com.daimajia.slider.library.SliderTypes.BaseSliderView;
-import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
-import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.mtesitoo.R;
+import com.mtesitoo.adapter.OrderListAdapter;
+import com.mtesitoo.adapter.OrderProductListAdapter;
 import com.mtesitoo.backend.model.Order;
-import com.mtesitoo.backend.model.Product;
+import com.mtesitoo.backend.model.OrderProduct;
+import com.mtesitoo.backend.service.OrderRequest;
+import com.mtesitoo.backend.service.logic.ICallback;
+import com.mtesitoo.backend.service.logic.IOrderRequest;
+import com.mtesitoo.helper.FormatHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -26,39 +30,36 @@ import butterknife.ButterKnife;
 /**
  * Created by User on 29-04-2016.
  */
-public class OrderDetailFragment extends Fragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener{
+public class OrderDetailFragment extends Fragment{
 
  private Order mOrder;
 
-    @Bind(R.id.product_image_slider)
-    SliderLayout mImageSlider;
-    @Bind(R.id.product_detail_info_border)
-    RelativeLayout mInfoBorder;
-    @Bind(R.id.product_detail_price_border)
-    RelativeLayout mPriceBorder;
-    @Bind(R.id.order_detail_date_border)
-    RelativeLayout mDateBorder;
-
-    @Bind(R.id.customer_name)
-    TextView mCustomerName;
-    @Bind(R.id.product_name)
-    TextView mProductName;
-    @Bind(R.id.product_quantity)
-    TextView mProductQuantity;
-    @Bind(R.id.product_price)
-    TextView mProductPrice;
-
-    @Bind(R.id.order_total_price)
-    TextView mTotal;
-    @Bind(R.id.order_delivery_address)
-    TextView mDeliveryAddress;
-    @Bind(R.id.order_status)
+    @Bind(R.id.order_detail_id)
+    TextView mOrderId;
+    @Bind(R.id.order_detail_status)
     TextView mOrderStatus;
-
-    @Bind(R.id.order_placed_date)
+    @Bind(R.id.order_detail_total_price)
+    TextView mTotal;
+    @Bind(R.id.order_detail_item_count_title)
+    TextView mOrderItemCountTitle;
+    @Bind(R.id.order_detail_item_count)
+    TextView mOrderItemCount;
+    @Bind(R.id.order_detail_date_ordered)
     TextView mOrderPlacedDate;
-    @Bind(R.id.order_payment_method)
-    TextView mPaymentMethod;
+
+    @Bind(R.id.order_detail_customer_id)
+    TextView mCustomerId;
+    @Bind(R.id.order_detail_customer_name)
+    TextView mCustomerName;
+    @Bind(R.id.order_detail_customer_telephone)
+    TextView mCustomerTelephone;
+    @Bind(R.id.order_detail_customer_email)
+    TextView mCustomerEmail;
+    @Bind(R.id.order_detail_customer_address)
+    TextView mCustomerAddress;
+
+    @Bind (R.id.listView_products)
+    ListView mListViewProducts;
 
     public static OrderDetailFragment newInstance(Context context, Order order) {
         OrderDetailFragment fragment = new OrderDetailFragment();
@@ -87,71 +88,53 @@ public class OrderDetailFragment extends Fragment implements BaseSliderView.OnSl
         Bundle args = this.getArguments();
 
         mOrder = args.getParcelable(getString(R.string.bundle_product_key));
-        mProductName.setText(mOrder.getmProductName());
-        mCustomerName.setText(mOrder.getmCustomerName());
-        mTotal.setText(Double.toString(mOrder.getmTotalPrice()));
-        mDeliveryAddress.setText(mOrder.getmDeliveryAddress());
+
+        // Get additional information for the order
+        getOrderDetails();
+    }
+
+    //TODO TEMPORARY METHOD TO GET STUCK IN
+    private void getOrderDetails()
+    {
+        IOrderRequest orderService = new OrderRequest(getActivity());
+
+        orderService.getDetailedOrders(mOrder, new ICallback() {
+            @Override
+            public void onResult(Object object) {
+                Log.d("TEST getOrderDetails()", mOrder.toString());
+                updateView();
+            }
+
+            @Override
+            public void onError(Exception e) {
+            }
+        });
+    }
+
+    private void updateView()
+    {
+        ArrayList<OrderProduct> products = mOrder.getProducts();
+
+        int itemCount = products.size();
+
+        String itemCountTitle = (itemCount == 1)?
+                getString(R.string.order_item_count_singular) :
+                getString(R.string.order_item_count_plural);
+
+
+        mOrderId.setText(Integer.toString(mOrder.getmId()));
         mOrderStatus.setText(mOrder.getmOrderStatus());
-        mProductQuantity.setText(mOrder.getmProductQuantity().toString());
-        mProductPrice.setText(mOrder.getmProductPrice());
-        mPaymentMethod.setText(mOrder.getmPaymentMethod());
-        mOrderPlacedDate.setText(mOrder.getmDateOrderPlaced().toString());
+        mTotal.setText(FormatHelper.formatPrice(getString(R.string.currency_symbol), mOrder.getmTotalPrice()));
+        mOrderItemCountTitle.setText(itemCountTitle);
+        mOrderItemCount.setText(Integer.toString(itemCount));
+        mOrderPlacedDate.setText(FormatHelper.formatDate(mOrder.getmDateOrderPlaced()));
 
-        updateBorderPaddings();
-        updateImageSlider();
+        mCustomerId.setText(Integer.toString(mOrder.getCustomerId()));
+        mCustomerName.setText(mOrder.getCustomerName());
+        mCustomerTelephone.setText(mOrder.getCustomerTelephone());
+        mCustomerEmail.setText(mOrder.getEmailAddress());
+        mCustomerAddress.setText(mOrder.getDeliveryAddress());
+
+        mListViewProducts.setAdapter(new OrderProductListAdapter(getActivity(), products));
     }
-
-    @Override
-    public void onStop() {
-        mImageSlider.stopAutoCycle();
-        super.onStop();
-    }
-
-    @Override
-    public void onSliderClick(BaseSliderView slider) {
-    }
-
-    @Override
-    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-    }
-
-    @Override
-    public void onPageSelected(int position) {
-    }
-
-    @Override
-    public void onPageScrollStateChanged(int state) {
-    }
-
-    private void updateBorderPaddings() {
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-        ViewGroup.LayoutParams params = mImageSlider.getLayoutParams();
-        params.height = (int) (metrics.widthPixels * 0.65);
-
-        int padding = Integer.parseInt(getString(R.string.padding_20));
-        mInfoBorder.setPadding(padding, padding, padding, padding / 2);
-        mPriceBorder.setPadding(padding, padding / 2, padding, padding / 2);
-        mDateBorder.setPadding(padding, padding / 2, padding, padding);
-    }
-
-    private void updateImageSlider() {
-        ArrayList<String> urls = new ArrayList<>();
-        urls.add("http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
-        urls.add("http://tvfiles.alphacoders.com/100/hdclearart-10.png");
-        urls.add("http://cdn3.nflximg.net/images/3093/2043093.jpg");
-        urls.add("http://images.boomsbeat.com/data/images/full/19640/game-of-thrones-season-4-jpg.jpg");
-
-        for (String url : urls) {
-            DefaultSliderView sliderView = new DefaultSliderView(getActivity());
-            sliderView
-                    .image(url)
-                    .setScaleType(BaseSliderView.ScaleType.Fit)
-                    .setOnSliderClickListener(this);
-            mImageSlider.addSlider(sliderView);
-        }
-
-        mImageSlider.setDuration(8000);
-        mImageSlider.addOnPageChangeListener(this);
-    }
-
 }

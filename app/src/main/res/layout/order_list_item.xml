@@ -13,43 +13,44 @@
         android:id="@+id/relativeLayout">
 
         <TextView
-            android:id="@+id/customer_NameTitle"
-            style="@style/TextTitleTheme"
+            android:id="@+id/order_customer_name_title"
+            style="@style/TextTitleBoldTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_toLeftOf="@id/customer_name"
-            android:text="@string/customer_name"
-            android:textStyle="bold" />
+            android:layout_alignParentStart="true"
+            android:text="@string/customer_name" />
 
         <TextView
-            android:id="@+id/customer_Name"
-            style="@style/TextTitleTheme"
+            android:id="@+id/order_customer_name"
+            style="@style/TextTitleBoldTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:textStyle="bold" />
+            android:layout_alignParentEnd="true"
+            android:text="@string/customer_name" />
 
         <TextView
             android:id="@+id/order_id_title"
             style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/customer_NameTitle"
+            android:layout_below="@+id/order_customer_name"
             android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:text="@string/order_id"
-            android:layout_alignRight="@+id/customer_NameTitle"
-            android:layout_alignEnd="@+id/customer_NameTitle" />
+            android:layout_alignRight="@+id/order_customer_name_title"
+            android:layout_alignEnd="@+id/order_customer_name_title" />
 
         <TextView
             android:id="@+id/order_id"
             style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1458"
-            android:layout_below="@+id/customer_NameTitle"
-            android:layout_toRightOf="@+id/customer_NameTitle"
-            android:layout_toEndOf="@+id/customer_NameTitle" />
+            android:layout_alignBottom="@+id/order_id_title"
+            android:layout_toRightOf="@+id/order_customer_name_title"
+            android:layout_toEndOf="@+id/order_customer_name_title"
+            android:text="@string/order_id"  />
 
         <TextView
             android:id="@+id/order_total_price_title"
@@ -57,47 +58,47 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/total_price"
-            android:layout_below="@+id/customer_Name"
-            android:layout_alignLeft="@+id/order_status_title"
-            android:layout_alignStart="@+id/order_status_title" />
+            android:layout_below="@+id/order_customer_name"
+            android:layout_toLeftOf="@+id/order_total_price"
+            android:layout_marginRight="30dp" />
 
         <TextView
             android:id="@+id/order_total_price"
+            android:text="@string/total_price"
             style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/customer_NameTitle"
+            android:layout_below="@+id/order_customer_name_title"
             android:layout_alignParentRight="true" />
 
         <TextView
-            android:id="@+id/date_ordered_title"
+            android:id="@+id/order_date_ordered_title"
             style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/order_id_title"
             android:layout_alignParentLeft="true"
             android:text="@string/date_order_placed"
-            android:layout_alignRight="@+id/order_id_title"
-            android:layout_alignEnd="@+id/order_id_title" />
+            android:layout_alignRight="@+id/order_customer_name_title"
+            android:layout_alignEnd="@+id/order_customer_name_title" />
 
         <TextView
-            android:id="@+id/date_ordered"
+            android:id="@+id/order_date_ordered"
             style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/order_id_title"
-            android:layout_toLeftOf="@+id/order_status_title"
-            android:layout_toRightOf="@+id/customer_NameTitle"
-            android:layout_toEndOf="@+id/customer_NameTitle" />
+            android:layout_alignBottom="@id/order_date_ordered_title"
+            android:layout_toRightOf="@+id/order_customer_name_title"
+            android:layout_toEndOf="@+id/order_customer_name_title"
+            android:text="@string/date_order_placed" />
 
         <TextView
             android:id="@+id/order_status_title"
             style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/order_id_title"
-            android:layout_toLeftOf="@+id/order_status"
-            android:paddingRight="12dp"
+            android:layout_alignLeft="@+id/order_total_price_title"
+            android:layout_alignBottom="@id/order_date_ordered_title"
             android:text="@string/order_status" />
 
         <TextView
@@ -105,8 +106,9 @@
             style="@style/TextTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_below="@id/order_id_title"
-            android:layout_alignParentRight="true" />
+            android:layout_alignBottom="@id/order_date_ordered_title"
+            android:layout_alignParentRight="true"
+            android:text="@string/order_status" />
 
         <View
             android:id="@+id/order_layout_divider"
@@ -114,8 +116,9 @@
             android:layout_height="1dip"
             android:layout_marginTop="6dip"
             android:layout_marginBottom="6dip"
-            android:layout_below="@id/order_status_title"
+            android:layout_below="@id/order_date_ordered_title"
             android:background="#d9d9d9" />
+
 
         <TextView
             android:id="@+id/order_details_link"
@@ -124,7 +127,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/order_layout_divider"
             android:layout_alignParentRight="true"
-            android:text="@string/see_more_details"
+            android:text="@string/order_see_more_details"
             android:textStyle="bold" />
 
 
