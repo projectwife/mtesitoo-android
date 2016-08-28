@@ -2,7 +2,9 @@ package com.mtesitoo.backend.model;
 
 import android.net.Uri;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import android.os.Parcel;
 import android.os.Parcelable;
@@ -21,6 +23,8 @@ public class Product implements Parcelable {
     private final Integer mQuantity;
     private final Date mExpiration;
     private final Uri mThumbnail;
+    private final ArrayList<Uri> mAuxImages;
+    private Uri lastImage;
 
     private Product(Parcel in) {
         this.mId = in.readInt();
@@ -32,8 +36,8 @@ public class Product implements Parcelable {
         this.mPricePerUnit = in.readString();
         this.mQuantity = in.readInt();
         this.mExpiration = new Date(in.readLong());
-
         this.mThumbnail = null;
+        this.mAuxImages = new ArrayList<>();
     }
 
     public static final Parcelable.Creator<Product> CREATOR = new Parcelable.Creator<Product>() {
@@ -61,7 +65,7 @@ public class Product implements Parcelable {
      * @param thumbnail    url of the product's thumbnail
      */
     public Product(int id, String name, String description, String location, String category, String siUnit,
-                   String pricePerUnit, Integer quantity, Date expiration, Uri thumbnail) {
+                   String pricePerUnit, Integer quantity, Date expiration, Uri thumbnail, ArrayList<Uri> auxImages) {
         mId = id;
         mName = name;
         mDescription = description;
@@ -72,6 +76,12 @@ public class Product implements Parcelable {
         mQuantity = quantity;
         mExpiration = expiration;
         mThumbnail = thumbnail;
+        mAuxImages = auxImages;
+    }
+
+    public void addImage(Uri imageUri){
+        mAuxImages.add(imageUri);
+        lastImage = imageUri;
     }
 
     public int getId() {
@@ -110,10 +120,13 @@ public class Product implements Parcelable {
         return mExpiration;
     }
 
-
     public Uri getmThumbnail() {
         return mThumbnail;
     }
+
+    public ArrayList<Uri> getAuxImages() {return mAuxImages; }
+
+    public Uri getLastImage() { return lastImage; }
 
     @Override
     public String toString() {

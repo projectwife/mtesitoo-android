@@ -1,8 +1,11 @@
 package com.mtesitoo.backend.service;
 
 import android.content.Context;
+import android.net.Uri;
+import android.util.Base64;
 import android.util.Log;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -70,11 +73,17 @@ public class ProductRequest extends Request implements IProductRequest {
     @Override
     public void submitProductImage(final Product product, ICallback<Product> callback) {
         URL url = new ProductImageURL(mContext, R.string.path_product_product, product.getId());
+        final Uri image = product.getLastImage();
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        byte[] imageBytes = baos.toByteArray();
+        final String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
+        // Todo: need to prep the image for upload - stringify
         ProductResponse response = new ProductResponse(null);
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), null, response) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
+                params.put("file",encodedImage);
                 params.put(mContext.getString(R.string.params_product_image_main), "false");
                 params.put(mContext.getString(R.string.params_product_image_sort), "1");
                 return params;

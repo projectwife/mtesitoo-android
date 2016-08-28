@@ -59,7 +59,8 @@ public class ProductResponse implements Response.Listener<String>, Response.Erro
                             "SI Unit",
                             jsonProduct.getString("price"), 100,
                             new Date(),
-                            Uri.parse(jsonProduct.getString("thumb_image"))
+                            Uri.parse(jsonProduct.getString("thumb_image")),
+                            null
                     );
             result.add(product);
         }

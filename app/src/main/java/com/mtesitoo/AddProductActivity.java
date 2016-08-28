@@ -91,8 +91,9 @@ public class AddProductActivity extends ActionBarActivity implements
                 }
             }
 
+            // Todo: adjust for new model with list of images (replace last null as needed)
             Product product = new Product(0, name, description, "Location", category, "SI Unit",
-                    pricePerUnit, Integer.parseInt(quantity), new Date(), Uri.parse("Uri"));
+                    pricePerUnit, Integer.parseInt(quantity), new Date(), Uri.parse("Uri"), null);
 
             IProductRequest productService = new ProductRequest(this);
             productService.submitProduct(product, new ICallback<Product>() {

@@ -1,5 +1,6 @@
 package com.mtesitoo.fragment;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
@@ -7,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -21,6 +23,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
@@ -31,10 +34,15 @@ import com.mtesitoo.backend.cache.CategoryCache;
 import com.mtesitoo.backend.cache.logic.ICategoryCache;
 import com.mtesitoo.backend.model.Category;
 import com.mtesitoo.backend.model.Product;
+import com.mtesitoo.backend.service.ProductRequest;
+import com.mtesitoo.backend.service.logic.ICallback;
+import com.mtesitoo.backend.service.logic.IProductRequest;
 import com.mtesitoo.helper.FileHelper;
 import com.mtesitoo.model.ImageFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -50,6 +58,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
 
     private Product mProduct;
     private ArrayList<ImageFile> mImages;
+    private ImageFile currentImage;
 
     @Bind(R.id.product_image_slider_edit)
     SliderLayout mImageSlider;
@@ -157,26 +166,22 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     @Override
     public void onSliderClick(BaseSliderView slider) {
 
-//        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-//        if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-//            startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
-//        }
-
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
             ImageFile image = null;
 
             try {
                 image = new ImageFile(getActivity());
-                image = mImages.get(mImageSlider.getCurrentPosition());
-            } catch (IndexOutOfBoundsException e) {
+            } catch (Exception e) {
                 Log.d("IMAGE_CAPTURE","Issue creating image file");
             }
 
             if (image != null) {
-                Uri imgUri = Uri.fromFile(image);
+                Uri imgUri = FileProvider.getUriForFile(getActivity(),
+                        "com.mtesitoo.fileprovider",
+                        image);
+                currentImage = image;
                 intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
-                //getActivity().setResult(getActivity().RESULT_OK, intent);
                 startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
             }
         }
@@ -197,10 +202,27 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == getActivity().RESULT_OK && requestCode == REQUEST_IMAGE_CAPTURE && data != null) {
-            Uri imageUri = data.getData();
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_CAPTURE) {
+            mImages.add(0,currentImage);
             updateImageSlider();
+
+            IProductRequest productService = new ProductRequest(this.getContext());
+            productService.submitProductImage(mProduct, new ICallback<Product>() {
+                @Override
+                public void onResult(Product result) {
+                    Toast.makeText(getContext(), "Product Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.e("UploadImage", e.toString());
+                }
+            });
         }
+    }
+
+    public ImageFile getCurrentImage(){
+        return currentImage;
     }
 
     private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
