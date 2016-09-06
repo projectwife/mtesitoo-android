@@ -93,9 +93,11 @@ public class OrderDetailFragment extends Fragment{
         getOrderDetails();
     }
 
-    //TODO TEMPORARY METHOD TO GET STUCK IN
     private void getOrderDetails()
     {
+        //TODO naily TEMPORARY METHOD TO GET STUCK IN
+        // TODO naily Move it so that it gets called before the fragment is created.
+        // otherwise, teh screen flickers when being drawn again here
         IOrderRequest orderService = new OrderRequest(getActivity());
 
         orderService.getDetailedOrders(mOrder, new ICallback() {

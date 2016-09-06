@@ -75,7 +75,7 @@ public class OrderRequest  extends Request implements IOrderRequest {
         mRequestQueue.add(stringRequest);
     }
 
-    //TODO move to another class
+    //TODO Naily move to another class
     @Override
     public void getDetailedOrders(final Order order, ICallback callback)
     {
