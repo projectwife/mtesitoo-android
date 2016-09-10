@@ -1,11 +1,13 @@
 package com.mtesitoo.backend.service;
 
-import android.net.Uri;
+import android.content.Context;
 import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.mtesitoo.backend.R;
 import com.mtesitoo.backend.model.Order;
+import com.mtesitoo.backend.model.OrderStatus;
 import com.mtesitoo.backend.service.logic.ICallback;
 
 import org.json.JSONArray;
@@ -23,9 +25,11 @@ import java.util.List;
 public class OrderResponse implements Response.Listener<String>, Response.ErrorListener {
 
     private ICallback<List<Order>> mCallback;
+    private Context                mContext;
 
-    public OrderResponse(ICallback<List<Order>> callback) {
+    public OrderResponse(Context context, ICallback<List<Order>> callback) {
         mCallback = callback;
+        mContext = context;
     }
 
     @Override
@@ -48,19 +52,19 @@ public class OrderResponse implements Response.Listener<String>, Response.ErrorL
 
     public List<Order> parseResponse(String response) throws JSONException {
         JSONArray jsonOrders = new JSONArray(response);
-        //Log.d("ARRAY response string", response);
+        Log.d("OrderResponse", response);
 
         List<Order> result = new ArrayList<>(jsonOrders.length());
         for (int i = 0; i < jsonOrders.length(); ++i) {
             JSONObject jsonOrder = jsonOrders.getJSONObject(i);
             //TODO NAILY COMMENT OUT BEFORE SUBMISSION
-            //Log.d("JSON definition file",jsonOrder.toString());
+            //Log.d("OrderResponse",jsonOrder.toString());
             Order order =
                     new Order(
                             jsonOrder.getInt("order_id"),
                             jsonOrder.getString("customer"),
                             "Delivery Address",
-                            jsonOrder.getString("status"),
+                            mapStatuses(jsonOrder.getString("status")),
                             jsonOrder.getDouble("total"),
                             FormatJsonDate(jsonOrder.getString("date_added")),
                             "Payment Method"
@@ -93,5 +97,28 @@ public class OrderResponse implements Response.Listener<String>, Response.ErrorL
         }
 
         return date;
+    }
+
+    private OrderStatus mapStatuses(String orderStatus)
+    {
+        OrderStatus status;
+        String st = mContext.getString(R.string.order_status_pending);
+
+        if (orderStatus.equals(mContext.getString(R.string.order_status_pending)))
+            status = OrderStatus.PENDING;
+        else if (orderStatus.equals(mContext.getString(R.string.order_status_shipped)))
+            status = OrderStatus.SHIPPED;
+        else if (orderStatus.equals(mContext.getString(R.string.order_status_complete)))
+            status = OrderStatus.COMPLETE;
+        else if (orderStatus.equals(mContext.getString(R.string.order_status_canceled)))
+            status = OrderStatus.CANCELED;
+        else
+        {
+            Log.e("mapStatuses", "Status " + orderStatus + "isn't supported");
+            status = OrderStatus.ALL;
+        }
+
+        status.setStatusString(orderStatus);
+        return status;
     }
 }

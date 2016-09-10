@@ -12,7 +12,7 @@ import java.util.Date;
 public class Order implements Parcelable {
 
     private int id;
-    private String orderStatus;
+    private OrderStatus orderStatus;
     private double totalPrice;
     private Date dateOrderPlaced;
     private String paymentMethod;
@@ -28,13 +28,13 @@ public class Order implements Parcelable {
     private Order()
     {
         // Initialise ArrayList to avoid reading or writing null objects in the Parcel.
-        products = new ArrayList<OrderProduct>();
+        products = new ArrayList<>();
     }
 
     public Order(Parcel in) {
         this();
         this.id = in.readInt();
-        this.orderStatus = in.readString();
+        this.orderStatus = (OrderStatus)in.readValue(OrderStatus.class.getClassLoader());
         this.totalPrice = in.readDouble();
         this.dateOrderPlaced =new Date(in.readLong());
         this.paymentMethod = in.readString();
@@ -46,7 +46,7 @@ public class Order implements Parcelable {
         in.readTypedList(products, OrderProduct.CREATOR);
     }
 
-    public Order(int id, String customerName, String deliveryAddress, String orderStatus, double totalPrice, Date dateOrderPlaced, String paymentMethod) {
+    public Order(int id, String customerName, String deliveryAddress, OrderStatus orderStatus, double totalPrice, Date dateOrderPlaced, String paymentMethod) {
         this();
         this.id = id;
         this.customerName = customerName;
@@ -74,7 +74,7 @@ public class Order implements Parcelable {
         this.deliveryAddress = deliveryAddress;
     }
 
-    public String getOrderStatus() {
+    public OrderStatus getOrderStatus() {
         return orderStatus;
     }
 
@@ -84,10 +84,6 @@ public class Order implements Parcelable {
 
     public Date getDateOrderPlaced() {
         return dateOrderPlaced;
-    }
-
-    public String getPaymentMethod() {
-        return paymentMethod;
     }
 
     public void setPaymentMethod(String paymentMethod) {
@@ -131,7 +127,7 @@ public class Order implements Parcelable {
     public String toString() {
         return "Order{" +
                 "id=" + id +
-                ", orderStatus='" + orderStatus + '\'' +
+                ", orderStatus=" + orderStatus +
                 ", totalPrice=" + totalPrice +
                 ", dateOrderPlaced=" + dateOrderPlaced +
                 ", paymentMethod='" + paymentMethod + '\'' +
@@ -165,7 +161,7 @@ public class Order implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeInt(id);
-        dest.writeString(orderStatus);
+        dest.writeValue(orderStatus);
         dest.writeDouble(totalPrice);
         dest.writeLong(dateOrderPlaced.getTime());
         dest.writeString(paymentMethod);
