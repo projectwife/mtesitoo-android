@@ -2,7 +2,6 @@ package com.mtesitoo.adapter;
 
 import android.content.Context;
 import android.content.Intent;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +11,9 @@ import android.widget.TextView;
 import com.mtesitoo.OrderActivity;
 import com.mtesitoo.R;
 import com.mtesitoo.backend.model.Order;
+import com.mtesitoo.backend.service.OrderRequest;
+import com.mtesitoo.backend.service.logic.ICallback;
+import com.mtesitoo.backend.service.logic.IOrderRequest;
 import com.mtesitoo.helper.FormatHelper;
 
 import java.util.ArrayList;
@@ -21,20 +23,16 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by Nan on 1/1/2016.
+ * Used to display info about orders.
  */
 public class OrderListAdapter extends ArrayAdapter<Order> {
     private Context mContext;
-    private float deviceWidth;
     private static ArrayList<Order> mOrders;
 
     public OrderListAdapter(Context context, ArrayList<Order> orders) {
         super(context, 0, orders);
         mContext = context;
         mOrders = orders;
-
-        DisplayMetrics metrics = mContext.getResources().getDisplayMetrics();
-        deviceWidth = metrics.widthPixels;
     }
 
     public void refresh(ArrayList<Order> products) {
@@ -62,11 +60,11 @@ public class OrderListAdapter extends ArrayAdapter<Order> {
         holder.context = mContext;
         holder.order = order;
 
-        holder.orderId.setText(Integer.toString(order.getmId()));
+        holder.orderId.setText(Integer.toString(order.getId()));
         holder.name.setText(order.getCustomerName());
-        holder.totalPrice.setText(FormatHelper.formatPrice(mContext.getString(R.string.currency_symbol), order.getmTotalPrice()));
-        holder.orderStatus.setText(order.getmOrderStatus());
-        holder.dateOrdered.setText(FormatHelper.formatDate(order.getmDateOrderPlaced()));
+        holder.totalPrice.setText(FormatHelper.formatPrice(mContext.getString(R.string.currency_symbol), order.getTotalPrice()));
+        holder.orderStatus.setText(order.getOrderStatus());
+        holder.dateOrdered.setText(FormatHelper.formatDate(order.getDateOrderPlaced()));
 
         return convertView;
     }
@@ -83,13 +81,28 @@ public class OrderListAdapter extends ArrayAdapter<Order> {
 
         @OnClick(R.id.order_details_link)
         public void onClick(View view) {
-            Intent intent = new Intent(context, OrderActivity.class);
-            intent.putExtra(context.getString(R.string.bundle_product_key), order);
-            context.startActivity(intent);
+            displayOrderDetails();
         }
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);
+        }
+
+        private void displayOrderDetails()
+        {
+            IOrderRequest orderService = new OrderRequest(context);
+
+            orderService.getDetailedOrders(order, new ICallback() {
+                @Override
+                public void onResult(Object object) {
+                    Intent intent = new Intent(context, OrderActivity.class);
+                    intent.putExtra(context.getString(R.string.bundle_product_key), order);
+                    context.startActivity(intent);
+                }
+
+                @Override
+                public void onError(Exception e) {}
+            });
         }
     }
 }

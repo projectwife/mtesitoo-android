@@ -18,7 +18,7 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by User on 26-04-2016.
+ * Created by User on 26-04-2016
  */
 public class OrderResponse implements Response.Listener<String>, Response.ErrorListener {
 
@@ -48,26 +48,22 @@ public class OrderResponse implements Response.Listener<String>, Response.ErrorL
 
     public List<Order> parseResponse(String response) throws JSONException {
         JSONArray jsonOrders = new JSONArray(response);
-        Log.d("aRRAY response string", response);
+        //Log.d("ARRAY response string", response);
 
         List<Order> result = new ArrayList<>(jsonOrders.length());
         for (int i = 0; i < jsonOrders.length(); ++i) {
             JSONObject jsonOrder = jsonOrders.getJSONObject(i);
             //TODO NAILY COMMENT OUT BEFORE SUBMISSION
-            Log.d("JSON definition file",jsonOrder.toString());
+            //Log.d("JSON definition file",jsonOrder.toString());
             Order order =
                     new Order(
                             jsonOrder.getInt("order_id"),
                             jsonOrder.getString("customer"),
                             "Delivery Address",
-                            "Product Name",
                             jsonOrder.getString("status"),
                             jsonOrder.getDouble("total"),
-                            "Product Price",
-                            2,
                             FormatJsonDate(jsonOrder.getString("date_added")),
                             "Payment Method"
-
                     );
             result.add(order);
         }

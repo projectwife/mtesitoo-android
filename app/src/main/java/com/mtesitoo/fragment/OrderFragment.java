@@ -57,7 +57,6 @@ public class OrderFragment extends ListFragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
 
         switch(item.getItemId())
         {

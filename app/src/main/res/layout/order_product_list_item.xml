@@ -15,7 +15,7 @@
             style="@style/TextTitleBoldTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Corn"
+            android:text="@string/product_name"
             android:id="@+id/order_product_name"
             android:layout_alignParentTop="true"
             android:layout_alignParentLeft="true"
@@ -25,7 +25,7 @@
             style="@style/TextTitleBoldTheme"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="£12345"
+            android:text="@string/total_price"
             android:id="@+id/order_product_total_price"
             android:layout_alignParentTop="true"
             android:layout_alignParentRight="true" />
