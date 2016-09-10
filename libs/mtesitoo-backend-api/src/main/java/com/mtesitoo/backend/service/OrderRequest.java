@@ -22,6 +22,10 @@ import com.mtesitoo.backend.service.logic.IOrderRequest;
 
 /**
  * Created by User on 26-04-2016
+ * Available requests:
+ * - getOrders()         - Get a list of orders for this vendor
+ * - getDetailedOrders() - Get detailed info about a specific order. This will include information
+ *                         about the seller and the products bought.
  */
 public class OrderRequest  extends Request implements IOrderRequest {
     public OrderRequest(Context context) {
@@ -41,14 +45,11 @@ public class OrderRequest  extends Request implements IOrderRequest {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put(mContext.getString(R.string.params_customer_name), order.getCustomerName());
-                params.put(mContext.getString(R.string.params_product_name), order.getmProductName());
-                params.put(mContext.getString(R.string.params_product_price), order.getmProductPrice());
-                params.put(mContext.getString(R.string.params_product_quantity), Integer.toString(order.getmProductQuantity()));
                 params.put(mContext.getString(R.string.params_order_delivery_address), order.getDeliveryAddress());
-                params.put(mContext.getString(R.string.params_order_total_price), Double.toString(order.getmTotalPrice()));
-                //params.put(mContext.getString(R.string.params_order_placed_date), order.getmDateOrderPlaced().toString());
+                params.put(mContext.getString(R.string.params_order_total_price), Double.toString(order.getTotalPrice()));
+                //params.put(mContext.getString(R.string.params_order_placed_date), order.getDateOrderPlaced().toString());
                 params.put(mContext.getString(R.string.params_order_payment_method), order.getPaymentMethod());
-                params.put(mContext.getString(R.string.params_order_status), order.getmOrderStatus());
+                params.put(mContext.getString(R.string.params_order_status), order.getOrderStatus());
                 //params.put(mContext.getString(R.string.params_product_meta_title), "meta_title");
                // params.put(mContext.getString(R.string.params_product_status), mContext.getString(R.string.params_product_status_enabled));
 
@@ -75,19 +76,12 @@ public class OrderRequest  extends Request implements IOrderRequest {
         mRequestQueue.add(stringRequest);
     }
 
-    //TODO Naily move to another class
     @Override
     public void getDetailedOrders(final Order order, ICallback callback)
     {
-        //TO DELETE
-        /*OrderStatus orderStatus = OrderStatus.ALL;
-        Log.d("getOrders - orderStatus", orderStatus.toString());
-        URL url = new VendorOrdersURL(mContext, orderStatus);
-        Log.d("Vendor Orders URL",url.toString());*/
-
-        //GET /api/v1/vendor/order/{id}
-        Log.d("getOrders - orderId", Integer.toString(order.getmId()));
-        URL url = new VendorOrderDetailsURL(mContext, order.getmId());
+        //Server request: GET /api/v1/vendor/order/{id}
+        Log.d("getOrders - orderId", Integer.toString(order.getId()));
+        URL url = new VendorOrderDetailsURL(mContext, order.getId());
         Log.d("Detailed Orders URL",url.toString());
 
         OrderDetailsResponse response = new OrderDetailsResponse(order, callback);

@@ -52,7 +52,7 @@ public class OrderDetailsResponse implements Response.Listener<String>, Response
         JSONObject jsonOrder = new JSONObject(response);
 
         //TODO NAILY COMMENT OUT BEFORE SUBMISSION
-        Log.d("response string", jsonOrder.toString(2));
+        //Log.d("response string", jsonOrder.toString(2));
 
         mOrder.setPaymentMethod(jsonOrder.getString("payment_method"));
         mOrder.setCustomerId(jsonOrder.getInt("customer_id"));
@@ -79,10 +79,6 @@ public class OrderDetailsResponse implements Response.Listener<String>, Response
             ));
         }
         mOrder.setProducts(products);
-
-
-        Log.d("response string", mOrder.toString());
-        Log.d("response string", jsonProducts.toString());
 
         List<Order> result = new ArrayList<>();
 

@@ -1,4 +1,5 @@
 // TODO NAILY Rework this so that you use the Product class rather than this OrderProduct
+// Better wait until Carl submits its changes.
 // At the moment, there are quite a few changes that need to be done to the Product class
 // - Add model
 // - Convert unitPrice to double, quantity to int

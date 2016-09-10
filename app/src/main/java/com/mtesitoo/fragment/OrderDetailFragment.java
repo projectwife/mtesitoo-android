@@ -3,32 +3,27 @@ package com.mtesitoo.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListAdapter;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.mtesitoo.R;
-import com.mtesitoo.adapter.OrderListAdapter;
 import com.mtesitoo.adapter.OrderProductListAdapter;
 import com.mtesitoo.backend.model.Order;
 import com.mtesitoo.backend.model.OrderProduct;
-import com.mtesitoo.backend.service.OrderRequest;
-import com.mtesitoo.backend.service.logic.ICallback;
-import com.mtesitoo.backend.service.logic.IOrderRequest;
 import com.mtesitoo.helper.FormatHelper;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by User on 29-04-2016.
+ * Created by User on 29-04-2016
  */
 public class OrderDetailFragment extends Fragment{
 
@@ -58,6 +53,9 @@ public class OrderDetailFragment extends Fragment{
     @Bind(R.id.order_detail_customer_address)
     TextView mCustomerAddress;
 
+    @Bind(R.id.order_detail_scrollView)
+    ScrollView scrollView;
+
     @Bind (R.id.listView_products)
     ListView mListViewProducts;
 
@@ -72,45 +70,29 @@ public class OrderDetailFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        setHasOptionsMenu(false);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Bundle args = this.getArguments();
+        mOrder = args.getParcelable(getString(R.string.bundle_product_key));
+
         View view = inflater.inflate(R.layout.activity_order_fragment_detail, container, false);
         ButterKnife.bind(this, view);
+
         return view;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        Bundle args = this.getArguments();
-
-        mOrder = args.getParcelable(getString(R.string.bundle_product_key));
-
-        // Get additional information for the order
-        getOrderDetails();
     }
 
-    private void getOrderDetails()
-    {
-        //TODO naily TEMPORARY METHOD TO GET STUCK IN
-        // TODO naily Move it so that it gets called before the fragment is created.
-        // otherwise, teh screen flickers when being drawn again here
-        IOrderRequest orderService = new OrderRequest(getActivity());
-
-        orderService.getDetailedOrders(mOrder, new ICallback() {
-            @Override
-            public void onResult(Object object) {
-                Log.d("TEST getOrderDetails()", mOrder.toString());
-                updateView();
-            }
-
-            @Override
-            public void onError(Exception e) {
-            }
-        });
+    @Override
+    public void onResume() {
+        super.onResume();
+        updateView();
     }
 
     private void updateView()
@@ -124,12 +106,12 @@ public class OrderDetailFragment extends Fragment{
                 getString(R.string.order_item_count_plural);
 
 
-        mOrderId.setText(Integer.toString(mOrder.getmId()));
-        mOrderStatus.setText(mOrder.getmOrderStatus());
-        mTotal.setText(FormatHelper.formatPrice(getString(R.string.currency_symbol), mOrder.getmTotalPrice()));
+        mOrderId.setText(Integer.toString(mOrder.getId()));
+        mOrderStatus.setText(mOrder.getOrderStatus());
+        mTotal.setText(FormatHelper.formatPrice(getString(R.string.currency_symbol), mOrder.getTotalPrice()));
         mOrderItemCountTitle.setText(itemCountTitle);
         mOrderItemCount.setText(Integer.toString(itemCount));
-        mOrderPlacedDate.setText(FormatHelper.formatDate(mOrder.getmDateOrderPlaced()));
+        mOrderPlacedDate.setText(FormatHelper.formatDate(mOrder.getDateOrderPlaced()));
 
         mCustomerId.setText(Integer.toString(mOrder.getCustomerId()));
         mCustomerName.setText(mOrder.getCustomerName());
@@ -138,5 +120,37 @@ public class OrderDetailFragment extends Fragment{
         mCustomerAddress.setText(mOrder.getDeliveryAddress());
 
         mListViewProducts.setAdapter(new OrderProductListAdapter(getActivity(), products));
+        setListViewHeightBasedOnChildren(mListViewProducts);
+
+        // Automatically scroll back up to the top of the page
+        scrollView.smoothScrollTo(0,0);
+    }
+
+    /**
+     * Dynamically set the height of myListView so that it expands to show all its children.
+     * This is to avoid having a separate scrollbar for the main view and for the list view.
+     */
+    private static void setListViewHeightBasedOnChildren(ListView myListView) {
+        ListAdapter myListAdapter = myListView.getAdapter();
+        if (myListAdapter == null)
+            return;
+
+        //set listAdapter in loop for getting final size
+        int totalHeight = 0;
+        View listItem = null;
+        int desiredWidth = View.MeasureSpec.makeMeasureSpec(myListView.getWidth(), View.MeasureSpec.UNSPECIFIED);
+        for (int i = 0; i < myListAdapter.getCount(); i++) {
+            listItem = myListAdapter.getView(i, listItem, myListView);
+
+            if (i == 0)
+                listItem.setLayoutParams(new ViewGroup.LayoutParams(desiredWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            listItem.measure(desiredWidth, View.MeasureSpec.UNSPECIFIED);
+            totalHeight += listItem.getMeasuredHeight();
+        }
+        //setting listview item in adapter
+        ViewGroup.LayoutParams params = myListView.getLayoutParams();
+        params.height = totalHeight + (myListView.getDividerHeight() * (myListAdapter.getCount() - 1));
+        myListView.setLayoutParams(params);
     }
 }
