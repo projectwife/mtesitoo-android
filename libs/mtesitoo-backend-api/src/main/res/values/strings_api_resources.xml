@@ -33,16 +33,6 @@
     <string name="params_register_telephone">telephone</string>
     <string name="params_register_company">company</string>
     <string name="params_register_agree">agree</string>
-
-
-
-
-
-
-
-
-
-
     <string name="path_product_vendor">/product/vendor</string>
     <string name="path_product_category">/product/category</string>
     <string name="path_admin_login">/admin/login</string>

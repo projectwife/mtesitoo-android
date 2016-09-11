@@ -11,6 +11,8 @@ import com.mtesitoo.backend.model.Product;
 public interface IProductRequest {
     void getProducts(int id, ICallback<List<Product>> callback);
 
+    void getProduct(int id, ICallback<Product> callback);
+
     void submitProduct(Product product, ICallback<Product> callback);
 
     void submitProductImage(Product product, ICallback<Product> callback);

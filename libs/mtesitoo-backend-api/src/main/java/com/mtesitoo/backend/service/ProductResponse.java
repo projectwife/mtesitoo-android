@@ -60,11 +60,16 @@ public class ProductResponse implements Response.Listener<String>, Response.Erro
                             jsonProduct.getString("price"), 100,
                             new Date(),
                             Uri.parse(jsonProduct.getString("thumb_image")),
-                            null
+                            parseAuxImages()
                     );
             result.add(product);
         }
 
         return result;
+    }
+
+    private ArrayList<Uri> parseAuxImages(){
+        ArrayList<Uri> images = new ArrayList<>();
+        return images;
     }
 }

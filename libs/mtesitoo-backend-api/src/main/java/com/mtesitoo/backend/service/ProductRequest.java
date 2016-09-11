@@ -25,6 +25,7 @@ import com.mtesitoo.backend.model.header.Authorization;
 import com.mtesitoo.backend.model.AuthorizedStringRequest;
 import com.mtesitoo.backend.model.URL;
 import com.mtesitoo.backend.model.url.ProductImageURL;
+import com.mtesitoo.backend.model.url.ProductURL;
 import com.mtesitoo.backend.model.url.VendorProductsURL;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.IProductRequest;
@@ -49,6 +50,17 @@ public class ProductRequest extends Request implements IProductRequest {
         URL url = new VendorProductsURL(mContext, R.string.path_product_vendor, sellerId);
         Log.d("Vendor Products URL",url.toString());
         ProductResponse response = new ProductResponse(callback);
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.GET, url.toString(), response, response);
+        stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
+        mRequestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void getProduct(int id, ICallback<Product> callback) {
+        Log.d("getProducts - ProductId",String.valueOf(id));
+        URL url = new ProductURL(mContext, R.string.path_product_product, id);
+        Log.d("Product URL",url.toString());
+        ProductDetailResponse response = new ProductDetailResponse(callback);
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.GET, url.toString(), response, response);
         stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
         mRequestQueue.add(stringRequest);

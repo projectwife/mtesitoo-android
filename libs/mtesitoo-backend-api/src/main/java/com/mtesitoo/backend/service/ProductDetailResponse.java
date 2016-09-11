@@ -1,9 +1,7 @@
 package com.mtesitoo.backend.service;
 
 import android.net.Uri;
-import android.util.Log;
 
-import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.mtesitoo.backend.model.Product;
@@ -18,13 +16,26 @@ import java.util.Date;
 import java.util.List;
 
 /**
- * Created by Nan on 9/7/2015.
+ * Created by Carl on 9/11/2016.
  */
-public class ProductUpdateResponse implements Response.Listener, Response.ErrorListener {
+public class ProductDetailResponse implements Response.Listener<String>, Response.ErrorListener {
     private ICallback<Product> mCallback;
 
-    public ProductUpdateResponse(ICallback<Product> callback) {
+    public ProductDetailResponse(ICallback<Product> callback) {
         mCallback = callback;
+    }
+
+    @Override
+    public void onResponse(String response) {
+        try {
+            Product product = parseResponse(response);
+
+            if (mCallback != null)
+                mCallback.onResult(product);
+        } catch (JSONException e) {
+            if (mCallback != null)
+                mCallback.onError(e);
+        }
     }
 
     @Override
@@ -34,10 +45,11 @@ public class ProductUpdateResponse implements Response.Listener, Response.ErrorL
 
     public Product parseResponse(String response) throws JSONException {
         JSONObject jsonProduct = new JSONObject(response);
+        jsonProduct = (JSONObject) jsonProduct.get("product");
 
         Product result = new Product(
                 Integer.parseInt(jsonProduct.getString("product_id")),
-                jsonProduct.getString("name"),
+                jsonProduct.getString("title"),
                 jsonProduct.getString("description"),
                 "Location",
                 "Category",
@@ -45,37 +57,23 @@ public class ProductUpdateResponse implements Response.Listener, Response.ErrorL
                 jsonProduct.getString("price"), 100,
                 new Date(),
                 Uri.parse(jsonProduct.getString("thumb_image")),
-                parseAuxImages()
+                parseAuxImages(jsonProduct.getJSONArray("images"))
         );
 
         return result;
     }
 
-    @Override
-    public void onResponse(Object response) {
-        if(response instanceof String){
-            try {
-                Product product = parseResponse((String)response);
-
-                if (mCallback != null)
-                    mCallback.onResult(product);
-            } catch (JSONException e) {
-                if (mCallback != null)
-                    mCallback.onError(e);
-            }
-        }else if(response instanceof NetworkResponse){
-            NetworkResponse networkResponse = (NetworkResponse)response;
-            if(networkResponse.statusCode==200)
-                mCallback.onResult(null);
-            else
-                mCallback.onError(new Exception(networkResponse.toString()));
-        }else{
-            Log.d("PRODUCT_UPDATE",response.toString());
-        }
-    }
-
-    private ArrayList<Uri> parseAuxImages(){
+    private ArrayList<Uri> parseAuxImages(JSONArray imageArray){
         ArrayList<Uri> images = new ArrayList<>();
+
+        for (int i = 0; i < imageArray.length(); i++) {
+            try {
+                images.add(Uri.parse(((JSONObject)imageArray.get(i)).getString("image")));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
         return images;
     }
 }
