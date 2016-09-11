@@ -204,6 +204,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_CAPTURE) {
             mImages.add(0,currentImage);
+            mProduct.addImage(currentImage.getUri());
             updateImageSlider();
 
             IProductRequest productService = new ProductRequest(this.getContext());

@@ -2,6 +2,7 @@ package com.mtesitoo.backend.model;
 
 import android.net.Uri;
 
+import java.net.URI;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
