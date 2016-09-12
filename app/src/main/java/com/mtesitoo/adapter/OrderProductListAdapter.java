@@ -65,6 +65,7 @@ public class OrderProductListAdapter extends ArrayAdapter<OrderProduct>
         holder.model.setText(orderProduct.getModel());
         holder.quantity.setText(Integer.toString(orderProduct.getQuantity()));
         holder.itemPrice.setText(FormatHelper.formatPrice(mContext.getString(R.string.currency_symbol), orderProduct.getUnitPrice()));
+        holder.productStatus.setText(orderProduct.getOrderStatus().getStatus(mContext));
 
         return convertView;
     }
@@ -79,6 +80,7 @@ public class OrderProductListAdapter extends ArrayAdapter<OrderProduct>
         @Bind(R.id.order_product_model)         TextView model;
         @Bind(R.id.order_product_quantity)      TextView quantity;
         @Bind(R.id.order_product_item_price)    TextView itemPrice;
+        @Bind(R.id.order_product_status)        TextView productStatus;
 
         public ViewHolder(View view) {
             ButterKnife.bind(this, view);

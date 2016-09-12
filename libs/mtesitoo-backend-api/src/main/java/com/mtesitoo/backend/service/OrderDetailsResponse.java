@@ -6,6 +6,7 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.mtesitoo.backend.model.Order;
 import com.mtesitoo.backend.model.OrderProduct;
+import com.mtesitoo.backend.model.OrderStatus;
 import com.mtesitoo.backend.service.logic.ICallback;
 
 import org.json.JSONArray;
@@ -52,7 +53,7 @@ public class OrderDetailsResponse implements Response.Listener<String>, Response
         JSONObject jsonOrder = new JSONObject(response);
 
         //TODO NAILY COMMENT OUT BEFORE SUBMISSION
-        //Log.d("response string", jsonOrder.toString(2));
+        Log.d("response string", jsonOrder.toString(2));
 
         mOrder.setPaymentMethod(jsonOrder.getString("payment_method"));
         mOrder.setCustomerId(jsonOrder.getInt("customer_id"));
@@ -72,6 +73,7 @@ public class OrderDetailsResponse implements Response.Listener<String>, Response
             JSONObject jsonProduct = jsonProducts.getJSONObject(i);
             products.add(new OrderProduct(
                     jsonProduct.getInt("order_product_id"),
+                    mapStatuses(jsonProduct.getInt("order_status_id")),
                     jsonProduct.getString("name"),
                     jsonProduct.getString("model"),
                     jsonProduct.getInt("quantity"),
@@ -107,5 +109,31 @@ public class OrderDetailsResponse implements Response.Listener<String>, Response
         }
 
         return date;
+    }
+
+    private OrderStatus mapStatuses(int orderStatusId)
+    {
+        OrderStatus status;
+
+        switch(orderStatusId) {
+            case 1:
+                status = OrderStatus.PENDING;
+                break;
+            case 3:
+                status = OrderStatus.SHIPPED;
+                break;
+            case 5:
+                status = OrderStatus.COMPLETE;
+                break;
+            case 7:
+                status = OrderStatus.CANCELED;
+                break;
+            default: {
+                Log.e("mapStatuses", "Status Id" + orderStatusId + "isn't supported");
+                status = OrderStatus.ALL;
+            }
+        }
+
+        return status;
     }
 }

@@ -36,20 +36,20 @@ public class OrderRequest  extends Request implements IOrderRequest {
     @Override
     public void submitOrder(final Order order, final ICallback<Order> callback) {
 
-        /**/
+        //Server request: GET /api/v1/vendor/order/{id}    POST /api/v1/vendor/order_product/{id}
         URL url = new URL(mContext, R.string.path_product_product);
-        OrderResponse response = new OrderResponse(null);
+        OrderResponse response = new OrderResponse(mContext, null);
 
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), response, response) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put(mContext.getString(R.string.params_customer_name), order.getCustomerName());
-                params.put(mContext.getString(R.string.params_order_delivery_address), order.getDeliveryAddress());
-                params.put(mContext.getString(R.string.params_order_total_price), Double.toString(order.getTotalPrice()));
+                //params.put(mContext.getString(R.string.par+ams_customer_name), order.getCustomerName());
+                //params.put(mContext.getString(R.string.params_order_delivery_address), order.getDeliveryAddress());
+                //params.put(mContext.getString(R.string.params_order_total_price), Double.toString(order.getTotalPrice()));
                 //params.put(mContext.getString(R.string.params_order_placed_date), order.getDateOrderPlaced().toString());
-                params.put(mContext.getString(R.string.params_order_payment_method), order.getPaymentMethod());
-                params.put(mContext.getString(R.string.params_order_status), order.getOrderStatus());
+                //params.put(mContext.getString(R.string.params_order_payment_method), order.getPaymentMethod());
+                params.put(mContext.getString(R.string.params_order_status_id), Integer.toString(order.getOrderStatus().getStatusId()));
                 //params.put(mContext.getString(R.string.params_product_meta_title), "meta_title");
                // params.put(mContext.getString(R.string.params_product_status), mContext.getString(R.string.params_product_status_enabled));
 
@@ -68,7 +68,7 @@ public class OrderRequest  extends Request implements IOrderRequest {
         URL url = new VendorOrdersURL(mContext, orderStatus);
         Log.d("Vendor Orders URL",url.toString());
 
-        OrderResponse response = new OrderResponse(callback);
+        OrderResponse response = new OrderResponse(mContext, callback);
 
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.GET, url.toString(), response, response);
 

@@ -58,5 +58,5 @@
     <string name="params_order_total_price">total_price</string>
     <string name="params_order_placed_date">order_placed_date</string>
     <string name="params_order_payment_method">payment_method</string>
-    <string name="params_order_status">order_status</string>
+    <string name="params_order_status_id">order_status_id</string>
 </resources>

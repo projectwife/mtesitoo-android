@@ -16,6 +16,7 @@ import android.os.Parcelable;
 public class OrderProduct implements Parcelable {
 
     private final int id;
+    private final OrderStatus orderStatus;
     private final String name;
     private final String model;
     private final int quantity;
@@ -24,14 +25,16 @@ public class OrderProduct implements Parcelable {
     public OrderProduct(Parcel in)
     {
         id = in.readInt();
+        orderStatus = (OrderStatus)in.readValue(OrderStatus.class.getClassLoader());
         name = in.readString();
         model = in.readString();
         quantity = in.readInt();
         unitPrice = in.readDouble();
     }
 
-    public OrderProduct(int id, String name, String model, int quantity, double unitPrice) {
+    public OrderProduct(int id, OrderStatus status, String name, String model, int quantity, double unitPrice) {
         this.id = id;
+        this.orderStatus = status;
         this.name = name;
         this.model = model;
         this.quantity = quantity;
@@ -40,6 +43,10 @@ public class OrderProduct implements Parcelable {
 
     public int getId() {
         return id;
+    }
+
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
     }
 
     public String getName() {
@@ -62,6 +69,7 @@ public class OrderProduct implements Parcelable {
     public String toString() {
         return "OrderProduct{" +
                 "id=" + id +
+                ", orderStatus=" + orderStatus +
                 ", name='" + name + '\'' +
                 ", model='" + model + '\'' +
                 ", quantity=" + quantity +
@@ -92,6 +100,7 @@ public class OrderProduct implements Parcelable {
     public void writeToParcel(Parcel dest, int flags)
     {
         dest.writeInt(id);
+        dest.writeValue(orderStatus);
         dest.writeString(name);
         dest.writeString(model);
         dest.writeInt(quantity);
