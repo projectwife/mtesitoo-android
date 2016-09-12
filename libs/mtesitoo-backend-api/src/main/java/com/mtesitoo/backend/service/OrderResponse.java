@@ -51,8 +51,10 @@ public class OrderResponse implements Response.Listener<String>, Response.ErrorL
     }
 
     public List<Order> parseResponse(String response) throws JSONException {
-        JSONArray jsonOrders = new JSONArray(response);
         Log.d("OrderResponse", response);
+
+        JSONObject jsonResponse = new JSONObject(response);
+        JSONArray jsonOrders = jsonResponse.getJSONArray("orders");
 
         List<Order> result = new ArrayList<>(jsonOrders.length());
         for (int i = 0; i < jsonOrders.length(); ++i) {
@@ -102,7 +104,6 @@ public class OrderResponse implements Response.Listener<String>, Response.ErrorL
     private OrderStatus mapStatuses(String orderStatus)
     {
         OrderStatus status;
-        String st = mContext.getString(R.string.order_status_pending);
 
         if (orderStatus.equals(mContext.getString(R.string.order_status_pending)))
             status = OrderStatus.PENDING;
@@ -118,7 +119,6 @@ public class OrderResponse implements Response.Listener<String>, Response.ErrorL
             status = OrderStatus.ALL;
         }
 
-        status.setStatusString(orderStatus);
         return status;
     }
 }

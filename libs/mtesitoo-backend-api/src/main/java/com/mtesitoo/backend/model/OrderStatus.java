@@ -1,5 +1,9 @@
 package com.mtesitoo.backend.model;
 
+import android.content.Context;
+
+import com.mtesitoo.backend.R;
+
 /**
  * Created by naily on 04/08/16
  *
@@ -8,14 +12,17 @@ package com.mtesitoo.backend.model;
  * CHARGEBACK(13), EXPIRED(14), PROCESSED(15), VOIDED(16)
  */
 public enum OrderStatus {
-    ALL(0), PENDING(1), SHIPPED(3), COMPLETE(5), CANCELED(7);
+    ALL(0, R.string.order_status_all_orders), PENDING(1, R.string.order_status_pending),
+    SHIPPED(3, R.string.order_status_shipped), COMPLETE(5, R.string.order_status_complete),
+    CANCELED(7, R.string.order_status_canceled);
 
-    private int     statusId;
-    private String  status;
+    private final int     statusId;
+    private final int statusStringResId;
 
-    OrderStatus(int id)
+    OrderStatus(int id, int resString)
     {
         statusId = id;
+        statusStringResId = resString;
     }
 
     public int getStatusId()
@@ -23,11 +30,7 @@ public enum OrderStatus {
         return statusId;
     }
 
-    public String getStatus() {
-        return status;
-    }
-
-    public void setStatusString(String aStatus) {
-        status = aStatus;
+    public String getStatus(Context context) {
+        return context.getString(statusStringResId);
     }
 }

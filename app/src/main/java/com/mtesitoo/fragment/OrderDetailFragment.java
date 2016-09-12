@@ -107,7 +107,7 @@ public class OrderDetailFragment extends Fragment{
 
 
         mOrderId.setText(Integer.toString(mOrder.getId()));
-        mOrderStatus.setText(mOrder.getOrderStatus().getStatus());
+        mOrderStatus.setText(mOrder.getOrderStatus().getStatus(getContext()));
         mTotal.setText(FormatHelper.formatPrice(getString(R.string.currency_symbol), mOrder.getTotalPrice()));
         mOrderItemCountTitle.setText(itemCountTitle);
         mOrderItemCount.setText(Integer.toString(itemCount));

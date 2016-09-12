@@ -111,6 +111,26 @@
             android:layout_alignParentEnd="true"
             android:layout_alignBottom="@+id/order_product_item_price_title" />
 
+        <TextView
+            style="@style/TextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/product_status"
+            android:id="@+id/order_product_status_title"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/order_product_item_price_title" />
+
+        <TextView
+            style="@style/TextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/product_status"
+            android:id="@+id/order_product_status"
+            android:layout_alignLeft="@+id/order_product_id"
+            android:layout_alignStart="@+id/order_product_id"
+            android:layout_alignBottom="@+id/order_product_status_title" />
+
     </RelativeLayout>
 
 </LinearLayout>

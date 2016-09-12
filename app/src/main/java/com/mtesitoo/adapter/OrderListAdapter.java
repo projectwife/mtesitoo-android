@@ -63,7 +63,7 @@ public class OrderListAdapter extends ArrayAdapter<Order> {
         holder.orderId.setText(Integer.toString(order.getId()));
         holder.name.setText(order.getCustomerName());
         holder.totalPrice.setText(FormatHelper.formatPrice(mContext.getString(R.string.currency_symbol), order.getTotalPrice()));
-        holder.orderStatus.setText(order.getOrderStatus().getStatus());
+        holder.orderStatus.setText(order.getOrderStatus().getStatus(mContext));
         holder.dateOrdered.setText(FormatHelper.formatDate(order.getDateOrderPlaced()));
 
         return convertView;
