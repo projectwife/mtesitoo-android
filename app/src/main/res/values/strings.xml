@@ -30,6 +30,7 @@
     <string name="product_id">Product id</string>
     <string name="product_unit_price">Unit Price</string>
     <string name="product_name">Product Name</string>
+    <string name="product_status">Product Status</string>
     <string name="product_model">Model</string>
     <string name="product_quantity">Quantity</string>
 </resources>
