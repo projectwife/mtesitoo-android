@@ -123,24 +123,6 @@ public class ProductRequest extends Request implements IProductRequest {
             }
         };
 
-
-//        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), null, response) {
-//            @Override
-//            protected Map<String, String> getParams() {
-//                Map<String, String> params = new HashMap<>();
-//                try {
-//                    params.put("file",new FileBody());
-//                } catch (UnsupportedEncodingException e) {
-//                    e.printStackTrace();
-//                }
-//                params.put(mContext.getString(R.string.params_product_image_main), "false");
-//                params.put(mContext.getString(R.string.params_product_image_sort), "1");
-//                return params;
-//            }
-//
-//
-//        };
-
         multipartRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
         mRequestQueue.add(multipartRequest);
     }
@@ -148,10 +130,10 @@ public class ProductRequest extends Request implements IProductRequest {
     @Override
     public void deleteProductImage(final Product product, final String fileName, ICallback<Product> callback) {
         URL url = new ProductImageURL(mContext, R.string.path_product_product, product.getId());
-        ProductResponse response = new ProductResponse(null);
-        url.append("?file=" + fileName);
+        ProductDetailResponse response = new ProductDetailResponse(callback);
+        url.append("?files=" + fileName);
 
-        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.DELETE, url.toString(), null, response);
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.DELETE, url.toString(), response, response);
         stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
         mRequestQueue.add(stringRequest);
     }

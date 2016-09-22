@@ -152,7 +152,7 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
             DefaultSliderView sliderView = new DefaultSliderView(getActivity());
             sliderView
                     .image(url)
-                    .setScaleType(BaseSliderView.ScaleType.Fit)
+                    .setScaleType(BaseSliderView.ScaleType.CenterCrop)
                     .setOnSliderClickListener(this);
             mImageSlider.addSlider(sliderView);
         }

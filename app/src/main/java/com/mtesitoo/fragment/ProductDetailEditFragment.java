@@ -3,12 +3,14 @@ package com.mtesitoo.fragment;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -164,27 +166,61 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     }
 
     @Override
-    public void onSliderClick(BaseSliderView slider) {
+    public void onSliderClick(final BaseSliderView slider) {
 
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-            ImageFile image = null;
+        new AlertDialog.Builder(getActivity())
+                .setTitle(getString(R.string.EditImages))
+                .setPositiveButton("Add an image", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                            ImageFile image = null;
 
-            try {
-                image = new ImageFile(getActivity());
-            } catch (Exception e) {
-                Log.d("IMAGE_CAPTURE","Issue creating image file");
-            }
+                            try {
+                                image = new ImageFile(getActivity());
+                            } catch (Exception e) {
+                                Log.d("IMAGE_CAPTURE","Issue creating image file");
+                            }
 
-            if (image != null) {
-                Uri imgUri = FileProvider.getUriForFile(getActivity(),
-                        "com.mtesitoo.fileprovider",
-                        image);
-                currentImage = image;
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
-                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-            }
-        }
+                            if (image != null) {
+                                Uri imgUri = FileProvider.getUriForFile(getActivity(),
+                                        "com.mtesitoo.fileprovider",
+                                        image);
+                                currentImage = image;
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+                                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                            }
+                        }
+                    }
+                })
+                .setNegativeButton("Delete this image", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        final String imageFilename = slider.getUrl().substring( slider.getUrl().lastIndexOf('/')+1, slider.getUrl().length() );
+
+                        // Delete image request
+                        IProductRequest productService = new ProductRequest(ProductDetailEditFragment.this.getContext());
+                        productService.deleteProductImage(mProduct, imageFilename, new ICallback<Product>() {
+                            @Override
+                            public void onResult(Product result) {
+                                for (ImageFile image : mImages) {
+                                    System.out.println(image.getName());
+                                }
+                                Toast.makeText(getActivity(),"delete " + imageFilename,Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                Toast.makeText(getActivity(),"delete error",Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                            // Remove image from list if successful
+
+                        //Toast.makeText(getActivity(),"delete " + slider.getUrl(),Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .show();
     }
 
     @Override
@@ -278,7 +314,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
             DefaultSliderView sliderView = new DefaultSliderView(getActivity());
             sliderView
                     .image(url)
-                    .setScaleType(BaseSliderView.ScaleType.Fit)
+                    .setScaleType(BaseSliderView.ScaleType.CenterCrop)
                     .setOnSliderClickListener(this);
             mImageSlider.addSlider(sliderView);
         }
@@ -324,6 +360,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         mDateBorder.setPadding(padding, padding / 2, padding, padding);
     }
 
+    // Todo: update this with new uplaod image process
     private void updateImageSlider() {
         mImageSlider.removeAllSliders();
 

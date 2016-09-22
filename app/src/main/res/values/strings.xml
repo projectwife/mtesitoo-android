@@ -12,4 +12,5 @@
 
     <string name="title_activity_order">OrderActivity</string>
     <string name="register_successful">Registered successfully, welcome!</string>
+    <string name="EditImages">Edit Images</string>
 </resources>
