@@ -203,15 +203,13 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
                         productService.deleteProductImage(mProduct, imageFilename, new ICallback<Product>() {
                             @Override
                             public void onResult(Product result) {
-                                for (ImageFile image : mImages) {
-                                    System.out.println(image.getName());
-                                }
-                                Toast.makeText(getActivity(),"delete " + imageFilename,Toast.LENGTH_SHORT).show();
+                                mImageSlider.removeSliderAt(mImageSlider.getCurrentPosition());
+                                Toast.makeText(getActivity(),"Deleted Image Successfully",Toast.LENGTH_SHORT).show();
                             }
 
                             @Override
                             public void onError(Exception e) {
-                                Toast.makeText(getActivity(),"delete error",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(),"Error Deleting Image",Toast.LENGTH_SHORT).show();
                             }
                         });
 

@@ -130,7 +130,7 @@ public class ProductRequest extends Request implements IProductRequest {
     @Override
     public void deleteProductImage(final Product product, final String fileName, ICallback<Product> callback) {
         URL url = new ProductImageURL(mContext, R.string.path_product_product, product.getId());
-        ProductDetailResponse response = new ProductDetailResponse(callback);
+        ProductImageDeleteResponse response = new ProductImageDeleteResponse(callback);
         url.append("?files=" + fileName);
 
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.DELETE, url.toString(), response, response);
