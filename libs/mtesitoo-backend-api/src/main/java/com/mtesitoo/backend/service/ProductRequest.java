@@ -3,6 +3,7 @@ package com.mtesitoo.backend.service;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
 import android.net.Uri;
 import android.util.Base64;
 import android.util.Log;
@@ -19,8 +20,10 @@ import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.mtesitoo.backend.ExifUtil;
 import com.mtesitoo.backend.MultipartRequest;
 import com.mtesitoo.backend.R;
+import com.mtesitoo.backend.ScalingUtilities;
 import com.mtesitoo.backend.model.header.Authorization;
 import com.mtesitoo.backend.model.AuthorizedStringRequest;
 import com.mtesitoo.backend.model.URL;
@@ -32,6 +35,8 @@ import com.mtesitoo.backend.service.logic.IProductRequest;
 import com.mtesitoo.backend.model.Product;
 
 import org.json.JSONException;
+
+import static android.R.attr.path;
 
 /**
  * Opencart API-based implementation of {@link IProductRequest}.
@@ -96,10 +101,31 @@ public class ProductRequest extends Request implements IProductRequest {
     public void submitProductImage(final Product product, ICallback<Product> callback) {
         URL url = new ProductImageURL(mContext, R.string.path_product_product, product.getId());
         final Uri image = product.getLastImage();
+
+        Bitmap bm = BitmapFactory.decodeFile(image.getPath());
+        
+        int DESIREDWIDTH = 500;
+        int DESIREDHEIGHT = 500;
+
+//        int width = bm.getWidth();
+//        int height = bm.getHeight();
+//        // CREATE A MATRIX FOR THE MANIPULATION
+//        Matrix matrix = new Matrix();
+//        // RESIZE THE BIT MAP
+//        matrix.postScale(DESIREDWIDTH, DESIREDHEIGHT);
+
+        // "RECREATE" THE NEW BITMAP
+//        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
+
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bm, DESIREDWIDTH, DESIREDHEIGHT, true);
+        bm.recycle();
+
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        Bitmap bitmap = BitmapFactory.decodeFile(image.getPath());
-        bitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+        //resizedBitmap = ExifUtil.rotateBitmap(image.getPath(),resizedBitmap);
+        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
         final byte[] imageBytes = baos.toByteArray();
+
         ProductUpdateResponse response = new ProductUpdateResponse(callback);
 
         MultipartRequest multipartRequest = new MultipartRequest(mContext, url.toString(), response, response){
@@ -125,6 +151,8 @@ public class ProductRequest extends Request implements IProductRequest {
 
         multipartRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
         mRequestQueue.add(multipartRequest);
+
+        resizedBitmap.recycle();
     }
 
     @Override

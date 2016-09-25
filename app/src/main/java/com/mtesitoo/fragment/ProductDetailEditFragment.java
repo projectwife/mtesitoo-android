@@ -309,7 +309,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         }
 
         for (String url : urls) {
-            DefaultSliderView sliderView = new DefaultSliderView(getActivity());
+             DefaultSliderView sliderView = new DefaultSliderView(getActivity());
             sliderView
                     .image(url)
                     .setScaleType(BaseSliderView.ScaleType.CenterCrop)
