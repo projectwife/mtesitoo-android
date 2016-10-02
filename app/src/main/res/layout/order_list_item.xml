@@ -1,91 +1,136 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/order_list_item"
+    style="@style/CardBorderTheme"
     android:layout_width="match_parent"
-    android:layout_height="300dip"
-    android:paddingBottom="8dip"
-    android:paddingLeft="16dip"
-    android:paddingRight="16dip"
-    android:paddingTop="16dip">
+    android:layout_height="wrap_content"
+    android:background="#e6e6e6" >
 
-    <FrameLayout
-
+    <RelativeLayout
+        style="@style/CardTheme"
         android:layout_width="match_parent"
-        android:layout_height="220dip"
-        android:background="@drawable/stock_order">
+        android:layout_height="wrap_content"
+        android:id="@+id/relativeLayout">
 
-        <LinearLayout
-            android:id="@+id/l1"
-            android:layout_width="match_parent"
-            android:layout_height="50dip"
-            android:background="#8444">
+        <TextView
+            android:id="@+id/order_customer_name_title"
+            style="@style/TextTitleBoldTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/customer_name" />
 
-            <TextView
-                android:id="@+id/order_name"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dip"
-                android:text="Order for 10 foo"
-                android:textColor="#ffffff"
-                android:textSize="17dp" />
+        <TextView
+            android:id="@+id/order_customer_name"
+            style="@style/TextTitleBoldTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentEnd="true"
+            android:text="@string/customer_name" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
+        <TextView
+            android:id="@+id/order_id_title"
+            style="@style/TextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/order_customer_name"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:text="@string/order_id"
+            android:layout_alignRight="@+id/order_customer_name_title"
+            android:layout_alignEnd="@+id/order_customer_name_title" />
 
-            <ImageView
-                android:id="@+id/product_detail"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center_vertical"
-                android:layout_marginRight="10dip"
-                android:src="@drawable/navigation_forward" />
+        <TextView
+            android:id="@+id/order_id"
+            style="@style/TextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/order_id_title"
+            android:layout_toRightOf="@+id/order_customer_name_title"
+            android:layout_toEndOf="@+id/order_customer_name_title"
+            android:text="@string/order_id"  />
 
-        </LinearLayout>
+        <TextView
+            android:id="@+id/order_total_price_title"
+            style="@style/TextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/total_price"
+            android:layout_below="@+id/order_customer_name"
+            android:layout_toLeftOf="@+id/order_total_price"
+            android:layout_marginRight="30dp" />
+
+        <TextView
+            android:id="@+id/order_total_price"
+            android:text="@string/total_price"
+            style="@style/TextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/order_customer_name_title"
+            android:layout_alignParentRight="true" />
+
+        <TextView
+            android:id="@+id/order_date_ordered_title"
+            style="@style/TextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/order_id_title"
+            android:layout_alignParentLeft="true"
+            android:text="@string/date_order_placed"
+            android:layout_alignRight="@+id/order_customer_name_title"
+            android:layout_alignEnd="@+id/order_customer_name_title" />
+
+        <TextView
+            android:id="@+id/order_date_ordered"
+            style="@style/TextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/order_date_ordered_title"
+            android:layout_toRightOf="@+id/order_customer_name_title"
+            android:layout_toEndOf="@+id/order_customer_name_title"
+            android:text="@string/date_order_placed" />
+
+        <TextView
+            android:id="@+id/order_status_title"
+            style="@style/TextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/order_total_price_title"
+            android:layout_alignBottom="@id/order_date_ordered_title"
+            android:text="@string/order_status" />
+
+        <TextView
+            android:id="@+id/order_status"
+            style="@style/TextTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@id/order_date_ordered_title"
+            android:layout_alignParentRight="true"
+            android:text="@string/order_status" />
+
+        <View
+            android:id="@+id/order_layout_divider"
+            android:layout_width="wrap_content"
+            android:layout_height="1dip"
+            android:layout_marginTop="6dip"
+            android:layout_marginBottom="6dip"
+            android:layout_below="@id/order_date_ordered_title"
+            android:background="#d9d9d9" />
 
 
+        <TextView
+            android:id="@+id/order_details_link"
+            style="@style/TextLinkTheme"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/order_layout_divider"
+            android:layout_alignParentRight="true"
+            android:text="@string/order_see_more_details"
+            android:textStyle="bold" />
 
 
+    </RelativeLayout>
 
-    <!--<LinearLayout-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="50dip"-->
-        <!--android:background="#8444"-->
-        <!--android:layout_below="@+id/l1">-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/order_status"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center_vertical"-->
-            <!--android:layout_marginLeft="10dip"-->
-            <!--android:text="Order status"-->
-            <!--android:textColor="#ffffff"-->
-            <!--android:textSize="17dp" />-->
-
-        <!--<View-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_height="0dp"-->
-            <!--android:layout_weight="1" />-->
-
-        <!--<TextView-->
-            <!--android:id="@+id/date_placed"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:layout_gravity="center_vertical"-->
-            <!--android:layout_marginLeft="10dip"-->
-            <!--android:text="date placed.."-->
-            <!--android:textColor="#ffffff"-->
-            <!--android:textSize="17dp" />-->
-
-    <!--</LinearLayout>-->
-    </FrameLayout>
-    <View
-        android:layout_width="75dp"
-        android:layout_height="75dp"
-        android:layout_marginLeft="20dp"
-        android:layout_marginTop="190dp"
-        android:background="@drawable/circle"
-        android:scaleType="fitXY" />
 </RelativeLayout>

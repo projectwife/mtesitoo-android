@@ -1,117 +1,142 @@
 package com.mtesitoo.backend.model;
 
-import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.ArrayList;
 import java.util.Date;
 
 /**
- * Created by Nan on 9/13/2015.
+ * Created by Nan on 9/13/2015
  */
 public class Order implements Parcelable {
 
+    private int id;
+    private OrderStatus orderStatus;
+    private double totalPrice;
+    private Date dateOrderPlaced;
+    private String paymentMethod;
 
+    private int customerId;
+    private String customerName;
+    private String deliveryAddress;
+    private String emailAddress;
+    private String customerTelephone;
 
-    private final int mId;
-    private final String mCustomerName;
-    private final String mDeliveryAddress;
-    private final String mProductName;
-    private final String mOrderStatus;
-    private final String mTotalPrice;
-    private final String mProductPrice;
-    private final Integer mProductQuantity;
-    private final Date mDateOrderPlaced;
-    private final String mPaymentMethod;
+    private ArrayList<OrderProduct> products;
 
+    private Order()
+    {
+        // Initialise ArrayList to avoid reading or writing null objects in the Parcel.
+        products = new ArrayList<>();
+    }
 
     public Order(Parcel in) {
-
-        this.mId = in.readInt();;
-        this.mCustomerName = in.readString();
-        this.mDeliveryAddress =in.readString();
-        this.mProductName = in.readString();
-        this.mOrderStatus = in.readString();
-        this.mTotalPrice = in.readString();
-        this.mProductPrice = in.readString();
-        this.mProductQuantity = in.readInt();
-        this.mDateOrderPlaced =new Date(in.readLong());
-        this.mPaymentMethod = in.readString();
-
+        this();
+        this.id = in.readInt();
+        this.orderStatus = (OrderStatus)in.readValue(OrderStatus.class.getClassLoader());
+        this.totalPrice = in.readDouble();
+        this.dateOrderPlaced =new Date(in.readLong());
+        this.paymentMethod = in.readString();
+        this.customerId = in.readInt();
+        this.customerName = in.readString();
+        this.deliveryAddress =in.readString();
+        this.emailAddress = in.readString();
+        this.customerTelephone = in.readString();
+        in.readTypedList(products, OrderProduct.CREATOR);
     }
 
-    public Order(int mId, String mCustomerName, String mDeliveryAddress, String mProductName, String mOrderStatus, String mTotalPrice, String mProductPrice, Integer mProductQuantity, Date mDateOrderPlaced, String mPaymentMethod) {
-        this.mId = mId;
-        this.mCustomerName = mCustomerName;
-        this.mDeliveryAddress = mDeliveryAddress;
-        this.mProductName = mProductName;
-        this.mOrderStatus = mOrderStatus;
-        this.mTotalPrice = mTotalPrice;
-        this.mProductPrice = mProductPrice;
-        this.mProductQuantity = mProductQuantity;
-        this.mDateOrderPlaced = mDateOrderPlaced;
-        this.mPaymentMethod = mPaymentMethod;
+    public Order(int id, String customerName, String deliveryAddress, OrderStatus orderStatus, double totalPrice, Date dateOrderPlaced, String paymentMethod) {
+        this();
+        this.id = id;
+        this.customerName = customerName;
+        this.deliveryAddress = deliveryAddress;
+        this.orderStatus = orderStatus;
+        this.totalPrice = totalPrice;
+        this.dateOrderPlaced = dateOrderPlaced;
+        this.paymentMethod = paymentMethod;
     }
 
 
-    public String getmCustomerName() {
-        return mCustomerName;
+    public String getCustomerName() {
+        return customerName;
     }
 
-    public int getmId() {
-        return mId;
+    public int getId() {
+        return id;
     }
 
-    public String getmDeliveryAddress() {
-        return mDeliveryAddress;
+    public String getDeliveryAddress() {
+        return deliveryAddress;
     }
 
-    public String getmProductName() {
-        return mProductName;
+    public void setDeliveryAddress(String deliveryAddress) {
+        this.deliveryAddress = deliveryAddress;
     }
 
-    public String getmOrderStatus() {
-        return mOrderStatus;
+    public OrderStatus getOrderStatus() {
+        return orderStatus;
     }
 
-    public String getmTotalPrice() {
-        return mTotalPrice;
+    public double getTotalPrice() {
+        return totalPrice;
     }
 
-    public String getmProductPrice() {
-        return mProductPrice;
+    public Date getDateOrderPlaced() {
+        return dateOrderPlaced;
     }
 
-    public Integer getmProductQuantity() {
-        return mProductQuantity;
+    public void setPaymentMethod(String paymentMethod) {
+        this.paymentMethod = paymentMethod;
     }
 
-    public Date getmDateOrderPlaced() {
-        return mDateOrderPlaced;
+    public String getEmailAddress() {
+        return emailAddress;
     }
 
-    public String getmPaymentMethod() {
-        return mPaymentMethod;
+    public void setEmailAddress(String emailAddress) {
+        this.emailAddress = emailAddress;
     }
 
-//    public static Creator<Order> getCREATOR() {
-//        return CREATOR;
-//    }
+    public int getCustomerId() {
+        return customerId;
+    }
+
+    public void setCustomerId(int customerId) {
+        this.customerId = customerId;
+    }
+
+    public String getCustomerTelephone() {
+        return customerTelephone;
+    }
+
+    public ArrayList<OrderProduct> getProducts() {
+        return products;
+    }
+
+    public void setProducts(ArrayList<OrderProduct> products) {
+        this.products = products;
+    }
+
+    public void setCustomerTelephone(String customerTelephone) {
+        this.customerTelephone = customerTelephone;
+    }
 
 
     @Override
     public String toString() {
         return "Order{" +
-                "mId=" + mId +
-                ", mCustomerName='" + mCustomerName + '\'' +
-                ", mDeliveryAddress='" + mDeliveryAddress + '\'' +
-                ", mProductName='" + mProductName + '\'' +
-                ", mOrderStatus='" + mOrderStatus + '\'' +
-                ", mTotalPrice='" + mTotalPrice + '\'' +
-                ", mProductPrice='" + mProductPrice + '\'' +
-                ", mProductQuantity=" + mProductQuantity +
-                ", mDateOrderPlaced=" + mDateOrderPlaced +
-                ", mPaymentMethod='" + mPaymentMethod + '\'' +
+                "id=" + id +
+                ", orderStatus=" + orderStatus +
+                ", totalPrice=" + totalPrice +
+                ", dateOrderPlaced=" + dateOrderPlaced +
+                ", paymentMethod='" + paymentMethod + '\'' +
+                ", customerId=" + customerId +
+                ", customerName='" + customerName + '\'' +
+                ", deliveryAddress='" + deliveryAddress + '\'' +
+                ", emailAddress='" + emailAddress + '\'' +
+                ", customerTelephone='" + customerTelephone + '\'' +
+                ", products=" + products +
                 '}';
     }
 
@@ -135,15 +160,16 @@ public class Order implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(mId);
-        dest.writeString(mCustomerName);
-        dest.writeString(mDeliveryAddress);
-        dest.writeString(mProductName);
-        dest.writeString(mOrderStatus);
-        dest.writeString(mTotalPrice);
-        dest.writeString(mProductPrice);
-        dest.writeInt(mProductQuantity);
-        dest.writeLong(mDateOrderPlaced.getTime());
-        dest.writeString(mPaymentMethod);
+        dest.writeInt(id);
+        dest.writeValue(orderStatus);
+        dest.writeDouble(totalPrice);
+        dest.writeLong(dateOrderPlaced.getTime());
+        dest.writeString(paymentMethod);
+        dest.writeInt(customerId);
+        dest.writeString(customerName);
+        dest.writeString(deliveryAddress);
+        dest.writeString(emailAddress);
+        dest.writeString(customerTelephone);
+        dest.writeTypedList(products);
     }
 }

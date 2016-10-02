@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="order_status_pending">Pending</string>
+    <string name="order_status_shipped">Shipped</string>
+    <string name="order_status_complete">Complete</string>
+    <string name="order_status_canceled">Canceled</string>
+    <string name="order_status_all_orders">All Orders</string>
+</resources>
