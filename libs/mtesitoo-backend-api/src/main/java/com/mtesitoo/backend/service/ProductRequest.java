@@ -103,7 +103,7 @@ public class ProductRequest extends Request implements IProductRequest {
         final Uri image = product.getLastImage();
 
         Bitmap bm = BitmapFactory.decodeFile(image.getPath());
-        
+
         int DESIREDWIDTH = 500;
         int DESIREDHEIGHT = 500;
 
