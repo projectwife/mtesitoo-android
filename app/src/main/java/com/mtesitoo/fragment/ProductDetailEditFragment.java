@@ -304,6 +304,8 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
 
         ArrayList<String> urls = new ArrayList<>();
 
+        urls.add(mProduct.getmThumbnail().toString());
+
         for(Uri image : mProduct.getAuxImages()){
             urls.add(image.toString());
         }
@@ -358,7 +360,6 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         mDateBorder.setPadding(padding, padding / 2, padding, padding);
     }
 
-    // Todo: update this with new uplaod image process
     private void updateImageSlider() {
         mImageSlider.removeAllSliders();
 

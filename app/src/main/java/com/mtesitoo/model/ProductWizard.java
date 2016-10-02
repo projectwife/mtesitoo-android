@@ -41,7 +41,7 @@ public class ProductWizard extends AbstractWizardModel {
 
                 new TextPage(this, mContext.getString(R.string.page_description)).setRequired(true),
 
-//                new ImagePage(this, mContext.getString(R.string.page_photo)).setRequired(true),
+                new ImagePage(this, mContext.getString(R.string.page_photo)).setRequired(true),
 
 //                new TextPage(this, mContext.getString(R.string.page_location)).setRequired(true),
 

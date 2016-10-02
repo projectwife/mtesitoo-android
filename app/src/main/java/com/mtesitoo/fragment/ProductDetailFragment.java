@@ -144,6 +144,8 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
     private void updateImageSlider() {
         ArrayList<String> urls = new ArrayList<>();
 
+        urls.add(mProduct.getmThumbnail().toString());
+
         for(Uri image : mProduct.getAuxImages()){
             urls.add(image.toString());
         }

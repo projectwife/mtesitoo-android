@@ -10,6 +10,8 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
 import java.io.UnsupportedEncodingException;
 import java.util.HashMap;
 import java.util.List;
@@ -72,11 +74,11 @@ public class ProductRequest extends Request implements IProductRequest {
     }
 
     @Override
-    public void submitProduct(final Product product, final ICallback<Product> callback) {
+    public void submitProduct(final Product product, final ICallback<String> callback) {
         Log.d("Product",product.toString());
         URL url = new URL(mContext, R.string.path_product_product);
         Log.d("Submit Product URL",url.toString());
-        ProductResponse response = new ProductResponse(null);
+        ProductThumbnailResponse response = new ProductThumbnailResponse(callback);
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), response, response) {
             @Override
             protected Map<String, String> getParams() {
@@ -98,6 +100,60 @@ public class ProductRequest extends Request implements IProductRequest {
     }
 
     @Override
+    public void submitProductThumbnail(int productId, Uri thumbnail, ICallback<String> callback){
+        URL url = new ProductImageURL(mContext, R.string.path_product_product, productId);
+        final Uri image = thumbnail;
+
+        InputStream inputStream = null;
+        try {
+            inputStream = mContext.getContentResolver().openInputStream(image);
+
+            Bitmap bm = BitmapFactory.decodeStream(inputStream);
+
+            int DESIREDWIDTH = 500;
+            int DESIREDHEIGHT = 500;
+
+            Bitmap resizedBitmap = Bitmap.createScaledBitmap(bm, DESIREDWIDTH, DESIREDHEIGHT, true);
+            bm.recycle();
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
+            final byte[] imageBytes = baos.toByteArray();
+
+            ProductThumbnailResponse response = new ProductThumbnailResponse(callback);
+
+            MultipartRequest multipartRequest = new MultipartRequest(mContext, url.toString(), response, response){
+
+                @Override
+                protected Map<String, String> getParams() throws AuthFailureError {
+                    Map<String,String> params = new HashMap<>();
+                    params.put(mContext.getString(R.string.params_product_image_main), "true");
+                    return params;
+                }
+
+                @Override
+                protected Map<String, DataPart> getByteData() throws AuthFailureError {
+                    Map<String, DataPart> params = new HashMap<>();
+                    // file name could found file base or direct access from real path
+                    // for now just get bitmap data from ImageView
+                    params.put("file", new DataPart("mtesitoo_thumb_" + image.getLastPathSegment() + ".jpg", imageBytes, "image/jpeg"));
+
+                    return params;
+                }
+            };
+
+            multipartRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
+            mRequestQueue.add(multipartRequest);
+
+            resizedBitmap.recycle();
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @Override
     public void submitProductImage(final Product product, ICallback<Product> callback) {
         URL url = new ProductImageURL(mContext, R.string.path_product_product, product.getId());
         final Uri image = product.getLastImage();
@@ -107,21 +163,10 @@ public class ProductRequest extends Request implements IProductRequest {
         int DESIREDWIDTH = 500;
         int DESIREDHEIGHT = 500;
 
-//        int width = bm.getWidth();
-//        int height = bm.getHeight();
-//        // CREATE A MATRIX FOR THE MANIPULATION
-//        Matrix matrix = new Matrix();
-//        // RESIZE THE BIT MAP
-//        matrix.postScale(DESIREDWIDTH, DESIREDHEIGHT);
-
-        // "RECREATE" THE NEW BITMAP
-//        Bitmap resizedBitmap = Bitmap.createBitmap(bm, 0, 0, width, height, matrix, false);
-
         Bitmap resizedBitmap = Bitmap.createScaledBitmap(bm, DESIREDWIDTH, DESIREDHEIGHT, true);
         bm.recycle();
 
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        //resizedBitmap = ExifUtil.rotateBitmap(image.getPath(),resizedBitmap);
         resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
         final byte[] imageBytes = baos.toByteArray();
