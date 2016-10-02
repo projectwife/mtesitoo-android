@@ -105,11 +105,13 @@ public class AddProductActivity extends ActionBarActivity implements
                         @Override
                         public void onResult(String result) {
                             Log.d("image thumb upload","Success");
+                            finish();
                         }
 
                         @Override
                         public void onError(Exception e) {
                             Log.e("image thumb upload err",e.toString());
+                            finish();
                         }
                     });
                 }
@@ -117,10 +119,10 @@ public class AddProductActivity extends ActionBarActivity implements
                 @Override
                     public void onError(Exception e) {
                     Log.e("product add error",e.toString());
+                    finish();
                 }
             });
 
-            finish();
         } else {
             if (mEditingAfterReview) {
                 mPager.setCurrentItem(mPagerAdapter.getCount() - 1);
