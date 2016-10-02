@@ -1,6 +1,7 @@
 package com.mtesitoo.fragment;
 
 import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
@@ -16,6 +18,9 @@ import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.mtesitoo.R;
 import com.mtesitoo.backend.model.Product;
+import com.mtesitoo.backend.service.ProductRequest;
+import com.mtesitoo.backend.service.logic.ICallback;
+import com.mtesitoo.backend.service.logic.IProductRequest;
 
 import java.util.ArrayList;
 
@@ -59,6 +64,9 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
     @Bind(R.id.product_detail_expiration_date)
     TextView mProductExpirationDate;
 
+    ArrayList<Uri> auxImages;
+    int productId;
+
     public static ProductDetailFragment newInstance(Context context, Product product) {
         ProductDetailFragment fragment = new ProductDetailFragment();
         Bundle args = new Bundle();
@@ -86,6 +94,7 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
         Bundle args = this.getArguments();
 
         mProduct = args.getParcelable(getString(R.string.bundle_product_key));
+        productId = mProduct.getId();
         mProductName.setText(mProduct.getName());
         mProductDescription.setText(mProduct.getDescription());
         mProductLocation.setText(mProduct.getLocation());
@@ -95,8 +104,8 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
         mProductPrice.setText(mProduct.getPricePerUnit());
         mProductExpirationDate.setText(mProduct.getExpiration().toString());
 
-        updateBorderPaddings();
         updateImageSlider();
+        updateBorderPaddings();
     }
 
     @Override
@@ -134,17 +143,18 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
 
     private void updateImageSlider() {
         ArrayList<String> urls = new ArrayList<>();
-        //Todo: get actual product image URLs
-        urls.add("http://www.firepitessentials.com/wp-content/themes/456ecology/assets//img/no-product-image.png");
-        urls.add("http://thefoodtrust.org/uploads/media_items/produce-placeholder-3.825.360.c.jpg");
-        urls.add("http://thefoodtrust.org/uploads/media_items/produce-placeholder-4.825.360.c.jpg");
-        urls.add("http://thefoodtrust.org/uploads/media_items/produce-placeholder-7-1.825.360.c.jpg");
+
+        urls.add(mProduct.getmThumbnail().toString());
+
+        for(Uri image : mProduct.getAuxImages()){
+            urls.add(image.toString());
+        }
 
         for (String url : urls) {
             DefaultSliderView sliderView = new DefaultSliderView(getActivity());
             sliderView
                     .image(url)
-                    .setScaleType(BaseSliderView.ScaleType.Fit)
+                    .setScaleType(BaseSliderView.ScaleType.CenterCrop)
                     .setOnSliderClickListener(this);
             mImageSlider.addSlider(sliderView);
         }
