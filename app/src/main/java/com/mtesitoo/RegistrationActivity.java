@@ -150,8 +150,8 @@ public class RegistrationActivity extends ActionBarActivity implements
             }
 
             final Seller seller = new Seller(0, username, firstname, lastname,
-                    page_phonenumber, page_email, "Company", Address1, Address2,
-                    page_Postcode, "uri", page_password, zone, "1", country);
+                    page_phonenumber, page_email, "Company", Address1, "", Address2,
+                    "", page_Postcode, "uri", page_password, zone, "1", country, "");
 
             IRegistrationRequest registrationService = new RegistrationRequest(this);
             registrationService.submitSeller(seller, new ICallback<Seller>() {
