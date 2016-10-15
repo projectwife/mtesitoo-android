@@ -142,12 +142,18 @@ public class RegistrationActivity extends ActionBarActivity implements
 
             IZonesCache zonesCache = new ZoneCache(this);
             List<Zone> zones = zonesCache.GetZones();
-            for (Zone c : zones) {
-                if (c.getName().equals(zone)) {
-                    zone = Integer.toString(c.getId());
-                    break;
+
+            if(zone == null){
+                zone = "0";
+            }else{
+                for (Zone c : zones) {
+                    if (c.getName().equals(zone)) {
+                        zone = Integer.toString(c.getId());
+                        break;
+                    }
                 }
             }
+
 
             final Seller seller = new Seller(0, username, firstname, lastname,
                     page_phonenumber, page_email, "Company", Address1, "", Address2,
