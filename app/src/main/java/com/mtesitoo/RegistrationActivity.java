@@ -115,13 +115,16 @@ public class RegistrationActivity extends ActionBarActivity implements
     public void onNextButtonClick(View view) {
 
         //todo: loads the infomation of countries
+        String zone = null;
         if (mPager.getCurrentItem() == mCurrentPageSequence.size()) {
             String username = mWizardModel.findByKey(this.getString(R.string.page_username)).getData().getString(Page.SIMPLE_DATA_KEY);
             String firstname = mWizardModel.findByKey(this.getString(R.string.page_firstname)).getData().getString(Page.SIMPLE_DATA_KEY);
             String lastname = mWizardModel.findByKey(this.getString(R.string.page_lastname)).getData().getString(Page.SIMPLE_DATA_KEY);
             String page_password = mWizardModel.findByKey(this.getString(R.string.page_password)).getData().getString(Page.SIMPLE_DATA_KEY);
             String country = mPrefs.getString("SelectedCountries", "195");
-            String zone = mWizardModel.findByKey(this.getString(R.string.page_Zone)).getData().getString(Page.SIMPLE_DATA_KEY);
+            if(mWizardModel.findByKey(this.getString(R.string.page_Zone)) != null){
+                zone = mWizardModel.findByKey(this.getString(R.string.page_Zone)).getData().getString(Page.SIMPLE_DATA_KEY);
+            }
             String page_phonenumber = mWizardModel.findByKey(this.getString(R.string.page_phonenumber)).getData().getString(Page.SIMPLE_DATA_KEY);
             String page_email = mWizardModel.findByKey(this.getString(R.string.page_email)).getData().getString(Page.SIMPLE_DATA_KEY);
             String Address1 = mWizardModel.findByKey(this.getString(R.string.page_address1)).getData().getString(Page.SIMPLE_DATA_KEY);
