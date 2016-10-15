@@ -27,6 +27,9 @@
     <string name="customer_email">Email</string>
     <string name="customer_address">Address</string>
 
+    <string name="order_edit_status_submit">Submit</string>
+    <string name="order_edit_status_cancel">Cancel</string>
+
     <string name="product_id">Product id</string>
     <string name="product_unit_price">Unit Price</string>
     <string name="product_name">Product Name</string>

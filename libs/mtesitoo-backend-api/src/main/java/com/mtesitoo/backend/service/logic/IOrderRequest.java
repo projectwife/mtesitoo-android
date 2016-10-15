@@ -11,9 +11,9 @@ import java.util.List;
  */
 public interface IOrderRequest {
 
-    void getOrders(int sellerId, OrderStatus orderStatusId, ICallback<List<Order>> callback);
+    void getOrders(int sellerId, OrderStatus orderStatus, ICallback<List<Order>> callback);
 
     void getDetailedOrders(Order order, ICallback callback);
 
-    void submitOrder(Order order, ICallback<Order> callback);
+    void submitOrder(Order order, OrderStatus orderStatus, ICallback<Order> callback);
 }

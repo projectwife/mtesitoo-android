@@ -1,6 +1,6 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools" tools:context="com.mtesitoo.OrderActivity">
+    xmlns:tools="http://schemas.android.com/tools" tools:context="com.mtesitoo.fragment.OrderFragment">
 
     <item
         android:id="@+id/action_filterBy"
@@ -30,4 +30,5 @@
             </group>
         </menu>
     </item>
+
 </menu>

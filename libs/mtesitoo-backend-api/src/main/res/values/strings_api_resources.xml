@@ -34,15 +34,6 @@
     <string name="params_register_company">company</string>
     <string name="params_register_agree">agree</string>
 
-
-
-
-
-
-
-
-
-
     <string name="path_product_vendor">/product/vendor</string>
     <string name="path_product_category">/product/category</string>
     <string name="path_admin_login">/admin/login</string>
@@ -52,6 +43,7 @@
 
     <string name="path_order_vendor">/vendor/order</string>
     <string name="path_order_vendor_filterBy">filter_order_status</string>
+    <string name="path_order_vendor_product">/vendor/order_product</string>
 
     <string name="params_customer_name">customer_name</string>
     <string name="params_order_delivery_address">delivery_address</string>

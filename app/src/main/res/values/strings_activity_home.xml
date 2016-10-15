@@ -32,4 +32,6 @@
     <string name="menu_item_order_filterBy_Complete">Complete</string>
     <string name="menu_item_order_filterBy_Canceled">Canceled</string>
     <string name="menu_item_order_filterBy_Clear">All Orders</string>
+
+    <string name="menu_item_order_editOrder">Edit</string>
 </resources>

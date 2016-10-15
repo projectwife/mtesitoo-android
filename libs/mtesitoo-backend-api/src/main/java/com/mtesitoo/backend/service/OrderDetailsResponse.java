@@ -23,7 +23,7 @@ import java.util.List;
  */
 public class OrderDetailsResponse implements Response.Listener<String>, Response.ErrorListener {
     private ICallback  mCallback;
-    private Order                   mOrder;
+    private Order      mOrder;
 
     public OrderDetailsResponse(Order order, ICallback callback) {
         mCallback = callback;
@@ -33,10 +33,13 @@ public class OrderDetailsResponse implements Response.Listener<String>, Response
     @Override
     public void onResponse(String response) {
         try {
-            List<Order> orders = parseResponse(response);
+            //todo naily how to handle responses from post?
+            //hack for post messages. should handle it differently
+            if (!response.isEmpty())
+                parseResponse(response);
 
             if (mCallback != null)
-                mCallback.onResult(orders);
+                mCallback.onResult(mOrder);
         } catch (JSONException e) {
             if (mCallback != null)
                 mCallback.onError(e);
@@ -48,7 +51,21 @@ public class OrderDetailsResponse implements Response.Listener<String>, Response
         mCallback.onError(error);
     }
 
-    public List<Order> parseResponse(String response) throws JSONException {
+    public void parseResponse(String response) throws JSONException {
+
+        /**
+         * Read detailed of a specific order. This should contain only products that have the same
+         * status as the overall order.
+         * Background info:
+         * GET /api/v1/vendor/order returns multiple entries for an order that contains products
+         * with different statuses. For e.g. assuming Order 12 has 5 products (2 shipped, 2 pending,
+         * 1 cancelled), there will be 3 instances of Order 12 listed, one for each category.
+         * When you want to see details of an Order that says "Pending",
+         * GET /api/v1/vendor/order/{id} still lists all the 5 products. We are manually filtering
+         * the result here so that we would get 2 products instead of 5.
+         */
+        //todo naily to delete
+        Log.d("response string", response);
 
         JSONObject jsonOrder = new JSONObject(response);
 
@@ -66,25 +83,27 @@ public class OrderDetailsResponse implements Response.Listener<String>, Response
                                   jsonOrder.getString("payment_city") + ", " +
                                   jsonOrder.getString("payment_country"));
 
+        OrderStatus orderStatus = mOrder.getOrderStatus();
+
         JSONArray jsonProducts = jsonOrder.getJSONArray("products");
         ArrayList<OrderProduct> products = new ArrayList<>(jsonProducts.length());
         for (int i = 0; i < jsonProducts.length(); ++i)
         {
             JSONObject jsonProduct = jsonProducts.getJSONObject(i);
-            products.add(new OrderProduct(
-                    jsonProduct.getInt("order_product_id"),
-                    mapStatuses(jsonProduct.getInt("order_status_id")),
-                    jsonProduct.getString("name"),
-                    jsonProduct.getString("model"),
-                    jsonProduct.getInt("quantity"),
-                    jsonProduct.getDouble("price")
-            ));
+            OrderStatus productStatus = mapStatuses(jsonProduct.getInt("order_status_id"));
+            // Only add products which matches the status of the order.
+            if (productStatus == orderStatus) {
+                products.add(new OrderProduct(
+                        jsonProduct.getInt("order_product_id"),
+                        mapStatuses(jsonProduct.getInt("order_status_id")),
+                        jsonProduct.getString("name"),
+                        jsonProduct.getString("model"),
+                        jsonProduct.getInt("quantity"),
+                        jsonProduct.getDouble("price")
+                ));
+            }
         }
         mOrder.setProducts(products);
-
-        List<Order> result = new ArrayList<>();
-
-        return result;
     }
 
     private static Date FormatJsonDate(String dateString)
