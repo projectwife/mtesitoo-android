@@ -35,6 +35,8 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.Volley;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.SignUpEvent;
@@ -78,11 +80,16 @@ import com.tech.freak.wizardpager.ui.PageFragmentCallbacks;
 import com.tech.freak.wizardpager.ui.ReviewFragment;
 import com.tech.freak.wizardpager.ui.StepPagerStrip;
 
+import java.io.UnsupportedEncodingException;
 import java.util.Date;
 import java.util.List;
 
 import android.os.Handler;
 
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -115,13 +122,16 @@ public class RegistrationActivity extends ActionBarActivity implements
     public void onNextButtonClick(View view) {
 
         //todo: loads the infomation of countries
+        String zone = null;
         if (mPager.getCurrentItem() == mCurrentPageSequence.size()) {
             String username = mWizardModel.findByKey(this.getString(R.string.page_username)).getData().getString(Page.SIMPLE_DATA_KEY);
             String firstname = mWizardModel.findByKey(this.getString(R.string.page_firstname)).getData().getString(Page.SIMPLE_DATA_KEY);
             String lastname = mWizardModel.findByKey(this.getString(R.string.page_lastname)).getData().getString(Page.SIMPLE_DATA_KEY);
             String page_password = mWizardModel.findByKey(this.getString(R.string.page_password)).getData().getString(Page.SIMPLE_DATA_KEY);
             String country = mPrefs.getString("SelectedCountries", "195");
-            String zone = mWizardModel.findByKey(this.getString(R.string.page_Zone)).getData().getString(Page.SIMPLE_DATA_KEY);
+            if(mWizardModel.findByKey(this.getString(R.string.page_Zone)) != null){
+                zone = mWizardModel.findByKey(this.getString(R.string.page_Zone)).getData().getString(Page.SIMPLE_DATA_KEY);
+            }
             String page_phonenumber = mWizardModel.findByKey(this.getString(R.string.page_phonenumber)).getData().getString(Page.SIMPLE_DATA_KEY);
             String page_email = mWizardModel.findByKey(this.getString(R.string.page_email)).getData().getString(Page.SIMPLE_DATA_KEY);
             String Address1 = mWizardModel.findByKey(this.getString(R.string.page_address1)).getData().getString(Page.SIMPLE_DATA_KEY);
@@ -142,16 +152,22 @@ public class RegistrationActivity extends ActionBarActivity implements
 
             IZonesCache zonesCache = new ZoneCache(this);
             List<Zone> zones = zonesCache.GetZones();
-            for (Zone c : zones) {
-                if (c.getName().equals(zone)) {
-                    zone = Integer.toString(c.getId());
-                    break;
+
+            if(zone == null){
+                zone = "0";
+            }else{
+                for (Zone c : zones) {
+                    if (c.getName().equals(zone)) {
+                        zone = Integer.toString(c.getId());
+                        break;
+                    }
                 }
             }
 
+
             final Seller seller = new Seller(0, username, firstname, lastname,
-                    page_phonenumber, page_email, "Company", Address1, Address2,
-                    page_Postcode, "uri", page_password, zone, "1", country);
+                    page_phonenumber, page_email, "Company", Address1, "", Address2,
+                    "", page_Postcode, "uri", page_password, zone, "1", country, "");
 
             IRegistrationRequest registrationService = new RegistrationRequest(this);
             registrationService.submitSeller(seller, new ICallback<Seller>() {
@@ -167,8 +183,30 @@ public class RegistrationActivity extends ActionBarActivity implements
 
                 @Override
                 public void onError(Exception e) {
+
+                    VolleyError err = (VolleyError)e;
+
+                    String errorMsg = "";
+                    if(err.networkResponse.data!=null) {
+                        try {
+                            String body = new String(err.networkResponse.data,"UTF-8");
+                            Log.e("REG_ERR",body);
+                            JSONObject jsonErrors = new JSONObject(body);
+                            JSONObject error = jsonErrors.getJSONArray("errors").getJSONObject(0);
+                            errorMsg = error.getString("message");
+                        } catch (UnsupportedEncodingException encErr) {
+                            encErr.printStackTrace();
+                        } catch (JSONException jErr) {
+                            jErr.printStackTrace();
+                        } finally {
+                            if(errorMsg.equals("")){
+                                errorMsg = "Error registering account";
+                            }
+                        }
+                    }
+
                     logFailRegistration(seller);
-                    Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                    Toast.makeText(mContext, errorMsg, Toast.LENGTH_LONG).show();
                 }
             });
 

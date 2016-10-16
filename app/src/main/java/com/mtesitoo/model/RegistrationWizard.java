@@ -40,23 +40,44 @@ public class RegistrationWizard extends AbstractWizardModel {
         agreeNames[0]="Yes";
         agreeNames[1]="No";
 
-        return new PageList(
+        // Omit zones page if there are none
+        if(zonesNames.length > 0){
+            return new PageList(
 
-                new TextPage(this, mContext.getString(R.string.page_username)).setRequired(true),
-                new TextPage(this, mContext.getString(R.string.page_firstname)).setRequired(true),
-                new TextPage(this, mContext.getString(R.string.page_lastname)).setRequired(true),
-                new TextPage(this, mContext.getString(R.string.page_password)).setRequired(true),
-                new TextPage(this, mContext.getString(R.string.page_email)).setRequired(true),
-                new TextPage(this, mContext.getString(R.string.page_phonenumber)).setRequired(true),
-                //CountriesCodes
-                new TextPage(this, mContext.getString(R.string.page_address1)).setRequired(true),
-                new TextPage(this, mContext.getString(R.string.page_address2)).setRequired(true),
-                new TextPage(this, mContext.getString(R.string.page_Postcode)).setRequired(true),
-                new SingleFixedChoicePage(this, mContext.getString(R.string.page_Zone))
-                        .setChoices(zonesNames),
-                new SingleFixedChoicePage(this, mContext.getString(R.string.page_Agree))
-                .setChoices(agreeNames)
-               );
+                    new TextPage(this, mContext.getString(R.string.page_username)).setRequired(true),
+                    new TextPage(this, mContext.getString(R.string.page_firstname)).setRequired(true),
+                    new TextPage(this, mContext.getString(R.string.page_lastname)).setRequired(true),
+                    new TextPage(this, mContext.getString(R.string.page_password)).setRequired(true),
+                    new TextPage(this, mContext.getString(R.string.page_email)).setRequired(true),
+                    new TextPage(this, mContext.getString(R.string.page_phonenumber)).setRequired(true),
+                    //CountriesCodes
+                    new TextPage(this, mContext.getString(R.string.page_address1)).setRequired(true),
+                    new TextPage(this, mContext.getString(R.string.page_address2)).setRequired(true),
+                    new TextPage(this, mContext.getString(R.string.page_Postcode)).setRequired(true),
+                    new SingleFixedChoicePage(this, mContext.getString(R.string.page_Zone))
+                            .setChoices(zonesNames),
+                    new SingleFixedChoicePage(this, mContext.getString(R.string.page_Agree))
+                            .setChoices(agreeNames)
+            );
+        }else{
+            return new PageList(
+
+                    new TextPage(this, mContext.getString(R.string.page_username)).setRequired(true),
+                    new TextPage(this, mContext.getString(R.string.page_firstname)).setRequired(true),
+                    new TextPage(this, mContext.getString(R.string.page_lastname)).setRequired(true),
+                    new TextPage(this, mContext.getString(R.string.page_password)).setRequired(true),
+                    new TextPage(this, mContext.getString(R.string.page_email)).setRequired(true),
+                    new TextPage(this, mContext.getString(R.string.page_phonenumber)).setRequired(true),
+                    //CountriesCodes
+                    new TextPage(this, mContext.getString(R.string.page_address1)).setRequired(true),
+                    new TextPage(this, mContext.getString(R.string.page_address2)).setRequired(true),
+                    new TextPage(this, mContext.getString(R.string.page_Postcode)).setRequired(true),
+                    new SingleFixedChoicePage(this, mContext.getString(R.string.page_Agree))
+                            .setChoices(agreeNames)
+            );
+        }
+
+
 
     }
 }
