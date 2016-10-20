@@ -64,13 +64,10 @@ public class OrderDetailsResponse implements Response.Listener<String>, Response
          * GET /api/v1/vendor/order/{id} still lists all the 5 products. We are manually filtering
          * the result here so that we would get 2 products instead of 5.
          */
-        //todo naily to delete
-        Log.d("response string", response);
 
         JSONObject jsonOrder = new JSONObject(response);
-
         //TODO NAILY COMMENT OUT BEFORE SUBMISSION
-        Log.d("response string", jsonOrder.toString(2));
+        Log.d("OrderDetailsResponse", jsonOrder.toString(2));
 
         mOrder.setPaymentMethod(jsonOrder.getString("payment_method"));
         mOrder.setCustomerId(jsonOrder.getInt("customer_id"));

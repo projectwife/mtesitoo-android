@@ -1,6 +1,7 @@
 package com.mtesitoo.backend.service.logic;
 
 import com.mtesitoo.backend.model.Order;
+import com.mtesitoo.backend.model.OrderProduct;
 import com.mtesitoo.backend.model.OrderStatus;
 
 
@@ -13,7 +14,7 @@ public interface IOrderRequest {
 
     void getOrders(int sellerId, OrderStatus orderStatus, ICallback<List<Order>> callback);
 
-    void getDetailedOrders(Order order, ICallback callback);
+    void getDetailedOrders(Order order, ICallback<Order> callback);
 
-    void submitOrder(Order order, OrderStatus orderStatus, ICallback<Order> callback);
+    void submitEditStatusSingleProduct(OrderProduct orderProduct, OrderStatus orderStatus, ICallback<OrderProduct> callback);
 }

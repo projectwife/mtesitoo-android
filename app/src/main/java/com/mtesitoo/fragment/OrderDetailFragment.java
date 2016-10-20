@@ -83,8 +83,10 @@ public class OrderDetailFragment extends Fragment{
         switch(item.getItemId())
         {
             case R.id.action_editOrder:
-                Fragment f = EditOrderFragment.newInstance(getContext(), mOrder);
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+                //todo naily - Keep this for now. Need to figure out how to change status of all orders at once
+                /*Fragment f = EditOrderFragment.newInstance(getContext(), mOrder);
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();*/
+                Log.d("TEMP", "MENU BUTTON NOT WORKING FOR NOW");
                 return true;
 
             default:
@@ -95,7 +97,8 @@ public class OrderDetailFragment extends Fragment{
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
+        //todo naily P1 - Implement menu to change status of all orders at once
+        setHasOptionsMenu(false);
     }
 
     @Override
@@ -144,7 +147,7 @@ public class OrderDetailFragment extends Fragment{
         mCustomerEmail.setText(mOrder.getEmailAddress());
         mCustomerAddress.setText(mOrder.getDeliveryAddress());
 
-        mListViewProducts.setAdapter(new OrderProductListAdapter(getActivity(), products));
+        mListViewProducts.setAdapter(new OrderProductListAdapter(getActivity(), mOrder, products));
         setListViewHeightBasedOnChildren(mListViewProducts);
 
         // Automatically scroll back up to the top of the page

@@ -1,6 +1,5 @@
 package com.mtesitoo.fragment;
 
-import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -8,12 +7,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.RadioGroup;
 
-import com.mtesitoo.OrderActivity;
 import com.mtesitoo.R;
 import com.mtesitoo.backend.model.Order;
+import com.mtesitoo.backend.model.OrderProduct;
 import com.mtesitoo.backend.model.OrderStatus;
 import com.mtesitoo.backend.service.OrderRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
@@ -28,20 +26,18 @@ import butterknife.OnClick;
  */
 public class EditOrderFragment extends Fragment {
 
+    //TODO NAILY RENAME TO EditOrderSingleProductFragment
     private Order order;
+    private OrderProduct orderProduct;
 
     @Bind(R.id.rGroupEditStatusOptions)
     RadioGroup editStatusOptions;
 
-    @Bind(R.id.btn_edit_order_submit)
-    Button submitBtn;
-    @Bind(R.id.btn_edit_order_cancel)
-    Button cancelBtn;
-
-    public static EditOrderFragment newInstance(Context context, Order order) {
+    public static EditOrderFragment newInstance(Context context, OrderProduct orderProductToEdit, Order order) {
         EditOrderFragment fragment = new EditOrderFragment();
         Bundle args = new Bundle();
         args.putParcelable(context.getString(R.string.bundle_product_key), order);
+        args.putParcelable(context.getString(R.string.bundle_order_product_key), orderProductToEdit);
         fragment.setArguments(args);
         return fragment;
     }
@@ -56,6 +52,7 @@ public class EditOrderFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle args = this.getArguments();
         order = args.getParcelable(getString(R.string.bundle_product_key));
+        orderProduct = args.getParcelable(getString(R.string.bundle_order_product_key));
 
         View view = inflater.inflate(R.layout.activity_edit_order_fragment, container, false);
         ButterKnife.bind(this, view);
@@ -71,7 +68,6 @@ public class EditOrderFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //updateView();
 
         //TODO NAILY MOVE TO FUNCTION
         OrderStatus status = order.getOrderStatus();
@@ -100,13 +96,31 @@ public class EditOrderFragment extends Fragment {
 
         OrderStatus newOrderStatus = getSelectedStatus();
 
+        //todo naily - P2 do nothing if the order status hasn't changed
+        //todo naily Do we still need the order object here?
+
         IOrderRequest orderService = new OrderRequest(getContext());
 
-        orderService.submitOrder(order, newOrderStatus, new ICallback() {
+        orderService.submitEditStatusSingleProduct(orderProduct, newOrderStatus, new ICallback<OrderProduct>() {
             @Override
-            public void onResult(Object object) {
-                Fragment f = OrderDetailFragment.newInstance(getContext(), order);
-                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+            public void onResult(OrderProduct editedOrderProduct) {
+
+                //TODO NAILY HACK TO MAKE SURE WE GET THE RIGHT STATUS BACK
+                //OVERRIDE GETDETAILEDORDERS METHOD?
+                order.setOrderStatus(editedOrderProduct.getOrderStatus());
+
+                IOrderRequest orderService = new OrderRequest(getContext());
+
+                orderService.getDetailedOrders(order, new ICallback<Order>() {
+                    @Override
+                    public void onResult(Order theOrder) {
+                        Fragment f = OrderDetailFragment.newInstance(getContext(), theOrder);
+                        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+                    }
+
+                    @Override
+                    public void onError(Exception e) {}
+                });
             }
 
             @Override
@@ -116,7 +130,6 @@ public class EditOrderFragment extends Fragment {
 
     @OnClick(R.id.btn_edit_order_cancel)
     public void onClickCancel(View view) {
-        Log.d("TEMP", "CANCEL CLICKED");
         //Todo Naily - implement this as a back button
         Fragment f = OrderDetailFragment.newInstance(getContext(), order);
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();

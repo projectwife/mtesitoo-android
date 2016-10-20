@@ -8,6 +8,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
 import com.mtesitoo.backend.R;
 import com.mtesitoo.backend.model.OrderProduct;
 import com.mtesitoo.backend.model.header.Authorization;
@@ -36,34 +38,40 @@ public class OrderRequest  extends Request implements IOrderRequest {
     }
 
     @Override
-    public void submitOrder(final Order order, final OrderStatus newStatus, final ICallback<Order> callback) {
+    public void submitEditStatusSingleProduct(final OrderProduct productToEdit, final OrderStatus newStatus, final ICallback<OrderProduct> callback) {
 
-        //todo naily change detail of one order product - WORKING
-        //todo naily change detail of one order product picking statuses from the UI - WORKING
-        //todo naily inline response. don't want to do anything here in the response
-        //todo naily change detail of one order with multiple order products
+        //todo naily NO NEED TO PASS ORDER HERE - REMOVE IT ONCE YOU'VE DEALT WITH CALLBACK
 
         //Server request: GET /api/v1/vendor/order/{id}    POST /api/v1/vendor/order_product/{id}
 
-        ArrayList<OrderProduct> products = order.getProducts();
-        OrderProduct productToEdit = products.get(0);
         productToEdit.setOrderStatus(newStatus);
 
         URL url = new VendorOrderDetailsURL(mContext, productToEdit.getId(), false);
         Log.d("Submit Orders URL",url.toString());
-        //OrderResponse response = new OrderResponse(mContext, null);
-        //this is wrong, we're now getting details of the order product as a response.
-        OrderDetailsResponse response = new OrderDetailsResponse(order, callback);
 
-        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), response, response) {
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(),
+                new Response.Listener<String>(){
+
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d("Edit status for order", response);
+                        if (callback != null)
+                            callback.onResult(productToEdit);
+                    }
+                },
+                new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        if (callback != null)
+                            callback.onError(error);
+                    }
+                }
+        )
+        {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-
-                //temporary value
-                //params.put(mContext.getString(R.string.params_order_status_id), Integer.toString(order.getOrderStatus().getStatusId()));
                 params.put(mContext.getString(R.string.params_order_status_id), Integer.toString(newStatus.getStatusId()));
-
                 return params;
             }
         };
@@ -87,7 +95,7 @@ public class OrderRequest  extends Request implements IOrderRequest {
     }
 
     @Override
-    public void getDetailedOrders(final Order order, ICallback callback)
+    public void getDetailedOrders(final Order order, ICallback<Order> callback)
     {
         //Server request: GET /api/v1/vendor/order/{id}
         Log.d("getOrders - orderId", Integer.toString(order.getId()));

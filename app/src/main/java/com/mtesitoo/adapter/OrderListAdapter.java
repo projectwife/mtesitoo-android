@@ -90,12 +90,11 @@ public class OrderListAdapter extends ArrayAdapter<Order> {
 
         private void displayOrderDetails()
         {
-            //todo naily to change it back
             IOrderRequest orderService = new OrderRequest(context);
 
-            orderService.getDetailedOrders(order, new ICallback() {
+            orderService.getDetailedOrders(order, new ICallback<Order>() {
                 @Override
-                public void onResult(Object object) {
+                public void onResult(Order object) {
                     Intent intent = new Intent(context, OrderActivity.class);
                     intent.putExtra(context.getString(R.string.bundle_product_key), order);
                     context.startActivity(intent);
@@ -104,21 +103,6 @@ public class OrderListAdapter extends ArrayAdapter<Order> {
                 @Override
                 public void onError(Exception e) {}
             });
-
-            /*
-            IOrderRequest orderService = new OrderRequest(context);
-
-            orderService.submitOrder(order, new ICallback() {
-                @Override
-                public void onResult(Object object) {
-                    Intent intent = new Intent(context, OrderActivity.class);
-                    intent.putExtra(context.getString(R.string.bundle_product_key), order);
-                    context.startActivity(intent);
-                }
-
-                @Override
-                public void onError(Exception e) {}
-            });*/
         }
     }
 }
