@@ -16,7 +16,7 @@ import android.os.Parcelable;
 public class OrderProduct implements Parcelable {
 
     private final int id;
-    private final OrderStatus orderStatus;
+    private OrderStatus orderStatus;
     private final String name;
     private final String model;
     private final int quantity;
@@ -47,6 +47,10 @@ public class OrderProduct implements Parcelable {
 
     public OrderStatus getOrderStatus() {
         return orderStatus;
+    }
+
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
     }
 
     public String getName() {

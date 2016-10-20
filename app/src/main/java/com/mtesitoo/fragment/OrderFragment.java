@@ -174,7 +174,7 @@ public class OrderFragment extends ListFragment {
                 appTitleResId = R.string.menu_item_order_filterBy_Clear;
                 break;
             default:
-                Log.e("setAppTitle", "Status " + orderStatus.name() + "isn't supported");
+                Log.e("setAppTitle", "Order Status " + orderStatus.name() + " isn't supported");
                 appTitleResId = R.string.app_name;
         }
 

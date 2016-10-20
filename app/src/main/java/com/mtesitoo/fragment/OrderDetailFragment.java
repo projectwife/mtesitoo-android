@@ -3,7 +3,11 @@ package com.mtesitoo.fragment;
 import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListAdapter;
@@ -68,8 +72,32 @@ public class OrderDetailFragment extends Fragment{
     }
 
     @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_edit_order, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        switch(item.getItemId())
+        {
+            case R.id.action_editOrder:
+                //todo naily - Keep this for now. Need to figure out how to change status of all orders at once
+                /*Fragment f = EditOrderFragment.newInstance(getContext(), mOrder);
+                getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();*/
+                Log.d("TEMP", "MENU BUTTON NOT WORKING FOR NOW");
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
+    @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //todo naily P1 - Implement menu to change status of all orders at once
         setHasOptionsMenu(false);
     }
 
@@ -119,7 +147,7 @@ public class OrderDetailFragment extends Fragment{
         mCustomerEmail.setText(mOrder.getEmailAddress());
         mCustomerAddress.setText(mOrder.getDeliveryAddress());
 
-        mListViewProducts.setAdapter(new OrderProductListAdapter(getActivity(), products));
+        mListViewProducts.setAdapter(new OrderProductListAdapter(getActivity(), mOrder, products));
         setListViewHeightBasedOnChildren(mListViewProducts);
 
         // Automatically scroll back up to the top of the page

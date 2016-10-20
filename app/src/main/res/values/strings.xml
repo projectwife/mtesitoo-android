@@ -8,9 +8,10 @@
     <string name="padding_18">18</string>
     <string name="bundle_product_key">key_product_parcel</string>
     <string name="bundle_seller_key">key_seller_parcel</string>
+    <string name="bundle_order_product_key">key_order_product_parcel</string>
     <string name="action_settings">Settings</string>
 
-    <string name="title_activity_order">View Order Details</string>
+    <string name="title_activity_order">Order Details</string>
     <string name="register_successful">Registered successfully, welcome!</string>
     <string name="EditImages">Edit Images</string>
 
@@ -27,6 +28,10 @@
     <string name="customer_telephone">Telephone</string>
     <string name="customer_email">Email</string>
     <string name="customer_address">Address</string>
+
+    <string name="order_edit_product_status">Change Status</string>
+    <string name="order_edit_status_submit">Submit</string>
+    <string name="order_edit_status_cancel">Cancel</string>
 
     <string name="product_id">Product id</string>
     <string name="product_unit_price">Unit Price</string>
