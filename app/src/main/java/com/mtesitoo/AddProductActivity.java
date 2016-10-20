@@ -24,6 +24,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.View;
 import android.view.ViewGroup;
@@ -76,10 +77,11 @@ public class AddProductActivity extends ActionBarActivity implements
     public void onNextButtonClick(View view) {
         if (mPager.getCurrentItem() == mCurrentPageSequence.size()) {
             String name = mWizardModel.findByKey(this.getString(R.string.page_name)).getData().getString(Page.SIMPLE_DATA_KEY);
-            String description = mWizardModel.findByKey(this.getString(R.string.page_description)).getData().getString(Page.SIMPLE_DATA_KEY);
+            final String description = mWizardModel.findByKey(this.getString(R.string.page_description)).getData().getString(Page.SIMPLE_DATA_KEY);
             String category = mWizardModel.findByKey(this.getString(R.string.page_category)).getData().getString(Page.SIMPLE_DATA_KEY);
             String pricePerUnit = mWizardModel.findByKey(this.getString(R.string.page_price_per_unit)).getData().getString(Page.SIMPLE_DATA_KEY);
             String quantity = mWizardModel.findByKey(this.getString(R.string.page_quantity)).getData().getString(Page.SIMPLE_DATA_KEY);
+            String thumbnail = mWizardModel.findByKey("Photo").getData().getString(ImagePage.SIMPLE_DATA_KEY);
 
             ICategoryCache cache = new CategoryCache(this);
             List<Category> categories = cache.getCategories();
@@ -91,23 +93,36 @@ public class AddProductActivity extends ActionBarActivity implements
                 }
             }
 
-            Product product = new Product(0, name, description, "Location", category, "SI Unit",
-                    pricePerUnit, Integer.parseInt(quantity), new Date(), Uri.parse("Uri"));
+            final Product product = new Product(0, name, description, "Location", category, "SI Unit",
+                    pricePerUnit, Integer.parseInt(quantity), new Date(), Uri.parse(thumbnail), null);
 
             IProductRequest productService = new ProductRequest(this);
-            productService.submitProduct(product, new ICallback<Product>() {
+            productService.submitProduct(product, new ICallback<String>() {
                 @Override
-                public void onResult(Product result) {
+                public void onResult(String result) {
+                    IProductRequest productService = new ProductRequest(AddProductActivity.this);
+                    productService.submitProductThumbnail(Integer.parseInt(result), product.getmThumbnail(), new ICallback<String>() {
+                        @Override
+                        public void onResult(String result) {
+                            Log.d("image thumb upload","Success");
+                            finish();
+                        }
 
+                        @Override
+                        public void onError(Exception e) {
+                            Log.e("image thumb upload err",e.toString());
+                            finish();
+                        }
+                    });
                 }
 
                 @Override
                     public void onError(Exception e) {
-
+                    Log.e("product add error",e.toString());
+                    finish();
                 }
             });
 
-            finish();
         } else {
             if (mEditingAfterReview) {
                 mPager.setCurrentItem(mPagerAdapter.getCount() - 1);

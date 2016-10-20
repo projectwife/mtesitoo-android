@@ -13,6 +13,7 @@
 
     <string name="title_activity_order">Order Details</string>
     <string name="register_successful">Registered successfully, welcome!</string>
+    <string name="EditImages">Edit Images</string>
 
     <string name="order_id">Order id</string>
     <string name="total_price">Total Price</string>

@@ -5,8 +5,12 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.widget.Toast;
 
 import com.mtesitoo.backend.model.Product;
+import com.mtesitoo.backend.service.ProductRequest;
+import com.mtesitoo.backend.service.logic.ICallback;
+import com.mtesitoo.backend.service.logic.IProductRequest;
 import com.mtesitoo.fragment.ProductDetailEditFragment;
 import com.mtesitoo.fragment.ProductDetailFragment;
 
@@ -14,6 +18,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 public class ProductActivity extends AppCompatActivity {
+
     private Product mProduct;
 
     @Bind(R.id.toolbar)
@@ -27,8 +32,22 @@ public class ProductActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         mProduct = getIntent().getExtras().getParcelable(getString(R.string.bundle_product_key));
-        ProductDetailFragment f = ProductDetailFragment.newInstance(this, mProduct);
-        getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+
+        IProductRequest productService = new ProductRequest(this);
+
+        productService.getProduct(mProduct.getId(), new ICallback<Product>() {
+            @Override
+            public void onResult(Product result) {
+                mProduct = result;
+                ProductDetailFragment f = ProductDetailFragment.newInstance(ProductActivity.this, mProduct);
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(ProductActivity.this, "Error getting product images", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     @Override
@@ -49,4 +68,5 @@ public class ProductActivity extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
 }

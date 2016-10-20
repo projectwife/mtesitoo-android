@@ -1,13 +1,18 @@
 package com.mtesitoo.fragment;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -20,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
@@ -30,10 +36,15 @@ import com.mtesitoo.backend.cache.CategoryCache;
 import com.mtesitoo.backend.cache.logic.ICategoryCache;
 import com.mtesitoo.backend.model.Category;
 import com.mtesitoo.backend.model.Product;
+import com.mtesitoo.backend.service.ProductRequest;
+import com.mtesitoo.backend.service.logic.ICallback;
+import com.mtesitoo.backend.service.logic.IProductRequest;
 import com.mtesitoo.helper.FileHelper;
 import com.mtesitoo.model.ImageFile;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import butterknife.Bind;
@@ -49,6 +60,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
 
     private Product mProduct;
     private ArrayList<ImageFile> mImages;
+    private ImageFile currentImage;
 
     @Bind(R.id.product_image_slider_edit)
     SliderLayout mImageSlider;
@@ -130,7 +142,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     @Override
     public void onDestroy() {
         super.onDestroy();
-        FileHelper.clean(getActivity());
+        //FileHelper.clean(getActivity());
     }
 
     @Override
@@ -154,24 +166,59 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     }
 
     @Override
-    public void onSliderClick(BaseSliderView slider) {
-        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-            ImageFile image = null;
+    public void onSliderClick(final BaseSliderView slider) {
 
-            try {
-                image = mImages.get(mImageSlider.getCurrentPosition());
-            } catch (IndexOutOfBoundsException e) {
-                image = new ImageFile(getActivity());
-                mImages.add(image);
-            } finally {
-                if (image != null) {
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(image));
-                    getActivity().setResult(getActivity().RESULT_OK, intent);
-                    startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-                }
-            }
-        }
+        new AlertDialog.Builder(getActivity())
+                .setTitle(getString(R.string.EditImages))
+                .setPositiveButton("Add an image", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                            ImageFile image = null;
+
+                            try {
+                                image = new ImageFile(getActivity());
+                            } catch (Exception e) {
+                                Log.d("IMAGE_CAPTURE","Issue creating image file");
+                            }
+
+                            if (image != null) {
+                                Uri imgUri = FileProvider.getUriForFile(getActivity(),
+                                        "com.mtesitoo.fileprovider",
+                                        image);
+                                currentImage = image;
+                                intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+                                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
+                            }
+                        }
+                    }
+                })
+                .setNegativeButton("Delete this image", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        final String imageFilename = slider.getUrl().substring( slider.getUrl().lastIndexOf('/')+1, slider.getUrl().length() );
+
+                        // Delete image request
+                        IProductRequest productService = new ProductRequest(ProductDetailEditFragment.this.getContext());
+                        productService.deleteProductImage(mProduct, imageFilename, new ICallback<Product>() {
+                            @Override
+                            public void onResult(Product result) {
+                                mImageSlider.removeSliderAt(mImageSlider.getCurrentPosition());
+                                Toast.makeText(getActivity(),"Deleted Image Successfully",Toast.LENGTH_SHORT).show();
+                            }
+
+                            @Override
+                            public void onError(Exception e) {
+                                Toast.makeText(getActivity(),"Error Deleting Image",Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
+                            // Remove image from list if successful
+
+                        //Toast.makeText(getActivity(),"delete " + slider.getUrl(),Toast.LENGTH_SHORT).show();
+                    }
+                })
+                .show();
     }
 
     @Override
@@ -189,9 +236,28 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == REQUEST_IMAGE_CAPTURE && data != null) {
+        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_CAPTURE) {
+            mImages.add(0,currentImage);
+            mProduct.addImage(currentImage.getUri());
             updateImageSlider();
+
+            IProductRequest productService = new ProductRequest(this.getContext());
+            productService.submitProductImage(mProduct, new ICallback<Product>() {
+                @Override
+                public void onResult(Product result) {
+                    Toast.makeText(getContext(), "Product Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.e("UploadImage", e.toString());
+                }
+            });
         }
+    }
+
+    public ImageFile getCurrentImage(){
+        return currentImage;
     }
 
     private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
@@ -235,15 +301,20 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     }
 
     private void buildImageSlider() {
+
         ArrayList<String> urls = new ArrayList<>();
-        urls.add("http://static2.hypable.com/wp-content/uploads/2013/12/hannibal-season-2-release-date.jpg");
-        urls.add("http://tvfiles.alphacoders.com/100/hdclearart-10.png");
+
+        urls.add(mProduct.getmThumbnail().toString());
+
+        for(Uri image : mProduct.getAuxImages()){
+            urls.add(image.toString());
+        }
 
         for (String url : urls) {
-            DefaultSliderView sliderView = new DefaultSliderView(getActivity());
+             DefaultSliderView sliderView = new DefaultSliderView(getActivity());
             sliderView
                     .image(url)
-                    .setScaleType(BaseSliderView.ScaleType.Fit)
+                    .setScaleType(BaseSliderView.ScaleType.CenterCrop)
                     .setOnSliderClickListener(this);
             mImageSlider.addSlider(sliderView);
         }
