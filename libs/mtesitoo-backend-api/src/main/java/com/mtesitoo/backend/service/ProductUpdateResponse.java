@@ -21,9 +21,9 @@ import java.util.List;
  * Created by Nan on 9/7/2015.
  */
 public class ProductUpdateResponse implements Response.Listener, Response.ErrorListener {
-    private ICallback<Product> mCallback;
+    private ICallback<String> mCallback;
 
-    public ProductUpdateResponse(ICallback<Product> callback) {
+    public ProductUpdateResponse(ICallback<String> callback) {
         mCallback = callback;
     }
 
@@ -32,37 +32,10 @@ public class ProductUpdateResponse implements Response.Listener, Response.ErrorL
         mCallback.onError(error);
     }
 
-    public Product parseResponse(String response) throws JSONException {
-        JSONObject jsonProduct = new JSONObject(response);
-
-        Product result = new Product(
-                Integer.parseInt(jsonProduct.getString("product_id")),
-                jsonProduct.getString("name"),
-                jsonProduct.getString("description"),
-                "Location",
-                "Category",
-                "SI Unit",
-                jsonProduct.getString("price"), 100,
-                new Date(),
-                Uri.parse(jsonProduct.getString("thumb_image")),
-                parseAuxImages()
-        );
-
-        return result;
-    }
-
     @Override
     public void onResponse(Object response) {
         if(response instanceof String){
-            try {
-                Product product = parseResponse((String)response);
-
-                if (mCallback != null)
-                    mCallback.onResult(product);
-            } catch (JSONException e) {
-                if (mCallback != null)
-                    mCallback.onError(e);
-            }
+            mCallback.onResult(null);
         }else if(response instanceof NetworkResponse){
             NetworkResponse networkResponse = (NetworkResponse)response;
             if(networkResponse.statusCode==200)

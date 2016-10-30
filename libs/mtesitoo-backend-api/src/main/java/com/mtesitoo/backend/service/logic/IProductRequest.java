@@ -17,9 +17,11 @@ public interface IProductRequest {
 
     void submitProduct(Product product, ICallback<String> callback);
 
+    void updateProduct(Product product, ICallback<String> callback);
+
     void submitProductThumbnail(int productId, Uri thumbnail, ICallback<String> callback);
 
-    void submitProductImage(Product product, ICallback<Product> callback);
+    void submitProductImage(Product product, ICallback<String> callback);
 
     void deleteProductImage(Product product, String fileName, ICallback<Product> callback);
 }

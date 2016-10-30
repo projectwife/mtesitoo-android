@@ -100,6 +100,33 @@ public class ProductRequest extends Request implements IProductRequest {
     }
 
     @Override
+    public void updateProduct(final Product product, ICallback<String> callback) {
+        Log.d("Product",product.toString());
+        URL url = new URL(mContext, R.string.path_product_product);
+        Log.d("Update Product URL",url.toString());
+        ProductUpdateResponse response = new ProductUpdateResponse(callback);
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString()+ "/" +product.getId(), response, response) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put(mContext.getString(R.string.params_product_name), product.getName());
+                params.put(mContext.getString(R.string.params_product_description), product.getDescription());
+                //params.put(mContext.getString(R.string.params_product_location), product.getLocation());
+                params.put(mContext.getString(R.string.params_product_price), product.getPricePerUnit());
+                params.put(mContext.getString(R.string.params_product_quantity), Integer.toString(product.getQuantity()));
+                params.put(mContext.getString(R.string.params_product_category_ids), product.getCategory());
+                //params.put(mContext.getString(R.string.params_product_meta_title), "meta_title");
+                //params.put(mContext.getString(R.string.params_product_status), mContext.getString(R.string.params_product_status_enabled));
+
+                return params;
+            }
+        };
+
+        stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
+        mRequestQueue.add(stringRequest);
+    }
+
+    @Override
     public void submitProductThumbnail(int productId, Uri thumbnail, ICallback<String> callback){
         URL url = new ProductImageURL(mContext, R.string.path_product_product, productId);
         final Uri image = thumbnail;
@@ -154,7 +181,7 @@ public class ProductRequest extends Request implements IProductRequest {
     }
 
     @Override
-    public void submitProductImage(final Product product, ICallback<Product> callback) {
+    public void submitProductImage(final Product product, ICallback<String> callback) {
         URL url = new ProductImageURL(mContext, R.string.path_product_product, product.getId());
         final Uri image = product.getLastImage();
 

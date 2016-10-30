@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
@@ -61,8 +62,8 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
 
     @Bind(R.id.product_detail_posting_date)
     TextView mProductPostingDate;
-    @Bind(R.id.product_detail_expiration_date)
-    TextView mProductExpirationDate;
+//    @Bind(R.id.product_detail_expiration_date)
+//    TextView mProductExpirationDate;
 
     ArrayList<Uri> auxImages;
     int productId;
@@ -82,10 +83,29 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
     }
 
     @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.activity_product_fragment_detail, container, false);
         ButterKnife.bind(this, view);
         return view;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        int id = item.getItemId();
+
+        if (id == R.id.action_edit_product) {
+            ProductDetailEditFragment f = ProductDetailEditFragment.newInstance(getActivity(), mProduct);
+            getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+            return true;
+        }
+
+        return super.onOptionsItemSelected(item);
     }
 
     @Override
@@ -102,7 +122,7 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
         mProductUnit.setText(mProduct.getSIUnit());
         mProductQuantity.setText(mProduct.getQuantity().toString());
         mProductPrice.setText(mProduct.getPricePerUnit());
-        mProductExpirationDate.setText(mProduct.getExpiration().toString());
+       //mProductExpirationDate.setText(mProduct.getExpiration().toString());
 
         updateImageSlider();
         updateBorderPaddings();
@@ -151,12 +171,21 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
         }
 
         for (String url : urls) {
-            DefaultSliderView sliderView = new DefaultSliderView(getActivity());
-            sliderView
-                    .image(url)
-                    .setScaleType(BaseSliderView.ScaleType.CenterCrop)
-                    .setOnSliderClickListener(this);
-            mImageSlider.addSlider(sliderView);
+            if(!url.equals("") && !url.equals(" ")){
+                DefaultSliderView sliderView = new DefaultSliderView(getActivity());
+                sliderView
+                        .image(url)
+                        .setScaleType(BaseSliderView.ScaleType.CenterCrop)
+                        .setOnSliderClickListener(this);
+                mImageSlider.addSlider(sliderView);
+            }else{
+                DefaultSliderView sliderView = new DefaultSliderView(getActivity());
+                sliderView
+                        .image("http://tesitoo.com/image/cache/no_image-100x100.png")
+                        .setScaleType(BaseSliderView.ScaleType.CenterCrop)
+                        .setOnSliderClickListener(this);
+                mImageSlider.addSlider(sliderView);
+            }
         }
 
         mImageSlider.setDuration(8000);

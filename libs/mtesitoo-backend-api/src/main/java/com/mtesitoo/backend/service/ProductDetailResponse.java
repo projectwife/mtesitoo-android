@@ -52,7 +52,7 @@ public class ProductDetailResponse implements Response.Listener<String>, Respons
                 jsonProduct.getString("title"),
                 jsonProduct.getString("description"),
                 "Location",
-                "Category",
+                "Fix Me - Category",
                 "SI Unit",
                 jsonProduct.getString("price"), 100,
                 new Date(),

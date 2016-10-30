@@ -233,26 +233,26 @@
                             android:text="..." />
                     </RelativeLayout>
 
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="8dip"
-                        android:orientation="horizontal">
+                    <!--<RelativeLayout-->
+                        <!--android:layout_width="match_parent"-->
+                        <!--android:layout_height="match_parent"-->
+                        <!--android:layout_marginTop="8dip"-->
+                        <!--android:orientation="horizontal">-->
 
-                        <TextView
-                            style="@style/TextBoldTheme"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="Expiration Date" />
+                        <!--<TextView-->
+                            <!--style="@style/TextBoldTheme"-->
+                            <!--android:layout_width="wrap_content"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:text="Expiration Date" />-->
 
-                        <TextView
-                            android:id="@+id/product_detail_expiration_date"
-                            style="@style/TextTheme"
-                            android:layout_width="150dip"
-                            android:layout_height="wrap_content"
-                            android:layout_alignParentRight="true"
-                           android:text="..." />
-                    </RelativeLayout>
+                        <!--<TextView-->
+                            <!--android:id="@+id/product_detail_expiration_date"-->
+                            <!--style="@style/TextTheme"-->
+                            <!--android:layout_width="150dip"-->
+                            <!--android:layout_height="wrap_content"-->
+                            <!--android:layout_alignParentRight="true"-->
+                           <!--android:text="..." />-->
+                    <!--</RelativeLayout>-->
                 </LinearLayout>
             </RelativeLayout>
         </LinearLayout>

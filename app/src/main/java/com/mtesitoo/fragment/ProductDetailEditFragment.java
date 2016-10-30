@@ -61,6 +61,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     private Product mProduct;
     private ArrayList<ImageFile> mImages;
     private ImageFile currentImage;
+    private RadioGroup categoryButtonGroup;
 
     @Bind(R.id.product_image_slider_edit)
     SliderLayout mImageSlider;
@@ -68,8 +69,8 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     RelativeLayout mInfoBorder;
     @Bind(R.id.product_detail_price_border)
     RelativeLayout mPriceBorder;
-    @Bind(R.id.product_detail_date_border)
-    RelativeLayout mDateBorder;
+//    @Bind(R.id.product_detail_date_border)
+//    RelativeLayout mDateBorder;
     @Bind(R.id.product_detail_name_edit)
     EditText mProductName;
     @Bind(R.id.product_detail_description_edit)
@@ -86,8 +87,8 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     @Bind(R.id.product_detail_price_edit)
     EditText mProductPrice;
 
-    @Bind(R.id.product_detail_expiration_date_edit)
-    EditText mProductExpirationDate;
+//    @Bind(R.id.product_detail_expiration_date_edit)
+//    EditText mProductExpirationDate;
 
     public static ProductDetailEditFragment newInstance(Context context, Product product) {
         ProductDetailEditFragment fragment = new ProductDetailEditFragment();
@@ -118,7 +119,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         super.onViewCreated(view, savedInstanceState);
 
         buildProductCategories();
-        buildProductDatePicker();
+        //buildProductDatePicker();
         buildImageSlider();
 
         mProductName.setText(mProduct.getName());
@@ -127,7 +128,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         mProductUnit.setText(mProduct.getSIUnit());
         mProductQuantity.setText(mProduct.getQuantity().toString());
         mProductPrice.setText(mProduct.getPricePerUnit());
-        mProductExpirationDate.setText(mProduct.getExpiration().toString());
+        //mProductExpirationDate.setText(mProduct.getExpiration().toString());
 
         updateEditTextLengths();
         updateBorderPaddings();
@@ -156,7 +157,54 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_done_edit_product || id == R.id.action_cancel_edit_product) {
+        if (id == R.id.action_done_edit_product){
+            int catID = categoryButtonGroup.indexOfChild(getActivity().findViewById(categoryButtonGroup.getCheckedRadioButtonId()));
+            RadioButton cButton = ((RadioButton)categoryButtonGroup.getChildAt(catID));
+            String category = cButton != null ? cButton.getText().toString() : "Category";
+            ICategoryCache cache = new CategoryCache(this.getActivity());
+            List<Category> categories = cache.getCategories();
+
+            for (Category c : categories) {
+                if (c.getName().equals(category)) {
+                    category = Integer.toString(c.getId());
+                    break;
+                }
+            }
+
+            // Save product here
+            final Product updatedProduct = new Product(
+                    mProduct.getId(),
+                    mProductName.getText().toString(),
+                    mProductDescription.getText().toString(),
+                    mProduct.getLocation(),
+                    category,
+                    mProductUnit.getText().toString(),
+                    mProductPrice.getText().toString(),
+                    Integer.parseInt(mProductQuantity.getText().toString()),
+                    new Date(),
+                    mProduct.getmThumbnail(),
+                    mProduct.getAuxImages()
+            );
+
+            IProductRequest productService = new ProductRequest(ProductDetailEditFragment.this.getContext());
+            productService.updateProduct(updatedProduct, new ICallback<String>() {
+                @Override
+                public void onResult(String result) {
+                    Toast.makeText(getActivity(),"Product Updated Successfully",Toast.LENGTH_SHORT).show();
+                    ProductDetailFragment f = ProductDetailFragment.newInstance(getActivity(), updatedProduct);
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Toast.makeText(getActivity(),"Error Updating Product",Toast.LENGTH_SHORT).show();
+                    ProductDetailFragment f = ProductDetailFragment.newInstance(getActivity(), mProduct);
+                    getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+                }
+            });
+
+            return true;
+        }else if(id == R.id.action_cancel_edit_product) {
             ProductDetailFragment f = ProductDetailFragment.newInstance(getActivity(), mProduct);
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
             return true;
@@ -242,9 +290,9 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
             updateImageSlider();
 
             IProductRequest productService = new ProductRequest(this.getContext());
-            productService.submitProductImage(mProduct, new ICallback<Product>() {
+            productService.submitProductImage(mProduct, new ICallback<String>() {
                 @Override
-                public void onResult(Product result) {
+                public void onResult(String result) {
                     Toast.makeText(getContext(), "Product Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
                 }
 
@@ -260,19 +308,19 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         return currentImage;
     }
 
-    private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
-        public void onDateSet(DatePicker view, int selectedYear,
-                              int selectedMonth, int selectedDay) {
-            mProductExpirationDate.setText(new StringBuilder().append(selectedMonth + 1)
-                            .append("-").append(selectedDay).append("-").append(selectedYear)
-            );
-        }
-    };
+//    private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
+//        public void onDateSet(DatePicker view, int selectedYear,
+//                              int selectedMonth, int selectedDay) {
+//            mProductExpirationDate.setText(new StringBuilder().append(selectedMonth + 1)
+//                            .append("-").append(selectedDay).append("-").append(selectedYear)
+//            );
+//        }
+//    };
 
     private void buildProductCategories() {
         ICategoryCache cache = new CategoryCache(getActivity());
         List<Category> categories = cache.getCategories();
-        RadioGroup categoryButtonGroup = new RadioGroup(getActivity());
+        categoryButtonGroup = new RadioGroup(getActivity());
 
         for (int i = 0; i < categories.size(); i++) {
             String name = categories.get(i).getName();
@@ -289,16 +337,16 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         mProductCategoryContainer.addView(categoryButtonGroup);
     }
 
-    private void buildProductDatePicker() {
-        mProductExpirationDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-                if (hasFocus == true) {
-                    new DatePickerDialog(getActivity(), datePickerListener, 2015, 11, 1).show();
-                }
-            }
-        });
-    }
+//    private void buildProductDatePicker() {
+//        mProductExpirationDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//                if (hasFocus == true) {
+//                    new DatePickerDialog(getActivity(), datePickerListener, 2015, 11, 1).show();
+//                }
+//            }
+//        });
+//    }
 
     private void buildImageSlider() {
 
@@ -311,12 +359,21 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         }
 
         for (String url : urls) {
-             DefaultSliderView sliderView = new DefaultSliderView(getActivity());
-            sliderView
-                    .image(url)
-                    .setScaleType(BaseSliderView.ScaleType.CenterCrop)
-                    .setOnSliderClickListener(this);
-            mImageSlider.addSlider(sliderView);
+            if(!url.equals("") && !url.equals(" ")){
+                DefaultSliderView sliderView = new DefaultSliderView(getActivity());
+                sliderView
+                        .image(url)
+                        .setScaleType(BaseSliderView.ScaleType.CenterCrop)
+                        .setOnSliderClickListener(this);
+                mImageSlider.addSlider(sliderView);
+            }else{
+                DefaultSliderView sliderView = new DefaultSliderView(getActivity());
+                sliderView
+                        .image("http://tesitoo.com/image/cache/no_image-100x100.png")
+                        .setScaleType(BaseSliderView.ScaleType.CenterCrop)
+                        .setOnSliderClickListener(this);
+                mImageSlider.addSlider(sliderView);
+            }
         }
 
         mImageSlider.setDuration(IMAGE_SLIDER_DURATION);
@@ -345,8 +402,8 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         params = mProductPrice.getLayoutParams();
         params.width = (int) (metrics.widthPixels * 0.5);
 
-        params = mProductExpirationDate.getLayoutParams();
-        params.width = (int) (metrics.widthPixels * 0.5);
+//        params = mProductExpirationDate.getLayoutParams();
+//        params.width = (int) (metrics.widthPixels * 0.5);
     }
 
     private void updateBorderPaddings() {
@@ -357,13 +414,14 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         int padding = Integer.parseInt(getString(R.string.padding_20));
         mInfoBorder.setPadding(padding, padding, padding, padding / 2);
         mPriceBorder.setPadding(padding, padding / 2, padding, padding / 2);
-        mDateBorder.setPadding(padding, padding / 2, padding, padding);
+        //mDateBorder.setPadding(padding, padding / 2, padding, padding);
     }
 
     private void updateImageSlider() {
         mImageSlider.removeAllSliders();
 
         for (ImageFile image : mImages) {
+
             DefaultSliderView sliderView = new DefaultSliderView(getActivity());
             sliderView
                     .image(image)
