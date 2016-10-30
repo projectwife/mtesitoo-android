@@ -60,11 +60,11 @@ public class ProductActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.action_edit_product) {
-            ProductDetailEditFragment f = ProductDetailEditFragment.newInstance(this, mProduct);
-            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
-            return true;
-        }
+//        if (id == R.id.action_edit_product) {
+//            ProductDetailEditFragment f = ProductDetailEditFragment.newInstance(this, mProduct);
+//            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+//            return true;
+//        }
 
         return super.onOptionsItemSelected(item);
     }

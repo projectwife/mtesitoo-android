@@ -54,6 +54,8 @@ public class Product implements Parcelable {
         }
     };
 
+
+
     /**
      * @param name         product name (e.g. apples)
      * @param description  product descriptions (e.g. freshly picked, sweet-sour)
