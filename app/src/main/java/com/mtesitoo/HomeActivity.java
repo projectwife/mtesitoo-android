@@ -100,17 +100,20 @@ public class HomeActivity extends AppCompatActivity {
                         new SecondaryDrawerItem()
                                 .withName(R.string.drawer_item_home)
                                 .withIcon(GoogleMaterial.Icon.gmd_home)
-                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_home_index))),
+                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_home_index)))
+                                .withSelectable(false),
                         new SectionDrawerItem()
                                 .withName(R.string.drawer_item_section_header_account),
                         new SecondaryDrawerItem()
                                 .withName(R.string.drawer_item_profile)
                                 .withIcon(GoogleMaterial.Icon.gmd_face)
-                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_profile_index))),
+                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_profile_index)))
+                                .withSelectable(false),
                         new SecondaryDrawerItem()
                                 .withName(R.string.drawer_item_orders)
                                 .withIcon(GoogleMaterial.Icon.gmd_history)
-                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_order_index))),
+                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_order_index)))
+                                .withSelectable(false),
                                 // Todo orders menu - displays number of pending orders.
                                 // Uncomment the lines below to display the number of orders next to the menu item
                                 /*.withBadgeStyle(new BadgeStyle()
@@ -119,17 +122,20 @@ public class HomeActivity extends AppCompatActivity {
                         new SecondaryDrawerItem()
                                 .withName(R.string.drawer_item_new)
                                 .withIcon(GoogleMaterial.Icon.gmd_add)
-                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_add_product_index))),
+                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_add_product_index)))
+                                .withSelectable(false),
                         new SectionDrawerItem()
                                 .withName(R.string.drawer_item_section_header_app),
                         new SecondaryDrawerItem()
                                 .withName(R.string.drawer_item_info)
                                 .withIcon(GoogleMaterial.Icon.gmd_info_outline)
-                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_info_index))),
+                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_info_index)))
+                                .withSelectable(false),
                         new SecondaryDrawerItem()
                                 .withName(R.string.drawer_item_help)
                                 .withIcon(GoogleMaterial.Icon.gmd_help_outline)
-                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_help_index))),
+                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_help_index)))
+                                .withSelectable(false),
                         new SecondaryDrawerItem()
                                 .withName(R.string.drawer_item_exit)
                                 .withIcon(GoogleMaterial.Icon.gmd_exit_to_app)
@@ -167,6 +173,7 @@ public class HomeActivity extends AppCompatActivity {
                     }
                 })
                 .withShowDrawerOnFirstLaunch(true)
+                .withSelectedItem(-1)
                 .build();
 
         // Todo orders menu - displays number of pending orders.
