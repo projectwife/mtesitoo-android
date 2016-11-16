@@ -105,7 +105,7 @@ public class OrderProductListAdapter extends ArrayAdapter<OrderProduct>
         public void onClick(View view) {
             Fragment f = EditOrderFragment.newInstance(context, orderProduct, order);
             FragmentActivity fragmentActivity = (FragmentActivity)context;
-            fragmentActivity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+            fragmentActivity.getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).addToBackStack(null).commit();
         }
 
 
