@@ -122,7 +122,7 @@ public class OrderFragment extends ListFragment {
     }
 
     @Override
-    public void onDestroy() {
+    public void onPause() {
         super.onDestroy();
         //restore the title of the app to the default.
         getActivity().setTitle(R.string.app_name);
