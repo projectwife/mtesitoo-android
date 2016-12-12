@@ -7,8 +7,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
@@ -58,25 +56,6 @@ public class HomeActivity extends AppCompatActivity {
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_home, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-
-        if (id == R.id.action_add_product) {
-            Intent intent = new Intent(this, AddProductActivity.class);
-            startActivity(intent);
-            return true;
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
     public void buildNavigationDrawer() {
         final IProfile profile = new ProfileDrawerItem()
                 .withName(mSeller.getUsername())
@@ -113,13 +92,17 @@ public class HomeActivity extends AppCompatActivity {
                                 .withName(R.string.drawer_item_orders)
                                 .withIcon(GoogleMaterial.Icon.gmd_history)
                                 .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_order_index)))
-                                .withBadgeStyle(new BadgeStyle()
+                                .withSelectable(false),
+                                // Todo orders menu - displays number of pending orders.
+                                // Uncomment the lines below to display the number of orders next to the menu item
+                                /*.withBadgeStyle(new BadgeStyle()
                                         .withTextColor(Color.WHITE)
-                                        .withColorRes(R.color.md_red_700)),
+                                        .withColorRes(R.color.md_red_700)),*/
                         new SecondaryDrawerItem()
                                 .withName(R.string.drawer_item_new)
                                 .withIcon(GoogleMaterial.Icon.gmd_add)
-                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_add_product_index))),
+                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_add_product_index)))
+                                .withSelectable(false),
                         new SectionDrawerItem()
                                 .withName(R.string.drawer_item_section_header_app),
                         new SecondaryDrawerItem()
@@ -161,7 +144,7 @@ public class HomeActivity extends AppCompatActivity {
                             }
 
                             if (f != null) {
-                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+                                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).addToBackStack(null).commit();
                             }
                         }
 
@@ -169,8 +152,12 @@ public class HomeActivity extends AppCompatActivity {
                     }
                 })
                 .withShowDrawerOnFirstLaunch(true)
+                .withSelectedItem(-1)
                 .build();
 
-        result.updateBadge(3, new StringHolder(10 + ""));
+        // Todo orders menu - displays number of pending orders.
+        // functionality not yet implemented.
+        // Badge has been commented out above.
+        // result.updateBadge(3, new StringHolder(10 + ""));
     }
 }

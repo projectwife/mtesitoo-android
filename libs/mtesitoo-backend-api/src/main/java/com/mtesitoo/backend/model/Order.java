@@ -78,6 +78,10 @@ public class Order implements Parcelable {
         return orderStatus;
     }
 
+    public void setOrderStatus(OrderStatus orderStatus) {
+        this.orderStatus = orderStatus;
+    }
+
     public double getTotalPrice() {
         return totalPrice;
     }

@@ -122,7 +122,7 @@ public class OrderFragment extends ListFragment {
     }
 
     @Override
-    public void onDestroy() {
+    public void onPause() {
         super.onDestroy();
         //restore the title of the app to the default.
         getActivity().setTitle(R.string.app_name);
@@ -174,7 +174,7 @@ public class OrderFragment extends ListFragment {
                 appTitleResId = R.string.menu_item_order_filterBy_Clear;
                 break;
             default:
-                Log.e("setAppTitle", "Status " + orderStatus.name() + "isn't supported");
+                Log.e("setAppTitle", "Order Status " + orderStatus.name() + " isn't supported");
                 appTitleResId = R.string.app_name;
         }
 

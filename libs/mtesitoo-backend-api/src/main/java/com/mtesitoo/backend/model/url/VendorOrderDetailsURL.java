@@ -19,4 +19,10 @@ public class VendorOrderDetailsURL extends URL {
 
         mPath.append("/" + orderId);
     }
+
+    public VendorOrderDetailsURL(Context context, int orderProductId, boolean toDelete) {
+        super(context, R.string.path_order_vendor_product);
+
+        mPath.append("/" + orderProductId);
+    }
 }
