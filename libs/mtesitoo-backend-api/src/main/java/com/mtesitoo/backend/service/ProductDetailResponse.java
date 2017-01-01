@@ -1,6 +1,7 @@
 package com.mtesitoo.backend.service;
 
 import android.net.Uri;
+import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -51,8 +52,8 @@ public class ProductDetailResponse implements Response.Listener<String>, Respons
                 Integer.parseInt(jsonProduct.getString("product_id")),
                 jsonProduct.getString("title"),
                 jsonProduct.getString("description"),
-                "Location",
-                "Fix Me - Category",
+                jsonProduct.getString("location"),
+                arrayToString(jsonProduct.getJSONArray("categories")),
                 "SI Unit",
                 jsonProduct.getString("price"), 100,
                 new Date(),
@@ -75,5 +76,31 @@ public class ProductDetailResponse implements Response.Listener<String>, Respons
         }
 
         return images;
+    }
+
+    private String arrayToString(JSONArray array){
+
+        if(array == null) {
+            return "";
+        }else{
+
+            String result = "";
+
+            for (int i = 0; i < array.length(); i++) {
+                try {
+                    result = result.concat(array.getString(i)).concat(", ");
+                } catch (JSONException e) {
+                    Log.e("JSONArr2Str",e.toString());
+                }
+            }
+
+            if(!result.equals("")){
+                // Trim off the last ", " in the list
+                result = result.substring(0,result.length()-2);
+            }
+
+            return result;
+        }
+
     }
 }

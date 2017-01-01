@@ -181,17 +181,17 @@ public class Seller implements Parcelable {
                   String phoneNumber, String email, String company, String address1, String address2, String city, String state,
                   String postCode, String uri,String password, String zoneId,String  agree, String country, String description) {
         mId = id;
-        mUsername = username;
-        mFirstName = firstName;
-        mLastName = lastName;
-        mPhoneNumber = phoneNumber;
-        mEmail = email;
-        mCompany = company;
-        mAddress1 = address1;
-        mAddress2 = address2;
-        mCity = city;
-        mState = state;
-        mPostcode = postCode;
+        mUsername = username.trim();
+        mFirstName = firstName.trim();
+        mLastName = lastName.trim();
+        mPhoneNumber = phoneNumber.trim();
+        mEmail = email.trim();
+        mCompany = company.trim();
+        mAddress1 = address1.trim();
+        mAddress2 = address2.trim();
+        mCity = city.trim();
+        mState = state.trim();
+        mPostcode = postCode.trim();
         mThumbnail = Uri.parse(uri);
 
         mPassword=password;
