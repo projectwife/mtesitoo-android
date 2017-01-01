@@ -12,6 +12,7 @@ import com.mtesitoo.backend.cache.logic.ICategoryCache;
 import com.mtesitoo.backend.model.Category;
 import com.tech.freak.wizardpager.model.AbstractWizardModel;
 import com.tech.freak.wizardpager.model.BranchPage;
+import com.tech.freak.wizardpager.model.DecimalPage;
 import com.tech.freak.wizardpager.model.ImagePage;
 import com.tech.freak.wizardpager.model.NumberPage;
 import com.tech.freak.wizardpager.model.PageList;
@@ -56,7 +57,7 @@ public class ProductWizard extends AbstractWizardModel {
                         )
                         .setRequired(true),
 */
-                new NumberPage(this, mContext.getString(R.string.page_price_per_unit)).setRequired(true),
+                new DecimalPage(this, mContext.getString(R.string.page_price_per_unit)).setRequired(true),
 
                 new NumberPage(this, mContext.getString(R.string.page_quantity)).setRequired(true));
 
