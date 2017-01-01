@@ -79,7 +79,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 final Intent intent = new Intent(this, HomeActivity.class);
                 final ILoginRequest loginService = new LoginRequest(this);
 
-                loginService.authenticateUser(mUsername.getText().toString(), mPassword.getText().toString(), new ICallback<String>() {
+                loginService.authenticateUser(mUsername.getText().toString().trim(), mPassword.getText().toString(), new ICallback<String>() {
                     @Override
                     public void onResult(String result) {
 
