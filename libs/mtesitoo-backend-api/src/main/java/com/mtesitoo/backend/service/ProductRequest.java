@@ -87,7 +87,7 @@ public class ProductRequest extends Request implements IProductRequest {
                 params.put(mContext.getString(R.string.params_product_description), product.getDescription());
                 params.put(mContext.getString(R.string.params_product_price), product.getPricePerUnit());
                 params.put(mContext.getString(R.string.params_product_quantity), Integer.toString(product.getQuantity()));
-                params.put(mContext.getString(R.string.params_product_category_ids), product.getCategory());
+                params.put(mContext.getString(R.string.params_product_category_ids), product.getCategoriesJSON());
                 params.put(mContext.getString(R.string.params_product_meta_title), "meta_title");
                 params.put(mContext.getString(R.string.params_product_status), mContext.getString(R.string.params_product_status_enabled));
 
@@ -114,7 +114,7 @@ public class ProductRequest extends Request implements IProductRequest {
                 //params.put(mContext.getString(R.string.params_product_location), product.getLocation());
                 params.put(mContext.getString(R.string.params_product_price), product.getPricePerUnit());
                 params.put(mContext.getString(R.string.params_product_quantity), Integer.toString(product.getQuantity()));
-                params.put(mContext.getString(R.string.params_product_category_ids), product.getCategory());
+                params.put(mContext.getString(R.string.params_product_category_ids), product.getCategoriesJSON());
                 //params.put(mContext.getString(R.string.params_product_meta_title), "meta_title");
                 //params.put(mContext.getString(R.string.params_product_status), mContext.getString(R.string.params_product_status_enabled));
 
