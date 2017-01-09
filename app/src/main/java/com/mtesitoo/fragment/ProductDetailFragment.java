@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.slider.library.Indicators.PagerIndicator;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
@@ -189,6 +190,12 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
         }
 
         mImageSlider.setDuration(8000);
+
+        if(urls.size() <= 1){
+            mImageSlider.stopAutoCycle();
+            mImageSlider.setIndicatorVisibility(PagerIndicator.IndicatorVisibility.Invisible);
+        }
+
         mImageSlider.addOnPageChangeListener(this);
     }
 }
