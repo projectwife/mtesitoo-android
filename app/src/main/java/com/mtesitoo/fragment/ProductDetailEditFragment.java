@@ -325,16 +325,17 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         for (int i = 0; i < categories.size(); i++) {
             String name = categories.get(i).getName();
             RadioButton categoryButton = new RadioButton(getActivity());
-
-            for(String catString : mProduct.getCategories()){
-                if (catString.equalsIgnoreCase(name)) {
-                    categoryButton.setSelected(true);
-                    break;
-                }
-            }
+            categoryButton.setId(i);
 
             categoryButton.setText(name);
             categoryButtonGroup.addView(categoryButton);
+
+            for(String catString : mProduct.getResolvedCategories(getContext())){
+                if (catString.equalsIgnoreCase(name)) {
+                    categoryButtonGroup.check(i);
+                    break;
+                }
+            }
         }
 
         mProductCategoryContainer.addView(categoryButtonGroup);

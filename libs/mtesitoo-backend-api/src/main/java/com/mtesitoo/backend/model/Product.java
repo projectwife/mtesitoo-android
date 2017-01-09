@@ -155,6 +155,38 @@ public class Product implements Parcelable {
         return jsonCategories.toString();
     }
 
+    public ArrayList<String> getResolvedCategories(Context context){
+        ICategoryCache cache = new CategoryCache(context);
+        List<Category> categories = cache.getCategories();
+        ArrayList<String> resolvedList = new ArrayList<>();
+
+        for (String mCatId : mCategories) {
+            for (Category c : categories) {
+                if(c.getId() == Integer.valueOf(mCatId)){
+                    resolvedList.add(c.getName());
+                    break;
+                }
+            }
+        }
+
+        return resolvedList;
+
+    }
+
+    public String getCategoriesIDStringList(){
+
+        String categoryIDStringList = "";
+        for(String cat : mCategories){
+            categoryIDStringList = categoryIDStringList.concat(cat).concat(",");
+        }
+
+        if(categoryIDStringList.length() > 0){
+            return categoryIDStringList.substring(0,categoryIDStringList.length()-1);
+        }else{
+            return "None";
+        }
+    }
+
     public String getCategoriesStringList(Context context){
 
         ICategoryCache cache = new CategoryCache(context);
@@ -164,14 +196,14 @@ public class Product implements Parcelable {
         for (String mCatId : mCategories) {
             for (Category c : categories) {
                 if(c.getId() == Integer.valueOf(mCatId)){
-                    categoryStringList = categoryStringList.concat(c.getName()).concat(",");
+                    categoryStringList = categoryStringList.concat(c.getName()).concat(", ");
                     break;
                 }
             }
         }
 
         if(categoryStringList.length() > 0){
-            return categoryStringList.substring(0,categoryStringList.length()-1);
+            return categoryStringList.substring(0,categoryStringList.length()-2);
         }else{
             return "None";
         }
