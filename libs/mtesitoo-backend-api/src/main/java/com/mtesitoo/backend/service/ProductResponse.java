@@ -4,6 +4,9 @@ import android.net.Uri;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.mtesitoo.backend.cache.CategoryCache;
+import com.mtesitoo.backend.cache.logic.ICategoryCache;
+import com.mtesitoo.backend.model.Category;
 import com.mtesitoo.backend.model.Product;
 import com.mtesitoo.backend.service.logic.ICallback;
 
@@ -54,8 +57,8 @@ public class ProductResponse implements Response.Listener<String>, Response.Erro
                             Integer.parseInt(jsonProduct.getString("product_id")),
                             jsonProduct.getString("name"),
                             jsonProduct.getString("description"),
-                            "Location",
-                            "Category",
+                            jsonProduct.getString("location"),
+                            resolveCategories(jsonProduct.getJSONArray("categories")),
                             "SI Unit",
                             jsonProduct.getString("price"), 100,
                             new Date(),
@@ -71,5 +74,21 @@ public class ProductResponse implements Response.Listener<String>, Response.Erro
     private ArrayList<Uri> parseAuxImages(){
         ArrayList<Uri> images = new ArrayList<>();
         return images;
+    }
+
+    private ArrayList<String> resolveCategories(JSONArray categoryList) {
+
+        JSONArray arr = categoryList;
+        ArrayList<String> list = new ArrayList<>();
+        for(int i = 0; i < arr.length(); i++){
+            try {
+                list.add(arr.getString(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+
+        return list;
+
     }
 }

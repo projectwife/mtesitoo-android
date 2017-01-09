@@ -27,6 +27,7 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
+import com.daimajia.slider.library.Indicators.PagerIndicator;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
@@ -325,13 +326,17 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         for (int i = 0; i < categories.size(); i++) {
             String name = categories.get(i).getName();
             RadioButton categoryButton = new RadioButton(getActivity());
-
-            if (mProduct.getCategory() != null && mProduct.getCategory().compareTo(name) == 0) {
-                categoryButton.setSelected(true);
-            }
+            categoryButton.setId(i);
 
             categoryButton.setText(name);
             categoryButtonGroup.addView(categoryButton);
+
+            for(String catString : mProduct.getResolvedCategories(getContext())){
+                if (catString.equalsIgnoreCase(name)) {
+                    categoryButtonGroup.check(i);
+                    break;
+                }
+            }
         }
 
         mProductCategoryContainer.addView(categoryButtonGroup);
@@ -377,6 +382,11 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         }
 
         mImageSlider.setDuration(IMAGE_SLIDER_DURATION);
+
+        if(urls.size() <= 1){
+            mImageSlider.stopAutoCycle();
+            mImageSlider.setIndicatorVisibility(PagerIndicator.IndicatorVisibility.Invisible);
+        }
     }
 
     private void updateEditTextLengths() {
@@ -431,5 +441,10 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         }
 
         mImageSlider.setDuration(IMAGE_SLIDER_DURATION);
+
+        if(mImages.size() <= 1){
+            mImageSlider.stopAutoCycle();
+            mImageSlider.setIndicatorVisibility(PagerIndicator.IndicatorVisibility.Invisible);
+        }
     }
 }

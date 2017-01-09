@@ -78,7 +78,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         params.width = (int) (0.4 * deviceWidth);
 
         holder.productName.setText(product.getName());
-        holder.productCategory.setText(product.getCategory());
+        holder.productCategory.setText(product.getCategoriesStringList(mContext));
         holder.productPrice.setText(product.getPricePerUnit());
         uri = product.getmThumbnail().toString();
         if(uri.contains(" ")){

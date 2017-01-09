@@ -13,6 +13,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.daimajia.slider.library.Indicators.PagerIndicator;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
@@ -118,7 +119,7 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
         mProductName.setText(mProduct.getName());
         mProductDescription.setText(mProduct.getDescription());
         mProductLocation.setText(mProduct.getLocation());
-        mProductCategory.setText(mProduct.getCategory());
+        mProductCategory.setText(mProduct.getCategoriesStringList(this.getContext()));
         mProductUnit.setText(mProduct.getSIUnit());
         mProductQuantity.setText(mProduct.getQuantity().toString());
         mProductPrice.setText(mProduct.getPricePerUnit());
@@ -189,6 +190,12 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
         }
 
         mImageSlider.setDuration(8000);
+
+        if(urls.size() <= 1){
+            mImageSlider.stopAutoCycle();
+            mImageSlider.setIndicatorVisibility(PagerIndicator.IndicatorVisibility.Invisible);
+        }
+
         mImageSlider.addOnPageChangeListener(this);
     }
 }

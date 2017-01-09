@@ -53,7 +53,7 @@ public class ProductDetailResponse implements Response.Listener<String>, Respons
                 jsonProduct.getString("title"),
                 jsonProduct.getString("description"),
                 jsonProduct.getString("location"),
-                arrayToString(jsonProduct.getJSONArray("categories")),
+                resolveCategories(jsonProduct.getJSONArray("categories")),
                 "SI Unit",
                 jsonProduct.getString("price"), 100,
                 new Date(),
@@ -78,29 +78,19 @@ public class ProductDetailResponse implements Response.Listener<String>, Respons
         return images;
     }
 
-    private String arrayToString(JSONArray array){
+    private ArrayList<String> resolveCategories(JSONArray categoryList) {
 
-        if(array == null) {
-            return "";
-        }else{
-
-            String result = "";
-
-            for (int i = 0; i < array.length(); i++) {
-                try {
-                    result = result.concat(array.getString(i)).concat(", ");
-                } catch (JSONException e) {
-                    Log.e("JSONArr2Str",e.toString());
-                }
+        JSONArray arr = categoryList;
+        ArrayList<String> list = new ArrayList<>();
+        for(int i = 0; i < arr.length(); i++){
+            try {
+                list.add(arr.getString(i));
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-
-            if(!result.equals("")){
-                // Trim off the last ", " in the list
-                result = result.substring(0,result.length()-2);
-            }
-
-            return result;
         }
+
+        return list;
 
     }
 }
