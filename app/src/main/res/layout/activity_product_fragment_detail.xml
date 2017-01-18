@@ -128,6 +128,30 @@
                             android:gravity="right"
                             android:text="..." />
                     </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="8dip"
+                        android:orientation="horizontal">
+
+                        <TextView
+                            style="@style/TextBoldTheme"
+                            android:id="@+id/lblExpiration"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="Expiration Date" />
+
+                        <TextView
+                            android:id="@+id/product_detail_expiraition"
+                            style="@style/TextTheme"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentRight="true"
+                            android:layout_toRightOf="@+id/lblExpiration"
+                            android:gravity="right"
+                            android:text="1999-09-29" />
+                    </RelativeLayout>
                 </LinearLayout>
             </RelativeLayout>
 
