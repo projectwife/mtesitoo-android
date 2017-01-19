@@ -129,7 +129,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         mProductUnit.setText(mProduct.getSIUnit());
         mProductQuantity.setText(mProduct.getQuantity().toString());
         mProductPrice.setText(mProduct.getPricePerUnit());
-        mProductExpiration.setText(mProduct.getExpiration().toString());
+        mProductExpiration.setText(mProduct.getExpirationFormatted());
 
         updateEditTextLengths();
         updateBorderPaddings();

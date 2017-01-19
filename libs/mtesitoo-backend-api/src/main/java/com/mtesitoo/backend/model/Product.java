@@ -4,6 +4,7 @@ import android.content.Context;
 import android.net.Uri;
 
 import java.net.URI;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -223,6 +224,14 @@ public class Product implements Parcelable {
 
     public Date getExpiration() {
         return mExpiration;
+    }
+
+    public String getExpirationFormatted() {
+
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = (dateFormatter).format(mExpiration);
+
+        return formattedDate;
     }
 
     public Uri getmThumbnail() {
