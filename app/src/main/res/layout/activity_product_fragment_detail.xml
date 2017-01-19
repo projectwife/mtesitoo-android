@@ -143,7 +143,7 @@
                             android:text="Expiration Date" />
 
                         <TextView
-                            android:id="@+id/product_detail_expiraition"
+                            android:id="@+id/product_detail_expiration"
                             style="@style/TextTheme"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"

@@ -25,6 +25,7 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daimajia.slider.library.Indicators.PagerIndicator;
@@ -80,6 +81,8 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     EditText mProductLocation;
     @Bind(R.id.product_detail_category_container)
     LinearLayout mProductCategoryContainer;
+    @Bind(R.id.product_detail_expiration_edit)
+    EditText mProductExpiration;
 
     @Bind(R.id.product_detail_unit_edit)
     EditText mProductUnit;
@@ -87,9 +90,6 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     EditText mProductQuantity;
     @Bind(R.id.product_detail_price_edit)
     EditText mProductPrice;
-
-//    @Bind(R.id.product_detail_expiration_date_edit)
-//    EditText mProductExpirationDate;
 
     public static ProductDetailEditFragment newInstance(Context context, Product product) {
         ProductDetailEditFragment fragment = new ProductDetailEditFragment();
@@ -129,7 +129,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         mProductUnit.setText(mProduct.getSIUnit());
         mProductQuantity.setText(mProduct.getQuantity().toString());
         mProductPrice.setText(mProduct.getPricePerUnit());
-        //mProductExpirationDate.setText(mProduct.getExpiration().toString());
+        mProductExpiration.setText(mProduct.getExpiration().toString());
 
         updateEditTextLengths();
         updateBorderPaddings();
@@ -182,7 +182,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
                     mProductUnit.getText().toString(),
                     mProductPrice.getText().toString(),
                     Integer.parseInt(mProductQuantity.getText().toString()),
-                    new Date(),
+                    mProduct.getExpiration(),
                     mProduct.getmThumbnail(),
                     mProduct.getAuxImages()
             );
@@ -412,8 +412,8 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         params = mProductPrice.getLayoutParams();
         params.width = (int) (metrics.widthPixels * 0.5);
 
-//        params = mProductExpirationDate.getLayoutParams();
-//        params.width = (int) (metrics.widthPixels * 0.5);
+        params = mProductExpiration.getLayoutParams();
+        params.width = (int) (metrics.widthPixels * 0.5);
     }
 
     private void updateBorderPaddings() {
