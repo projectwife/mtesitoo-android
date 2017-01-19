@@ -7,4 +7,5 @@ import com.mtesitoo.backend.model.Seller;
  */
 public interface ISellerRequest {
     void getSellerInfo(int id, final ICallback<Seller> callback);
+    void updateSellerProfile(final Seller seller, final ICallback<Seller> callback);
 }

@@ -39,4 +39,6 @@
     <string name="product_status">Product Status</string>
     <string name="product_model">Model</string>
     <string name="product_quantity">Quantity</string>
+
+    <string name="profile_updated">Profile Updated</string>
 </resources>
