@@ -16,13 +16,13 @@ repositories {
 
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.1"
+    compileSdkVersion 24
+    buildToolsVersion "23.0.2"
 
     defaultConfig {
         applicationId "com.mtesitoo"
         minSdkVersion 16
-        targetSdkVersion 23
+        targetSdkVersion 24
         versionCode 3
         versionName "1.0.2"
     }
@@ -54,6 +54,10 @@ dependencies {
         transitive = false
     }
     compile 'com.android.support:support-v4:23.1.1'
+
+    compile 'com.android.support:appcompat-v7:24.2.1'
+    compile 'com.android.support:design:24.2.1'
+
     compile 'com.squareup.picasso:picasso:2.5.2'
     compile 'com.nineoldandroids:library:2.4.0'
     compile 'com.daimajia.slider:library:1.1.5'

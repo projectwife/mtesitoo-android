@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -17,7 +18,6 @@ import com.mtesitoo.backend.model.Seller;
 import com.mtesitoo.backend.service.SellerRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.ISellerRequest;
-import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -36,31 +36,36 @@ public class ProfileFragment extends Fragment {
     private static Seller mSeller;
     private static Context mContext;
 
-    @Bind(R.id.logo)
+    //@Bind(R.id.profileImage)
     ImageView mProfileImage;
-    @Bind(R.id.profile_name)
-    TextView mProfileName;
-    @Bind(R.id.profile_username)
-    TextView mProfileUsername;
-    @Bind(R.id.profile_telephone)
-    TextView mProfileTelephone;
-    @Bind(R.id.profile_email)
-    TextView mProfileEmail;
-    @Bind(R.id.profile_companyname)
-    TextView mProfileCompanyName;
-    @Bind(R.id.profile_description)
-    TextView mProfileDescription;
-    @Bind(R.id.profile_address1)
+//    @Bind(R.id.profile_name)
+//    TextView mProfileName;
+//    @Bind(R.id.profile_username)
+//    TextView mProfileUsername;
+
+    @Bind(R.id.etFirstName)
+    EditText mFirstName;
+    @Bind(R.id.etLastName)
+    EditText mLastName;
+    @Bind(R.id.etPhone)
+    EditText mProfileTelephone;
+    @Bind(R.id.etEmail)
+    EditText mProfileEmail;
+    @Bind(R.id.etBusiness)
+    EditText mProfileCompanyName;
+    @Bind(R.id.etDescription)
+    EditText mProfileDescription;
+    @Bind(R.id.etAddress1)
     TextView mProfileAddress1;
-    @Bind(R.id.profile_address2)
+    @Bind(R.id.etAddress2)
     TextView mProfileAddress2;
-    @Bind(R.id.profile_city)
+    @Bind(R.id.etCity)
     TextView mProfileCity;
-    @Bind(R.id.profile_state)
+    @Bind(R.id.etState)
     TextView mProfileState;
-    @Bind(R.id.profile_country)
+    @Bind(R.id.etCountry)
     TextView mProfileCountry;
-    @Bind(R.id.profile_postcode)
+    @Bind(R.id.etPostCode)
     TextView mProfilePostcode;
 
     public static ProfileFragment newInstance(Context context, Seller seller) {
@@ -75,7 +80,7 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.activity_my_profile, container, false);
+        View view = inflater.inflate(R.layout.frag_profile, container, false);
         ButterKnife.bind(this, view);
         return view;
     }
@@ -86,14 +91,19 @@ public class ProfileFragment extends Fragment {
 
         Bundle args = this.getArguments();
         mSeller = args.getParcelable(getString(R.string.bundle_seller_key));
-        Picasso.with(getContext()).load(mSeller.getmThumbnail().toString()).into(mProfileImage);
-        mProfileName.setText(mSeller.getmFirstName() + " " + mSeller.getmLastName());
-        mProfileUsername.setText(mSeller.getmUsername());
+//        Picasso.with(getContext()).load(mSeller.getmThumbnail().toString()).into(mProfileImage);
+        //mProfileName.setText(mSeller.getmFirstName() + " " + mSeller.getmLastName());
+        //mProfileUsername.setText(mSeller.getmUsername());
+        if (mSeller.getmBusiness() != null && !mSeller.getmBusiness().isEmpty()) {
+            mProfileCompanyName.setText(mSeller.getmBusiness());
+        } else {
+            mProfileCompanyName.setText(mSeller.getmFirstName() + " " + mSeller.getmLastName());
+        }
+
         mProfileAddress1.setText(mSeller.getmAddress1());
         mProfileAddress2.setText(mSeller.getmAddress2());
         mProfileTelephone.setText(mSeller.getmPhoneNumber());
         mProfileEmail.setText(mSeller.getmEmail());
-        mProfileCompanyName.setText(mSeller.getmBusiness());
         mProfileDescription.setText(mSeller.getmDescription());
         mProfileCity.setText(mSeller.getmCity());
         mProfileState.setText(mSeller.getmState());
@@ -101,21 +111,21 @@ public class ProfileFragment extends Fragment {
         mProfilePostcode.setText(mSeller.getmPostcode());
     }
 
-    @OnClick(R.id.update_profile)
+    @OnClick(R.id.updateProfile)
     public void onUpdateProfileClick(View view) {
-        String userName = mProfileUsername.getText().toString();
-        String firstName = mProfileName.getText().toString();
-        String lastName = mProfileName.getText().toString();
-        String phoneNumber = mProfileTelephone.getText().toString();
-        String email = mProfileEmail.getText().toString();
-        String address1 = mProfileAddress1.getText().toString();
-        String address2 = mProfileAddress2.getText().toString();
-        String postCode = mProfilePostcode.getText().toString();
-        String city = mProfileCity.getText().toString();
-        String state = mProfileState.getText().toString();
-        String country = mProfileCountry.getText().toString();
         String businessName = mProfileCompanyName.getText().toString();
         String description = mProfileDescription.getText().toString();
+        String firstName = mFirstName.getText().toString();
+        String lastName = mLastName.getText().toString();
+        String phoneNumber = mProfileTelephone.getText().toString();
+        String email = mProfileEmail.getText().toString();
+
+        String address1 = mProfileAddress1.getText().toString();
+        String address2 = mProfileAddress2.getText().toString();
+        String city = mProfileCity.getText().toString();
+        String state = mProfileState.getText().toString();
+        String postCode = mProfilePostcode.getText().toString();
+        String country = mProfileCountry.getText().toString();
 
         mSeller.setmFirstName(firstName);
         mSeller.setmLastName(lastName);
@@ -125,8 +135,10 @@ public class ProfileFragment extends Fragment {
         mSeller.setmAddress2(address2);
         mSeller.setmPostcode(postCode);
         mSeller.setmCity(city);
-        mSeller.setmState(state);
-        mSeller.setmCountry(country);
+        //TODO: Disabling state and country unless its fixed
+        mSeller.setmState(null);
+        mSeller.setmCountry(null);
+        
         mSeller.setmBusiness(businessName);
         mSeller.setmDescription(description);
 

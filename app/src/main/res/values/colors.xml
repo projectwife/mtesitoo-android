@@ -4,10 +4,10 @@
     <color name="primaryDark">#0D47A1</color>
     <color name="accent">#1565C0</color>
 
-    <color name="colorPrimary">#3E50B4</color>
-    <color name="colorPrimaryDark">#2F3E9E</color>
+    <color name="colorPrimary">#66a966</color>
+    <color name="colorPrimaryDark">#1B5E20</color>
     <color name="colorPrimaryLight">#C4C9E8</color>
-    <color name="colorAccent">#02A8F3</color>
+    <color name="colorAccent">#80CBC4</color>
     <!-- overwrite the selected colors because the primary color is to dark -->
     <color name="material_drawer_selected_text">#536EEA</color>
     <color name="material_drawer_dark_selected_text">#536EEA</color>
