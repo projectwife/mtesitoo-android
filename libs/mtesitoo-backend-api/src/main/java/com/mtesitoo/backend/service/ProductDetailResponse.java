@@ -12,6 +12,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -46,20 +48,26 @@ public class ProductDetailResponse implements Response.Listener<String>, Respons
 
     public Product parseResponse(String response) throws JSONException {
         JSONObject jsonProduct = new JSONObject(response);
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         jsonProduct = (JSONObject) jsonProduct.get("product");
 
-        Product result = new Product(
-                Integer.parseInt(jsonProduct.getString("product_id")),
-                jsonProduct.getString("title"),
-                jsonProduct.getString("description"),
-                jsonProduct.getString("location"),
-                resolveCategories(jsonProduct.getJSONArray("categories")),
-                "SI Unit",
-                jsonProduct.getString("price"), 100,
-                new Date(),
-                Uri.parse(jsonProduct.getString("thumb_image")),
-                parseAuxImages(jsonProduct.getJSONArray("images"))
-        );
+        Product result = null;
+        try {
+            result = new Product(
+                    Integer.parseInt(jsonProduct.getString("product_id")),
+                    jsonProduct.getString("title"),
+                    jsonProduct.getString("description"),
+                    jsonProduct.getString("location"),
+                    resolveCategories(jsonProduct.getJSONArray("categories")),
+                    "SI Unit",
+                    jsonProduct.getString("price"), 100,
+                    formatter.parse(jsonProduct.getString("expiration_date")),
+                    Uri.parse(jsonProduct.getString("thumb_image")),
+                    parseAuxImages(jsonProduct.getJSONArray("images"))
+            );
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
 
         return result;
     }
