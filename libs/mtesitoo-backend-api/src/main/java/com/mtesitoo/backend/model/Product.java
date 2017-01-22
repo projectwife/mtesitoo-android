@@ -226,9 +226,17 @@ public class Product implements Parcelable {
         return mExpiration;
     }
 
-    public String getExpirationFormatted() {
+    public String getExpirationFormattedForApp() {
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedDate = (dateFormatter).format(mExpiration);
+
+        return formattedDate;
+    }
+
+    public String getExpirationFormattedForAPI() {
+
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         String formattedDate = (dateFormatter).format(mExpiration);
 
         return formattedDate;
