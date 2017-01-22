@@ -25,7 +25,6 @@ import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.daimajia.slider.library.Indicators.PagerIndicator;
@@ -41,11 +40,12 @@ import com.mtesitoo.backend.model.Product;
 import com.mtesitoo.backend.service.ProductRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.IProductRequest;
-import com.mtesitoo.helper.FileHelper;
 import com.mtesitoo.model.ImageFile;
 
-import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -55,7 +55,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Nan on 12/31/2015.
  */
-public class ProductDetailEditFragment extends Fragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
+public class ProductDetailEditFragment extends Fragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener, View.OnClickListener{
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int MAX_IMAGES = 3;
     private static final int IMAGE_SLIDER_DURATION = 8000;
@@ -133,6 +133,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
 
         updateEditTextLengths();
         updateBorderPaddings();
+        mProductExpiration.setOnClickListener(this);
     }
 
     @Override
@@ -445,6 +446,42 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         if(mImages.size() <= 1){
             mImageSlider.stopAutoCycle();
             mImageSlider.setIndicatorVisibility(PagerIndicator.IndicatorVisibility.Invisible);
+        }
+    }
+
+    public void onClick(View view){
+
+        if (view == mProductExpiration) {
+            DatePickerDialogFragment datePickerDialog = new DatePickerDialogFragment();
+
+            Calendar calendar = Calendar.getInstance();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+            try {
+                Date date = dateFormat.parse(mProductExpiration.getText().toString());
+                calendar.setTime(date);
+            } catch (ParseException e) {
+                // Log
+            }
+
+            Bundle args = new Bundle();
+            args.putInt("year", calendar.get(Calendar.YEAR));
+            args.putInt("month", calendar.get(Calendar.MONTH));
+            args.putInt("day", calendar.get(Calendar.DAY_OF_MONTH));
+            datePickerDialog.setArguments(args);
+
+            DatePickerDialog.OnDateSetListener onDate = new DatePickerDialog.OnDateSetListener() {
+
+                public void onDateSet(DatePicker view, int year, int month,
+                                      int day) {
+
+                    mProductExpiration.setText(String.valueOf(year) + "-" + String.valueOf(month+1)
+                            + "-" + String.valueOf(day));
+                }
+            };
+
+            datePickerDialog.setCallBack(onDate);
+            datePickerDialog.show(getFragmentManager(), "Date Picker");
         }
     }
 }
