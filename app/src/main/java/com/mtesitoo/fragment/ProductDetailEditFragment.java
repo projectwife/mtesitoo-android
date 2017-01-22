@@ -158,6 +158,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        Date expiryDate;
 
         if (id == R.id.action_done_edit_product){
             int catID = categoryButtonGroup.indexOfChild(getActivity().findViewById(categoryButtonGroup.getCheckedRadioButtonId()));
@@ -173,6 +174,12 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
                 }
             }
 
+            try {
+                expiryDate = getDateFromDateField();
+            } catch (ParseException e) {
+                expiryDate = mProduct.getExpiration();
+            }
+
             // Save product here
             final Product updatedProduct = new Product(
                     mProduct.getId(),
@@ -183,7 +190,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
                     mProductUnit.getText().toString(),
                     mProductPrice.getText().toString(),
                     Integer.parseInt(mProductQuantity.getText().toString()),
-                    mProduct.getExpiration(),
+                    expiryDate,
                     mProduct.getmThumbnail(),
                     mProduct.getAuxImages()
             );
@@ -455,11 +462,8 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
             DatePickerDialogFragment datePickerDialog = new DatePickerDialogFragment();
 
             Calendar calendar = Calendar.getInstance();
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
             try {
-                Date date = dateFormat.parse(mProductExpiration.getText().toString());
-                calendar.setTime(date);
+                calendar.setTime(getDateFromDateField());
             } catch (ParseException e) {
                 // Log
             }
@@ -482,6 +486,16 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
 
             datePickerDialog.setCallBack(onDate);
             datePickerDialog.show(getFragmentManager(), "Date Picker");
+        }
+    }
+
+    private Date getDateFromDateField() throws ParseException {
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            return dateFormat.parse(mProductExpiration.getText().toString());
+        } catch (ParseException e) {
+            throw e;
         }
     }
 }
