@@ -7,14 +7,23 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mtesitoo.R;
+import com.mtesitoo.backend.cache.CountriesCache;
+import com.mtesitoo.backend.cache.ZoneCache;
+import com.mtesitoo.backend.cache.logic.ICountriesCache;
+import com.mtesitoo.backend.cache.logic.IZonesCache;
+import com.mtesitoo.backend.model.Countries;
 import com.mtesitoo.backend.model.Seller;
+import com.mtesitoo.backend.model.Zone;
 import com.mtesitoo.backend.service.SellerRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.ISellerRequest;
@@ -23,6 +32,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
+import java.util.ArrayList;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -56,15 +66,15 @@ public class ProfileFragment extends Fragment {
     @Bind(R.id.etDescription)
     EditText mProfileDescription;
     @Bind(R.id.etAddress1)
-    TextView mProfileAddress1;
+    EditText mProfileAddress1;
     @Bind(R.id.etAddress2)
-    TextView mProfileAddress2;
+    EditText mProfileAddress2;
     @Bind(R.id.etCity)
-    TextView mProfileCity;
-    @Bind(R.id.etState)
-    TextView mProfileState;
-    @Bind(R.id.etCountry)
-    TextView mProfileCountry;
+    EditText mProfileCity;
+    @Bind(R.id.spinnerState)
+    Spinner mProfileState;
+    @Bind(R.id.spinnerCountry)
+    Spinner mProfileCountry;
     @Bind(R.id.etPostCode)
     TextView mProfilePostcode;
 
@@ -106,9 +116,47 @@ public class ProfileFragment extends Fragment {
         mProfileEmail.setText(mSeller.getmEmail());
         mProfileDescription.setText(mSeller.getmDescription());
         mProfileCity.setText(mSeller.getmCity());
-        mProfileState.setText(mSeller.getmState());
-        mProfileCountry.setText(mSeller.getmCountry());
         mProfilePostcode.setText(mSeller.getmPostcode());
+
+        //mProfileState.setText(mSeller.getmState());
+        //mProfileCountry.setText(mSeller.getmCountry());
+
+
+        ICountriesCache countriesCache = new CountriesCache(mContext);
+        ArrayList<Countries> countriesArrayList = (ArrayList<Countries>) countriesCache.getCountries();
+
+        mProfileCountry.setAdapter(new ArrayAdapter<Countries>(mContext,
+                android.R.layout.simple_spinner_item,
+                countriesArrayList));
+        mProfileCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                mProfileCountry.setSelection(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
+
+        IZonesCache zoneCache = new ZoneCache(mContext);
+        ArrayList<Zone> zoneArrayList = (ArrayList<Zone>) zoneCache.GetZones();
+
+        mProfileState.setAdapter(new ArrayAdapter<Zone>(mContext,
+                android.R.layout.simple_spinner_item,
+                zoneArrayList));
+        mProfileState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                mProfileState.setSelection(i);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView) {
+
+            }
+        });
     }
 
     @OnClick(R.id.updateProfile)
@@ -123,9 +171,9 @@ public class ProfileFragment extends Fragment {
         String address1 = mProfileAddress1.getText().toString();
         String address2 = mProfileAddress2.getText().toString();
         String city = mProfileCity.getText().toString();
-        String state = mProfileState.getText().toString();
+        //String state = mProfileState.getText().toString();
         String postCode = mProfilePostcode.getText().toString();
-        String country = mProfileCountry.getText().toString();
+        //String country = mProfileCountry.getText().toString();
 
         mSeller.setmFirstName(firstName);
         mSeller.setmLastName(lastName);
@@ -138,7 +186,7 @@ public class ProfileFragment extends Fragment {
         //TODO: Disabling state and country unless its fixed
         mSeller.setmState(null);
         mSeller.setmCountry(null);
-        
+
         mSeller.setmBusiness(businessName);
         mSeller.setmDescription(description);
 

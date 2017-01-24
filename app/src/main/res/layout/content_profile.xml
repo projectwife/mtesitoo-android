@@ -32,7 +32,7 @@
 
             <EditText
                 android:id="@+id/etBusiness"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -63,7 +63,7 @@
 
             <EditText
                 android:id="@+id/etDescription"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
@@ -72,7 +72,7 @@
                 android:hint="Enter Business Description"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#212121"
-                android:maxLines="2"/>
+                android:inputType="textMultiLine"/>
 
         </RelativeLayout>
 
@@ -96,7 +96,7 @@
 
             <EditText
                 android:id="@+id/etFirstName"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
@@ -126,7 +126,7 @@
 
             <EditText
                 android:id="@+id/etLastName"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/tvLastName"
@@ -155,14 +155,15 @@
                 android:layout_marginRight="@dimen/activity_horizontal_margin" />
 
             <EditText
-                android:id="@+id/etPassword"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:id="@+id/etPassword"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/tvPassword"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:password="true"
+                android:inputType="textPassword"
+                android:maxLength="20"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#212121"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -190,7 +191,7 @@
 
             <EditText
                 android:id="@+id/etPhone"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -198,7 +199,7 @@
                 android:layout_toRightOf="@id/ivPhone"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="123-456-7890"
+                android:inputType="phone"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#212121" />
 
@@ -223,7 +224,7 @@
 
             <EditText
                 android:id="@+id/etEmail"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -231,7 +232,8 @@
                 android:layout_toRightOf="@id/ivEmail"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="seller@socialcode.org"
+                android:inputType="textEmailAddress"
+                android:hint="seller@gmail.com"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#212121" />
 
@@ -256,7 +258,7 @@
 
             <EditText
                 android:id="@+id/etAddress1"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/ivAddress1"
@@ -301,7 +303,7 @@
 
             <EditText
                 android:id="@+id/etAddress2"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/ivAddress2"
@@ -344,7 +346,7 @@
                 android:layout_marginRight="@dimen/activity_horizontal_margin" />
             <EditText
                 android:id="@+id/etCity"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/ivCity"
@@ -377,51 +379,7 @@
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:padding="@dimen/activity_horizontal_margin">
-            <ImageView
-                android:id="@+id/ivState"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:src="@drawable/ic_location_on_black"
-                android:visibility="invisible"
-                android:layout_marginRight="@dimen/activity_horizontal_margin" />
-            <EditText
-                android:id="@+id/etState"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_toEndOf="@id/ivState"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:hint="Region/State"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_toRightOf="@id/ivState" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/etState"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="8dp"
-                android:layout_toEndOf="@id/ivState"
-                android:text="Region/State"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#727272"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_toRightOf="@id/ivState" />
-
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:padding="@dimen/activity_horizontal_margin">
-'
+            '
             <ImageView
                 android:id="@+id/ivPostCode"
                 android:layout_width="wrap_content"
@@ -433,13 +391,14 @@
                 android:layout_marginRight="@dimen/activity_horizontal_margin" />
             <EditText
                 android:id="@+id/etPostCode"
-                android:layout_width="wrap_content"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/ivPostCode"
                 android:ellipsize="end"
                 android:maxLines="1"
-                android:text="123456"
+                android:hint="123456"
+                android:inputType="number"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#212121"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -457,6 +416,49 @@
                 android:textColor="#727272"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_toRightOf="@id/ivPostCode" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="?attr/selectableItemBackground"
+            android:clickable="true"
+            android:padding="@dimen/activity_horizontal_margin">
+            <ImageView
+                android:id="@+id/ivState"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_location_on_black"
+                android:visibility="invisible"
+                android:layout_marginRight="@dimen/activity_horizontal_margin" />
+            <Spinner
+                android:id="@+id/spinnerState"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_toEndOf="@id/ivState"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:hint="Region/State"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:textColor="#212121"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_toRightOf="@id/ivState" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/spinnerState"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginTop="8dp"
+                android:layout_toEndOf="@id/ivState"
+                android:text="Region/State"
+                android:textAppearance="@style/TextAppearance.AppCompat.Small"
+                android:textColor="#727272"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_toRightOf="@id/ivState" />
 
         </RelativeLayout>
 
@@ -476,15 +478,13 @@
                 android:src="@drawable/ic_location_on_black"
                 android:visibility="invisible"
                 android:layout_marginRight="@dimen/activity_horizontal_margin" />
-            <EditText
-                android:id="@+id/etCountry"
-                android:layout_width="wrap_content"
+            <Spinner
+                android:id="@+id/spinnerCountry"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/ivCountry"
                 android:ellipsize="end"
-                android:maxLines="1"
-                android:text="Gambia"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#212121"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
@@ -493,7 +493,7 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@id/etCountry"
+                android:layout_below="@id/spinnerCountry"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@id/ivCountry"
