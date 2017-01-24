@@ -2,6 +2,7 @@ package com.mtesitoo.fragment;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -197,7 +198,9 @@ public class ProfileFragment extends Fragment {
                 sellerService.updateSellerProfile(mSeller, new ICallback<Seller>() {
                     @Override
                     public void onResult(Seller result) {
-                        Toast.makeText(mContext, R.string.profile_updated, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(mContext, R.string.profile_updated, Toast.LENGTH_LONG).show();
+                        Snackbar.make(getView(), getString(R.string.profile_updated),
+                                Snackbar.LENGTH_LONG).show();
                     }
 
                     @Override
