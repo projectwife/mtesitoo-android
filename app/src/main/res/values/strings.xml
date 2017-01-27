@@ -41,4 +41,5 @@
     <string name="product_quantity">Quantity</string>
 
     <string name="profile_updated">Profile Updated</string>
+    <string name="password_updated">Password Updated</string>
 </resources>

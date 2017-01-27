@@ -3,14 +3,9 @@ package com.mtesitoo.model;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Environment;
-import android.support.annotation.NonNull;
-
-import com.mtesitoo.R;
 
 import java.io.File;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.net.URI;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -19,6 +14,9 @@ import java.util.Date;
  */
 public class ImageFile extends File {
 
+    public ImageFile(String path) throws IOException {
+        super(path);
+    }
     public ImageFile(Context context) throws IOException {
         super(createImageFile(context).getAbsolutePath());
     }

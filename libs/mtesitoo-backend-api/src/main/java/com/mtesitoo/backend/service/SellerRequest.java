@@ -1,17 +1,23 @@
 package com.mtesitoo.backend.service;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Log;
 
+import com.android.volley.AuthFailureError;
+import com.mtesitoo.backend.MultipartRequest;
 import com.mtesitoo.backend.R;
-import com.mtesitoo.backend.model.header.Authorization;
 import com.mtesitoo.backend.model.AuthorizedStringRequest;
 import com.mtesitoo.backend.model.Seller;
 import com.mtesitoo.backend.model.URL;
+import com.mtesitoo.backend.model.header.Authorization;
 import com.mtesitoo.backend.model.url.VendorURL;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.ISellerRequest;
 
+import java.io.ByteArrayOutputStream;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -40,7 +46,7 @@ public class SellerRequest extends Request implements ISellerRequest {
         System.out.println("seller--" + seller);
         URL url = new URL(mContext, R.string.path_vendor_profile);
         Log.d("SellerProfile", "Updating Seller Profile: " + seller.toString());
-        RegistrationResponse response = new RegistrationResponse(callback);
+        SellerResponse response = new SellerResponse(callback);
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), response, response) {
             @Override
             protected Map<String, String> getParams() {
@@ -84,6 +90,80 @@ public class SellerRequest extends Request implements ISellerRequest {
 
         Log.d("mAuthorizationCache",mAuthorizationCache.getAuthorization());
         stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
+        mRequestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void submitProfileImage(final Uri imageUri, final ICallback<String> callback) {
+        URL url = new URL(mContext, R.string.path_vendor_profile_image);
+        final Uri image = imageUri;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(image.getPath());
+
+        int DESIREDWIDTH = 500;
+        int DESIREDHEIGHT = 500;
+
+        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bitmap, DESIREDWIDTH, DESIREDHEIGHT, true);
+        bitmap.recycle();
+
+        ByteArrayOutputStream baos = new ByteArrayOutputStream();
+        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+
+        final byte[] imageBytes = baos.toByteArray();
+
+        ProfileThumbnailResponse response = new ProfileThumbnailResponse(callback);
+
+        MultipartRequest multipartRequest =
+                new MultipartRequest(mContext, url.toString(), response, response){
+
+            @Override
+            protected Map<String, String> getParams() throws AuthFailureError {
+                return new HashMap<>();
+            }
+
+            @Override
+            protected Map<String, DataPart> getByteData() throws AuthFailureError {
+                Map<String, DataPart> params = new HashMap<>();
+                // file name could found file base or direct access from real path
+                // for now just get bitmap data from ImageView
+                params.put("file", new DataPart(image.getLastPathSegment(), imageBytes, "image/jpeg"));
+
+                return params;
+            }
+        };
+
+        multipartRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
+        mRequestQueue.add(multipartRequest);
+
+        resizedBitmap.recycle();
+    }
+
+    @Override
+    public void deleteProfileImage(ICallback<String> callback) {
+        URL url = new URL(mContext, R.string.path_vendor_profile_image);
+        ProfileThumbnailResponse response = new ProfileThumbnailResponse(callback);
+
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.DELETE, url.toString(), response, response);
+        stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
+        mRequestQueue.add(stringRequest);
+    }
+
+    @Override
+    public void updatePassword(final String oldPassword, final String newPassword, final ICallback<String> callback) {
+        URL url = new URL(mContext, R.string.path_admin_password);
+        UpdatePasswordResponse response = new UpdatePasswordResponse(callback);
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), response, response) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put(mContext.getString(R.string.params_admin_old_password), oldPassword);
+                params.put(mContext.getString(R.string.params_admin_new_password), newPassword);
+                return params;
+            }
+        };
+
+        stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
+
         mRequestQueue.add(stringRequest);
     }
 }

@@ -14,4 +14,7 @@
 
     <string name="params_admin_username">username</string>
     <string name="params_admin_password">password</string>
+
+    <string name="params_admin_old_password">old_password</string>
+    <string name="params_admin_new_password">new_password</string>
 </resources>
