@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
@@ -20,6 +21,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -62,11 +64,6 @@ public class ProfileFragment extends Fragment {
 
     @Bind(R.id.profileImage)
     ImageView mProfileImage;
-//    @Bind(R.id.profile_name)
-//    TextView mProfileName;
-//    @Bind(R.id.profile_username)
-//    TextView mProfileUsername;
-
     @Bind(R.id.etFirstName)
     EditText mFirstName;
     @Bind(R.id.etLastName)
@@ -94,6 +91,17 @@ public class ProfileFragment extends Fragment {
     @Bind(R.id.etPassword)
     EditText mPassword;
 
+    //Settings FAB
+    @Bind(R.id.layoutFabSave)
+    LinearLayout layoutFabSave;
+    @Bind(R.id.layoutFabEdit)
+    LinearLayout layoutFabEdit;
+    @Bind(R.id.layoutFabPhoto)
+    LinearLayout layoutFabPhoto;
+    @Bind(R.id.fabSetting)
+    FloatingActionButton fabSettings;
+    private boolean settingsFabExpanded = false;
+
     public static ProfileFragment newInstance(Context context, Seller seller) {
         mContext = context;
         mSeller = seller;
@@ -108,7 +116,39 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_profile, container, false);
         ButterKnife.bind(this, view);
+
+        fabSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (settingsFabExpanded == true){
+                    closeSettings();
+                } else {
+                    openSettings();
+                }
+            }
+        });
+
+        //Only main FAB is visible in the beginning
+        closeSettings();
+
         return view;
+    }
+
+    private void closeSettings(){
+        layoutFabSave.setVisibility(View.INVISIBLE);
+        layoutFabEdit.setVisibility(View.INVISIBLE);
+        layoutFabPhoto.setVisibility(View.INVISIBLE);
+        fabSettings.setImageResource(R.drawable.ic_settings_black_24dp);
+        settingsFabExpanded = false;
+    }
+
+    private void openSettings(){
+        layoutFabSave.setVisibility(View.VISIBLE);
+        layoutFabEdit.setVisibility(View.VISIBLE);
+        layoutFabPhoto.setVisibility(View.VISIBLE);
+        //Change settings icon to 'X' icon
+        fabSettings.setImageResource(R.drawable.ic_close_black_24dp);
+        settingsFabExpanded = true;
     }
 
     @Override
@@ -241,7 +281,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    @OnClick(R.id.manageProfilePhoto)
+    @OnClick(R.id.fabPhoto)
     public void onUpdateProfileImage(View view) {
         CharSequence options[] = new CharSequence[] {"Pick from Gallery", "Add an Image"};
         new AlertDialog.Builder(getActivity())
@@ -307,11 +347,16 @@ public class ProfileFragment extends Fragment {
                             }
                         });
                     }
+                }).setPositiveButton("Cancel",
+                    new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.dismiss();
+                        }
                 })
                 .show();
     }
 
-    @OnClick(R.id.updateProfile)
+    @OnClick(R.id.fabSave)
     public void onUpdateProfileClick(View view) {
         String businessName = mProfileCompanyName.getText().toString();
         String description = mProfileDescription.getText().toString();
@@ -414,13 +459,12 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    @OnClick(R.id.etPassword)
-    public void updatePassword() {
+    private void updatePassword(final String oldPassword, final String newPassword) {
         final ISellerRequest sellerService = new SellerRequest(mContext);
         sellerService.getSellerInfo(mSeller.getId(), new ICallback<Seller>() {
             @Override
             public void onResult(Seller result) {
-                sellerService.updatePassword("tesitoo1", "tesitoo", new ICallback<String>() {
+                sellerService.updatePassword(oldPassword, newPassword, new ICallback<String>() {
                     @Override
                     public void onResult(String result) {
                         Snackbar.make(getView(), getString(R.string.password_updated),
@@ -432,7 +476,7 @@ public class ProfileFragment extends Fragment {
                         String errorMsg = "";
 
                         if (e instanceof JSONException) {
-                            errorMsg = "Error updating profile: " + e.getMessage();
+                            errorMsg = "Error updating password: " + e.getMessage();
                         } else {
                             VolleyError err = (VolleyError) e;
                             if(err.networkResponse.data!=null) {
@@ -445,11 +489,11 @@ public class ProfileFragment extends Fragment {
                                 } catch (UnsupportedEncodingException encErr) {
                                     encErr.printStackTrace();
                                 } catch (JSONException jErr) {
-                                    errorMsg = "Error updating profile: " +jErr.getMessage();
+                                    errorMsg = "Error updating password: " +jErr.getMessage();
                                     jErr.printStackTrace();
                                 } finally {
                                     if(errorMsg.equals("")){
-                                        errorMsg = "Error updating profile";
+                                        errorMsg = "Error updating password";
                                     }
                                 }
                             }
@@ -478,7 +522,7 @@ public class ProfileFragment extends Fragment {
                         jErr.printStackTrace();
                     } finally {
                         if(errorMsg.equals("")){
-                            errorMsg = "Error updating profile";
+                            errorMsg = "Error updating password";
                         }
                     }
                 }
@@ -488,4 +532,75 @@ public class ProfileFragment extends Fragment {
         });
     }
 
+    @OnClick(R.id.fabPasswordEdit)
+    public void showPasswordPrompt() {
+
+        LayoutInflater layoutInflater = LayoutInflater.from(mContext);
+        View promptsView = layoutInflater.inflate(R.layout.profile_password_prompt, null);
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+        alertDialogBuilder.setView(promptsView);
+
+        final EditText oldPassword = (EditText) promptsView.findViewById(R.id.editTextOldPassword);
+        final EditText newPassword1 = (EditText) promptsView.findViewById(R.id.editTextNewPassword1);
+        final EditText newPassword2 = (EditText) promptsView.findViewById(R.id.editTextNewPassword2);
+
+        alertDialogBuilder
+                .setCancelable(false)
+                .setNegativeButton("Update",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                String oldPass = (oldPassword != null) ? oldPassword.getText().toString() : "";
+                                String newPass1 = (newPassword1 != null) ? newPassword1.getText().toString() : "";
+                                String newPass2 = (newPassword2 != null) ? newPassword2.getText().toString() : "";
+
+                                //verify new password
+                                if (!oldPass.isEmpty() && !newPass1.isEmpty() && !newPass2.isEmpty()
+                                        && newPass1.equals(newPass2)) {
+                                    updatePassword(oldPass, newPass1);
+                                } else {
+                                    String message;
+                                    if (oldPass.isEmpty()) {
+                                        message = "Don't forget to enter Old Password." + " \n \n" + "Please try again!";
+                                    } else if (newPass1.isEmpty()) {
+                                        message = "New Password can't be empty." + " \n \n" + "Please try again!";
+                                    } else if (newPass2.isEmpty()) {
+                                        message = "You need to re-enter new password." + " \n \n" + "Please try again!";
+                                    } else if (!newPass1.equals(newPass2)) {
+                                        message = "The new passwords don't match." + " \n \n" + "Please try again!";
+                                    } else {
+                                        message = "Something went wrong !" + " \n \n" + "Please try again!";
+                                    }
+
+                                    AlertDialog.Builder builder = new AlertDialog.Builder(mContext);
+                                    builder.setTitle("Error");
+                                    builder.setMessage(message);
+                                    builder.setPositiveButton("Cancel", null);
+                                    builder.setNegativeButton("Retry", new DialogInterface.OnClickListener() {
+                                        @Override
+                                        public void onClick(DialogInterface dialog, int id) {
+                                            showPasswordPrompt();
+                                        }
+                                    });
+                                    builder.create().show();
+
+                                }
+                            }
+                        })
+                .setPositiveButton("Cancel",
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+
+                        }
+
+                );
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
+
+    }
 }
