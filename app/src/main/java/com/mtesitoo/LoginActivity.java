@@ -162,54 +162,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 final Intent intent = new Intent(mContext, RegisterActivity.class);
                 mContext.startActivity(intent);
 
-//                ICountriesCache cache = new CountriesCache(mContext);
-//                List<Countries> countries = cache.getCountries();
-//                final String[] countriesNames = new String[countries.size()];
-//
-//                for (int i = 0; i < countries.size(); i++) {
-//                    countriesNames[i] = countries.get(i).getName();
-//                }
-//
-//                Arrays.sort(countriesNames);
-//
-//                final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-//                builder.setTitle("Where are you from?");
-//                builder.setItems(countriesNames, new DialogInterface.OnClickListener() {
-//                    @Override
-//                    public void onClick(DialogInterface dialog, int which) {
-//                        mEditor.putString("SelectedCountries", countriesNames[which]);
-//                        mEditor.apply();
-//
-//                        IZoneRequest zoneService = new ZoneRequest(mContext);
-//
-//                        zoneService.getZones(new ICallback<List<Zone>>() {
-//                            @Override
-//                            public void onResult(List<Zone> zones) {
-//
-//                                IZonesCache zonesCache = new ZoneCache(mContext);
-//                                zonesCache.storeZones(zones);
-//
-//                                List<Zone> zones1 = zones;
-//                                zonesNames = new String[zones1.size()];
-//
-//                                for (int i = 0; i < zones1.size(); i++) {
-//                                    zonesNames[i] = zones1.get(i).getName();
-//                                }
-//
-//                                final Intent intent = new Intent(mContext, RegistrationActivity.class);
-//                                mContext.startActivity(intent);
-//                                finish();
-//                            }
-//
-//                            @Override
-//                            public void onError(Exception e) {
-//                                Log.e("Zones", e.toString());
-//                            }
-//                        });
-//
-//                    }
-//                });
-//                builder.show();
                 break;
             }
 

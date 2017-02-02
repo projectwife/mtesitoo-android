@@ -79,12 +79,14 @@
         >
 
         <android.support.v7.widget.AppCompatButton
+            android:id="@+id/cancel_registration_button"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:text="Cancel"/>
 
         <android.support.v7.widget.AppCompatButton
+            android:id="@+id/register_user_button"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
