@@ -185,6 +185,10 @@ public class RegisterActivity extends AppCompatActivity {
 
     private boolean noEmptyFieds(){
 
+        firstName = firstName.trim();
+        lastName = lastName.trim();
+        phoneNumber = phoneNumber.trim();
+
         return  !firstName.equals("")
                 && !lastName.equals("")
                 && !phoneNumber.equals("");
