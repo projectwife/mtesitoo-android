@@ -40,8 +40,19 @@ public class SellerResponse implements Response.Listener<String>, Response.Error
         JSONObject jsonResponse = new JSONObject(response);
         JSONObject jsonSellerObject = jsonResponse.getJSONObject("vendor");
         JSONObject jsonSellerAddressObject = jsonSellerObject.getJSONObject("address");
-        JSONObject jsonSellerAddressCountryObject = jsonSellerAddressObject.getJSONObject("country");
-        JSONObject jsonSellerAddressStateObject = jsonSellerAddressObject.getJSONObject("zone");
+
+        JSONObject jsonSellerAddressCountryObject;
+        JSONObject jsonSellerAddressStateObject;
+
+        try{
+            jsonSellerAddressCountryObject =  jsonSellerAddressObject.getJSONObject("country");
+            jsonSellerAddressStateObject =  jsonSellerAddressObject.getJSONObject("zone");
+        }catch(JSONException e){
+            jsonSellerAddressCountryObject = new JSONObject();
+            jsonSellerAddressCountryObject.put("name", "");
+            jsonSellerAddressStateObject = new JSONObject();
+            jsonSellerAddressStateObject.put("name", "");
+        }
 
         return new Seller(Integer.parseInt(
                 jsonSellerObject.getString("vendor_id")),
