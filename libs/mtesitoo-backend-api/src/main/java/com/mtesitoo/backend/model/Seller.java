@@ -68,6 +68,10 @@ public class Seller implements Parcelable {
         this.mState = mState;
     }
 
+    public void setmZoneId(String mZoneId) {
+        this.mZoneId = mZoneId;
+    }
+
     public void setmPostcode(String mPostcode) {
         this.mPostcode = mPostcode;
     }

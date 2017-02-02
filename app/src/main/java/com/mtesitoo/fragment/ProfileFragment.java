@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
@@ -28,16 +29,16 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.mtesitoo.R;
-import com.mtesitoo.backend.cache.CountriesCache;
 import com.mtesitoo.backend.cache.ZoneCache;
-import com.mtesitoo.backend.cache.logic.ICountriesCache;
 import com.mtesitoo.backend.cache.logic.IZonesCache;
 import com.mtesitoo.backend.model.Countries;
 import com.mtesitoo.backend.model.Seller;
 import com.mtesitoo.backend.model.Zone;
 import com.mtesitoo.backend.service.SellerRequest;
+import com.mtesitoo.backend.service.ZoneRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.ISellerRequest;
+import com.mtesitoo.backend.service.logic.IZoneRequest;
 import com.mtesitoo.model.ImageFile;
 import com.squareup.picasso.Picasso;
 
@@ -47,6 +48,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -88,8 +90,6 @@ public class ProfileFragment extends Fragment {
     Spinner mProfileCountry;
     @Bind(R.id.etPostCode)
     TextView mProfilePostcode;
-    @Bind(R.id.etPassword)
-    EditText mPassword;
 
     //Settings FAB
     @Bind(R.id.layoutFabSave)
@@ -167,6 +167,8 @@ public class ProfileFragment extends Fragment {
             mProfileCompanyName.setText(mSeller.getmFirstName() + " " + mSeller.getmLastName());
         }
 
+        mFirstName.setText(mSeller.getmFirstName());
+        mLastName.setText(mSeller.getmLastName());
         mProfileAddress1.setText(mSeller.getmAddress1());
         mProfileAddress2.setText(mSeller.getmAddress2());
         mProfileTelephone.setText(mSeller.getmPhoneNumber());
@@ -175,13 +177,17 @@ public class ProfileFragment extends Fragment {
         mProfileCity.setText(mSeller.getmCity());
         mProfilePostcode.setText(mSeller.getmPostcode());
 
-        //TODO Spinner is blocked on incorrect population of countries and its zones
-        //mProfileState.setText(mSeller.getmState());
-        //mProfileCountry.setText(mSeller.getmCountry());
+        final SharedPreferences.Editor mEditor;
+        final SharedPreferences mPrefs;
+        mPrefs = mContext.getSharedPreferences("pref", Context.MODE_PRIVATE);
+        mEditor = mPrefs.edit();
 
-
-        ICountriesCache countriesCache = new CountriesCache(mContext);
-        ArrayList<Countries> countriesArrayList = (ArrayList<Countries>) countriesCache.getCountries();
+        //ICountriesCache countriesCache = new CountriesCache(mContext);
+        ArrayList<Countries> countriesArrayList = new ArrayList<Countries>();
+        //Note: hard-coding to Gambia.
+        countriesArrayList.add(new Countries(79, "Gambia"));
+        mEditor.putString("SelectedCountries", "79");
+        mEditor.apply();
 
         mProfileCountry.setAdapter(new ArrayAdapter<Countries>(mContext,
                 android.R.layout.simple_spinner_item,
@@ -191,32 +197,75 @@ public class ProfileFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 mProfileCountry.setSelection(i);
             }
-
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
 
+        ArrayList<Zone> zoneArrayList = new ArrayList<Zone>();
+        final ArrayAdapter[] zoneAdapter = {null};
         IZonesCache zoneCache = new ZoneCache(mContext);
-        ArrayList<Zone> zoneArrayList = (ArrayList<Zone>) zoneCache.GetZones();
+        zoneArrayList = (ArrayList<Zone>) zoneCache.GetZones();
+        if (zoneArrayList.isEmpty()) {
+            IZoneRequest zoneService = new ZoneRequest(mContext);
+            final String[][] zonesNames = {null};
+            final ArrayList<Zone> finalZoneArrayList = zoneArrayList;
+            zoneService.getZones(new ICallback<List<Zone>>() {
+                @Override
+                public void onResult(List<Zone> zones) {
+                    IZonesCache zonesCache = new ZoneCache(mContext);
+                    zonesCache.storeZones(zones);
 
-        mProfileState.setAdapter(new ArrayAdapter<Zone>(mContext,
-                android.R.layout.simple_spinner_item,
-                zoneArrayList));
+                    List<Zone> zones1 = zones;
+                    zonesNames[0] = new String[zones1.size()];
+
+                    for (int i = 0; i < zones1.size(); i++) {
+                        zonesNames[0][i] = zones1.get(i).getName();
+                        Zone zone = zones1.get(i);
+                        finalZoneArrayList.add(new Zone(zone.getId(), zone.getName(), zone.getName()));
+                    }
+
+                    zoneAdapter[0] = new ArrayAdapter<Zone>(mContext,
+                            android.R.layout.simple_spinner_item,
+                            finalZoneArrayList);
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.e("Zones", e.toString());
+                }
+            });
+
+        } else {
+            zoneAdapter[0] = new ArrayAdapter<Zone>(mContext,
+                    android.R.layout.simple_spinner_item,
+                    zoneArrayList);
+        }
+
+        mProfileState.setAdapter(zoneAdapter[0]);
         mProfileState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 mProfileState.setSelection(i);
             }
-
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
+            public void onNothingSelected(AdapterView<?> adapterView) {}
         });
+
+        mProfileState.setSelection(getSpinnerIndex(mProfileState, mSeller.getmState()));
+        mProfileCountry.setSelection(getSpinnerIndex(mProfileCountry, mSeller.getmCountry()));
     }
 
+    private int getSpinnerIndex(Spinner spinner, String myString) {
+        int index = 0;
+
+        for (int i=0;i<spinner.getCount();i++){
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
+                index = i;
+                break;
+            }
+        }
+        return index;
+    }
     public String getPath(Uri uri) {
         // just some safety built in
         if( uri == null ) {
@@ -368,9 +417,9 @@ public class ProfileFragment extends Fragment {
         String address1 = mProfileAddress1.getText().toString();
         String address2 = mProfileAddress2.getText().toString();
         String city = mProfileCity.getText().toString();
-        //String state = mProfileState.getText().toString();
         String postCode = mProfilePostcode.getText().toString();
-        //String country = mProfileCountry.getText().toString();
+        Countries country = (Countries) mProfileCountry.getSelectedItem();
+        Zone zone = (Zone)mProfileState.getSelectedItem();
 
         mSeller.setmFirstName(firstName);
         mSeller.setmLastName(lastName);
@@ -380,12 +429,11 @@ public class ProfileFragment extends Fragment {
         mSeller.setmAddress2(address2);
         mSeller.setmPostcode(postCode);
         mSeller.setmCity(city);
-        //TODO: Disabling state and country unless its fixed
-        mSeller.setmState(null);
-        mSeller.setmCountry(null);
+        mSeller.setmZoneId(String.valueOf(zone.getId()));
+        mSeller.setmCountry(String.valueOf(country.getId()));
 
         mSeller.setmBusiness(businessName);
-        mSeller.setmDescription(description);
+        mSeller.setmDescription(description.replace("\n", "<br>"));
 
         final ISellerRequest sellerService = new SellerRequest(mContext);
         sellerService.getSellerInfo(mSeller.getId(), new ICallback<Seller>() {
@@ -394,8 +442,10 @@ public class ProfileFragment extends Fragment {
                 sellerService.updateSellerProfile(mSeller, new ICallback<Seller>() {
                     @Override
                     public void onResult(Seller result) {
-                        Snackbar.make(getView(), getString(R.string.profile_updated),
-                                Snackbar.LENGTH_LONG).show();
+                        if (result == null) {
+                            Snackbar.make(getView(), getString(R.string.profile_updated),
+                                    Snackbar.LENGTH_LONG).show();
+                        }
                     }
 
                     @Override
