@@ -1,9 +1,11 @@
 package com.mtesitoo.backend.service;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
 
 import com.android.volley.AuthFailureError;
@@ -93,12 +95,28 @@ public class SellerRequest extends Request implements ISellerRequest {
         mRequestQueue.add(stringRequest);
     }
 
+    private String getRealPathFromURI(Uri contentURI) {
+        String result;
+        Cursor cursor = mContext.getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) {
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
+        return result;
+    }
+
     @Override
     public void submitProfileImage(final Uri imageUri, final ICallback<String> callback) {
         URL url = new URL(mContext, R.string.path_vendor_profile_image);
-        final Uri image = imageUri;
 
-        Bitmap bitmap = BitmapFactory.decodeFile(image.getPath());
+        String imageFilePath = getRealPathFromURI(imageUri);
+        final String imageFileName = imageFilePath.substring(imageFilePath.lastIndexOf("/")+1);
+
+        Bitmap bitmap = BitmapFactory.decodeFile(imageFilePath);
 
         int DESIREDWIDTH = 500;
         int DESIREDHEIGHT = 500;
@@ -124,9 +142,9 @@ public class SellerRequest extends Request implements ISellerRequest {
             @Override
             protected Map<String, DataPart> getByteData() throws AuthFailureError {
                 Map<String, DataPart> params = new HashMap<>();
-                // file name could found file base or direct access from real path
+                // file name could find file base or direct access from real path
                 // for now just get bitmap data from ImageView
-                params.put("file", new DataPart(image.getLastPathSegment(), imageBytes, "image/jpeg"));
+                params.put("file", new DataPart(imageFileName, imageBytes, "image/jpeg"));
 
                 return params;
             }

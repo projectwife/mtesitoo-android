@@ -1,17 +1,20 @@
 package com.mtesitoo.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.database.Cursor;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -45,7 +48,6 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
@@ -58,6 +60,7 @@ import butterknife.OnClick;
  * Created by Nan on 12/30/2015.
  */
 public class ProfileFragment extends Fragment {
+    final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     private static final int SELECT_PICTURE = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     private static Seller mSeller;
@@ -200,6 +203,7 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {}
         });
+        mProfileCountry.setSelection(getSpinnerIndex(mProfileCountry, mSeller.getmCountry()));
 
         ArrayList<Zone> zoneArrayList = new ArrayList<Zone>();
         final ArrayAdapter[] zoneAdapter = {null};
@@ -227,6 +231,8 @@ public class ProfileFragment extends Fragment {
                     zoneAdapter[0] = new ArrayAdapter<Zone>(mContext,
                             android.R.layout.simple_spinner_item,
                             finalZoneArrayList);
+                    mProfileState.setAdapter(zoneAdapter[0]);
+                    mProfileState.setSelection(getSpinnerIndex(mProfileState, mSeller.getmState()));
                 }
 
                 @Override
@@ -239,9 +245,11 @@ public class ProfileFragment extends Fragment {
             zoneAdapter[0] = new ArrayAdapter<Zone>(mContext,
                     android.R.layout.simple_spinner_item,
                     zoneArrayList);
+            mProfileState.setAdapter(zoneAdapter[0]);
+            mProfileState.setSelection(getSpinnerIndex(mProfileState, mSeller.getmState()));
         }
 
-        mProfileState.setAdapter(zoneAdapter[0]);
+
         mProfileState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
@@ -250,9 +258,6 @@ public class ProfileFragment extends Fragment {
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {}
         });
-
-        mProfileState.setSelection(getSpinnerIndex(mProfileState, mSeller.getmState()));
-        mProfileCountry.setSelection(getSpinnerIndex(mProfileCountry, mSeller.getmCountry()));
     }
 
     private int getSpinnerIndex(Spinner spinner, String myString) {
@@ -266,51 +271,29 @@ public class ProfileFragment extends Fragment {
         }
         return index;
     }
-    public String getPath(Uri uri) {
-        // just some safety built in
-        if( uri == null ) {
-            // TODO perform some logging or show user feedback
-            return null;
-        }
-        // try to retrieve the image from the media store first
-        // this will only work for images selected from gallery
-        String[] projection = { MediaStore.Images.Media.DATA };
-        Cursor cursor = getActivity().managedQuery(uri, projection, null, null, null);
-        if( cursor != null ){
-            int column_index = cursor
-                    .getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-            cursor.moveToFirst();
-            String path = cursor.getString(column_index);
-            return path;
-        }
-        // this is our fallback here
-        return uri.getPath();
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == SELECT_PICTURE && resultCode == Activity.RESULT_OK) {
-            final Uri selectedImageUri = data.getData();
-            String imagePath = getPath(selectedImageUri);
-            //Uri.fromFile(new File(imagePath))
-            ISellerRequest sellerRequest = new SellerRequest(this.getContext());
-            try {
-                sellerRequest.submitProfileImage(new ImageFile(imagePath).getUri(), new ICallback<String>() {
-                    @Override
-                    public void onResult(String result) {
-                        mProfileImage.setImageURI(selectedImageUri);
-                        Snackbar.make(getView(), "Profile Image Uploaded Successfully",
-                                Snackbar.LENGTH_SHORT).show();
-                    }
+        if (requestCode == SELECT_PICTURE && resultCode == Activity.RESULT_OK
+                && data != null && data.getData() != null) {
+            final Uri selectedImageURI = data.getData();
 
-                    @Override
-                    public void onError(Exception e) {
-                        Log.e("UploadImage", e.toString());
-                    }
-                });
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            ISellerRequest sellerRequest = new SellerRequest(this.getContext());
+            sellerRequest.submitProfileImage(selectedImageURI, new ICallback<String>() {
+                @Override
+                public void onResult(String result) {
+                    mProfileImage.setImageURI(selectedImageURI);
+                    Snackbar.make(getView(), "Profile Image Uploaded Successfully",
+                            Snackbar.LENGTH_SHORT).show();
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Snackbar.make(getView(), "Failed to upload profile Image",
+                            Snackbar.LENGTH_SHORT).show();
+                    Log.e("UploadImage", e.toString());
+                }
+            });
         } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_CAPTURE) {
 
             ISellerRequest sellerRequest = new SellerRequest(this.getContext());
@@ -325,13 +308,62 @@ public class ProfileFragment extends Fragment {
                 @Override
                 public void onError(Exception e) {
                     Log.e("UploadImage", e.toString());
+                    Snackbar.make(getView(), "Failed to upload profile Image",
+                            Snackbar.LENGTH_SHORT).show();
                 }
             });
         }
     }
 
+    private void requestPhotoPermissions() {
+        if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                Snackbar.make(getView(), "Please grant permissions to change profile photo", Snackbar.LENGTH_LONG).show();
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+
+            } else {
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+            }
+        } else if (ContextCompat.checkSelfPermission(getActivity(),
+                Manifest.permission.READ_EXTERNAL_STORAGE)
+                == PackageManager.PERMISSION_GRANTED) {
+            photoOps();
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String permissions[], int[] grantResults) {
+        switch (requestCode) {
+            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
+                if (grantResults.length > 0
+                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    // permission was granted, yay!
+                    photoOps();
+                } else {
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Snackbar.make(getView(), "Permissions Denied to access Photos", Snackbar.LENGTH_LONG).show();
+                }
+                return;
+            }
+        }
+    }
+
     @OnClick(R.id.fabPhoto)
     public void onUpdateProfileImage(View view) {
+       requestPhotoPermissions();
+    }
+
+    //If user has given needed permissions, then go ahead with accessing photos
+    private void photoOps() {
         CharSequence options[] = new CharSequence[] {"Pick from Gallery", "Add an Image"};
         new AlertDialog.Builder(getActivity())
                 .setTitle(getString(R.string.EditImages))
@@ -340,17 +372,11 @@ public class ProfileFragment extends Fragment {
                         Intent intent;
                         switch (which) {
                             case 0:
-                                Snackbar.make(getView(), "Not Supported", Snackbar.LENGTH_LONG).show();
-                                //TODO
-                                //Picking photo from gallery doesn't work due to issues in
-                                //reading file from external location other than app's data dir
-//                                intent = new Intent(
-//                                        Intent.ACTION_PICK,
-//                                        android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-//                                intent.setType("image/*");
-//                                intent.setAction(Intent.ACTION_GET_CONTENT);
-//                                startActivityForResult(Intent.createChooser(intent,
-//                                        "Select Picture"), SELECT_PICTURE);
+                                intent = new Intent(Intent.ACTION_PICK,
+                                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+                                intent.setType("image/*");
+                                intent.setAction(Intent.ACTION_GET_CONTENT);
+                                startActivityForResult(Intent.createChooser(intent, "Select Picture"), SELECT_PICTURE);
                                 break;
                             case 1:
                             default:
@@ -397,14 +423,14 @@ public class ProfileFragment extends Fragment {
                         });
                     }
                 }).setPositiveButton("Cancel",
-                    new DialogInterface.OnClickListener() {
-                        public void onClick(DialogInterface dialog, int id) {
-                            dialog.dismiss();
-                        }
+                new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
                 })
                 .show();
-    }
 
+    }
     @OnClick(R.id.fabSave)
     public void onUpdateProfileClick(View view) {
         String businessName = mProfileCompanyName.getText().toString();
