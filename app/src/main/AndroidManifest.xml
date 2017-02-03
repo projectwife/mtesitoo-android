@@ -54,7 +54,8 @@
             android:name="io.fabric.ApiKey"
             android:value="bb91c88fa1fa1da1333ff238412c101be60c4f97" />
 
-        <activity android:name=".RegisterActivity"></activity>
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".AddProductActivity2"></activity>
     </application>
 
 </manifest>
