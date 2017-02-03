@@ -146,13 +146,12 @@ public class RegisterActivity extends AppCompatActivity {
         });
     }
 
-    // Todo: make this better
     private boolean verifyInput(){
 
         boolean passwordsMatch = password.equalsIgnoreCase(confirmPassword);
 
-        if(!passwordsMatch){
-            displayToast("Passwords entered must match");
+        if(!noEmptyFieds()){
+            displayToast("All fields are required");
             return false;
         }
 
@@ -161,13 +160,13 @@ public class RegisterActivity extends AppCompatActivity {
             return false;
         }
 
-        if(!isValidEmailAddress()){
-            displayToast("Email address is not valid");
+        if(!passwordsMatch){
+            displayToast("Passwords entered must match");
             return false;
         }
 
-        if(!noEmptyFieds()){
-            displayToast("All fields are required");
+        if(!isValidEmailAddress()){
+            displayToast("Email address is not valid");
             return false;
         }
 
