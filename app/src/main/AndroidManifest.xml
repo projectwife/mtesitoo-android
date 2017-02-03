@@ -49,7 +49,6 @@
         <activity
             android:name=".OrderActivity"
             android:label="@string/title_activity_order" />
-        <activity android:name=".RegistrationActivity" />
 
         <meta-data
             android:name="io.fabric.ApiKey"
