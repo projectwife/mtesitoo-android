@@ -29,7 +29,15 @@
             android:layout_height="50dp"
             android:background="@drawable/border">
 
+            <ImageView
+                android:id="@+id/photo_display"
+                android:visibility="invisible"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop" />
+
             <TextView
+                android:id="@+id/add_photo_text"
                 android:gravity="center"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -39,6 +47,7 @@
         </RelativeLayout>
 
         <android.support.design.widget.TextInputLayout
+            android:paddingTop="16dp"
             android:layout_below="@+id/il_add_product_photo"
             android:id="@+id/il_add_product_name"
             android:layout_width="match_parent"
@@ -76,7 +85,7 @@
             android:layout_below="@id/il_add_product_description">
 
             <EditText
-                android:id="@+id/registration_confirm_password"
+                android:id="@+id/add_new_product_ppu"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Price per unit"
@@ -113,16 +122,18 @@
                 android:hint="Category"
                 android:enabled="false"/>
 
-            <LinearLayout
+            <GridLayout
+                android:id="@+id/category_grid"
                 android:layout_below="@+id/add_product_category_header"
-                android:id="@+id/leftCategories"
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingLeft="16dp"
+                android:columnCount="2">
 
                 <android.support.v7.widget.AppCompatCheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:paddingRight="32dp"
                     android:text="Vegetables"/>
 
                 <android.support.v7.widget.AppCompatCheckBox
@@ -135,16 +146,6 @@
                     android:layout_height="wrap_content"
                     android:text="Cereal"/>
 
-            </LinearLayout>
-
-            <LinearLayout
-                android:layout_below="@+id/add_product_category_header"
-                android:layout_toRightOf="@+id/leftCategories"
-                android:paddingLeft="48dp"
-                android:orientation="vertical"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content">
-
                 <android.support.v7.widget.AppCompatCheckBox
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -160,11 +161,7 @@
                     android:layout_height="wrap_content"
                     android:text="Other"/>
 
-            </LinearLayout>
-
-
-
-
+            </GridLayout>
 
         </RelativeLayout>
 

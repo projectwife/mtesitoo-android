@@ -12,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.mtesitoo.AddProductActivity;
+import com.mtesitoo.AddProductActivity2;
 import com.mtesitoo.R;
 import com.mtesitoo.adapter.ProductListAdapter;
 import com.mtesitoo.backend.model.Product;
@@ -50,7 +51,7 @@ public class ProductFragment extends ListFragment {
         switch(item.getItemId())
         {
             case R.id.action_add_product:
-                Intent intent = new Intent(getContext(), AddProductActivity.class);
+                Intent intent = new Intent(getContext(), AddProductActivity2.class);
                 startActivity(intent);
                 return true;
 
