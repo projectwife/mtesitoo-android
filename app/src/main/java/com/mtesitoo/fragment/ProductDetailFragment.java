@@ -23,6 +23,7 @@ import com.mtesitoo.backend.model.Product;
 import com.mtesitoo.backend.service.ProductRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.IProductRequest;
+import com.mtesitoo.helper.FormatHelper;
 
 import java.util.ArrayList;
 
@@ -119,7 +120,7 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
         mProduct = args.getParcelable(getString(R.string.bundle_product_key));
         productId = mProduct.getId();
         mProductName.setText(mProduct.getName());
-        mProductDescription.setText(mProduct.getDescription());
+        mProductDescription.setText(FormatHelper.formatDescription(mProduct.getDescription()));
         mProductLocation.setText(mProduct.getLocation());
         mProductCategory.setText(mProduct.getCategoriesStringList(this.getContext()));
         mProductExpiration.setText(mProduct.getExpiration().toString());

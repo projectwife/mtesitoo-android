@@ -1,5 +1,6 @@
 package com.mtesitoo.helper;
 
+import android.text.Html;
 import android.util.Log;
 
 import java.text.SimpleDateFormat;
@@ -20,5 +21,9 @@ public class FormatHelper {
     public static String formatPrice(String currency, double price)
     {
         return String.format("%s%,.2f", currency, price);
+    }
+
+    public static String formatDescription(String desc){
+        return Html.fromHtml(desc).toString();
     }
 }
