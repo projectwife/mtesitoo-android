@@ -42,9 +42,9 @@
                             style="@style/TextBoldTheme"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="Vendor" />
+                            android:text="Business" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/profile_name"
                             style="@style/TextTheme"
                             android:layout_width="wrap_content"
@@ -65,7 +65,7 @@
                             android:layout_height="wrap_content"
                             android:text="Telephone" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/profile_telephone"
                             style="@style/TextTheme"
                             android:layout_width="wrap_content"
@@ -86,7 +86,7 @@
                             android:layout_height="wrap_content"
                             android:text="Email" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/profile_email"
                             style="@style/TextTheme"
                             android:layout_width="wrap_content"
@@ -128,7 +128,7 @@
                             android:layout_height="wrap_content"
                             android:text="Display Name" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/profile_companyname"
                             style="@style/TextTheme"
                             android:layout_width="wrap_content"
@@ -163,13 +163,15 @@
                             android:layout_height="wrap_content"
                             android:text="Description" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/profile_description"
                             style="@style/TextTheme"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:text="..." />
+                            android:text="..."
+                            android:maxLines="3"
+                            android:hint="Enter Company Description here"/>
                     </RelativeLayout>
 
 
@@ -201,13 +203,14 @@
                             android:layout_height="wrap_content"
                             android:text="Address 1" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/profile_address1"
                             style="@style/TextTheme"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:text="..." />
+                            android:text="..."
+                            android:hint="Address 1"/>
                     </RelativeLayout>
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -221,13 +224,14 @@
                             android:layout_height="wrap_content"
                             android:text="Address 2" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/profile_address2"
                             style="@style/TextTheme"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-                            android:text="..." />
+                            android:text="..."
+                            android:hint="Address 2"/>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -242,14 +246,14 @@
                             android:layout_height="wrap_content"
                             android:text="City" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/profile_city"
                             style="@style/TextTheme"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-
-                            android:text="..." />
+                            android:text="..."
+                            android:hint="City"/>
                     </RelativeLayout>
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -263,7 +267,7 @@
                             android:layout_height="wrap_content"
                             android:text="State/Region" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/profile_state"
                             style="@style/TextTheme"
                             android:layout_width="wrap_content"
@@ -284,14 +288,15 @@
                             android:layout_height="wrap_content"
                             android:text="Country" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/profile_country"
                             style="@style/TextTheme"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
 
-                            android:text="..." />
+                            android:text="..."
+                            android:hint="Gambia"/>
                     </RelativeLayout>
 
                     <RelativeLayout
@@ -306,18 +311,24 @@
                             android:layout_height="wrap_content"
                             android:text="Post Code" />
 
-                        <TextView
+                        <EditText
                             android:id="@+id/profile_postcode"
                             style="@style/TextTheme"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_alignParentRight="true"
-
-                            android:text="..." />
+                            android:text="..."
+                            android:hint="Post Code"/>
                     </RelativeLayout>
                 </LinearLayout>
             </RelativeLayout>
 
+            <Button
+                android:id="@+id/update_profile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Update"
+                android:onClick="onClick"/>
         </LinearLayout>
     </ScrollView>
 </RelativeLayout>

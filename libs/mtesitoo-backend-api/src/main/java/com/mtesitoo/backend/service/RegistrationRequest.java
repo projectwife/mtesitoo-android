@@ -9,8 +9,6 @@ import com.mtesitoo.backend.model.Product;
 import com.mtesitoo.backend.model.Seller;
 import com.mtesitoo.backend.model.URL;
 import com.mtesitoo.backend.model.header.Authorization;
-import com.mtesitoo.backend.model.url.ProductImageURL;
-import com.mtesitoo.backend.model.url.VendorProductsURL;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.IRegistrationRequest;
 
@@ -63,8 +61,8 @@ public class RegistrationRequest extends Request implements IRegistrationRequest
                     params.put(mContext.getString(R.string.params_register_zone_id), seller.getmZoneId());
                 if (seller.getmPhoneNumber() != null)
                     params.put(mContext.getString(R.string.params_register_telephone), seller.getmPhoneNumber());
-                if (seller.getmCompany() != null)
-                    params.put(mContext.getString(R.string.params_register_company), seller.getmCompany());
+                if (seller.getmBusiness() != null)
+                    params.put(mContext.getString(R.string.params_register_company), seller.getmBusiness());
                 if (seller.getmAgree() != null)
                     params.put(mContext.getString(R.string.params_register_agree), seller.getmAgree());
 
