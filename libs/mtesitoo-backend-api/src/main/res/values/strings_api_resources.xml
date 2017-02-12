@@ -9,6 +9,7 @@
     <string name="params_product_quantity">quantity</string>
     <string name="params_product_meta_title">meta_title</string>
     <string name="params_product_category_ids">category_ids</string>
+    <string name="params_product_expiry">expiration_date</string>
     <string name="params_product_length_class_id">length_class_id</string>
     <string name="params_product_weight_class_id">weight_class_id</string>
     <string name="params_product_minimum">minimum</string>
