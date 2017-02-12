@@ -22,9 +22,14 @@ public class SellerResponse implements Response.Listener<String>, Response.Error
     public void onResponse(String response) {
         System.out.println(response);
         try {
-            Seller seller = parseResponse(response);
-           if (mCallback != null)
-                mCallback.onResult(seller);
+            if (response.isEmpty() || response.equals("\n")) {
+                if (mCallback != null)
+                    mCallback.onResult(null);
+            } else {
+                Seller seller = parseResponse(response);
+                if (mCallback != null)
+                    mCallback.onResult(seller);
+            }
         } catch (JSONException e) {
             if (mCallback != null)
                 mCallback.onError(e);
