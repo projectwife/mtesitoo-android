@@ -40,6 +40,8 @@ import com.mtesitoo.backend.model.Product;
 import com.mtesitoo.backend.service.ProductRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.IProductRequest;
+import com.mtesitoo.helper.FileHelper;
+import com.mtesitoo.helper.FormatHelper;
 import com.mtesitoo.model.ImageFile;
 
 import java.text.ParseException;
@@ -124,7 +126,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         buildImageSlider();
 
         mProductName.setText(mProduct.getName());
-        mProductDescription.setText(mProduct.getDescription());
+        mProductDescription.setText(FormatHelper.formatDescription(mProduct.getDescription()));
         mProductLocation.setText(mProduct.getLocation());
         mProductUnit.setText(mProduct.getSIUnit());
         mProductQuantity.setText(mProduct.getQuantity().toString());

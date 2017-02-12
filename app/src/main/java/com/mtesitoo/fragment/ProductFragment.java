@@ -1,5 +1,6 @@
 package com.mtesitoo.fragment;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -29,6 +30,7 @@ import java.util.List;
 public class ProductFragment extends ListFragment {
     private ProductListAdapter mProductListAdapter;
     private Seller mSeller;
+    ProgressDialog pd;
 
     public static ProductFragment newInstance(Context context, Seller seller) {
         ProductFragment fragment = new ProductFragment();
@@ -85,6 +87,9 @@ public class ProductFragment extends ListFragment {
     @Override
     public void onResume() {
         super.onResume();
+        pd = new ProgressDialog(this.getActivity());
+        pd.setMessage("Fetching products");
+        pd.show();
         updateProductList();
     }
 
@@ -95,10 +100,12 @@ public class ProductFragment extends ListFragment {
             @Override
             public void onResult(List<Product> result) {
                 mProductListAdapter.refresh((ArrayList<Product>) result);
+                pd.dismiss();
             }
 
             @Override
             public void onError(Exception e) {
+                pd.dismiss();
             }
         });
 
