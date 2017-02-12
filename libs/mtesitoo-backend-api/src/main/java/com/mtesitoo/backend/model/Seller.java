@@ -12,6 +12,77 @@ public class Seller implements Parcelable {
             "Phone Number", "Email", "Company", "Address1", "Address2", "City", "State", "Postcode", "Country", "Description", "Uri");
 
     private final Integer mId;
+    private final String mUsername;
+    private Uri mThumbnail;
+    private String mZoneId;
+    private String mAgree;
+    //Samuel added
+    private  String mPassword;
+
+    private String mFirstName;
+    private String mLastName;
+    private String mPhoneNumber;
+    private String mEmail;
+    private String mBusiness;
+    private String mAddress1;
+    private String mAddress2;
+    private String mCity;
+    private String mState;
+    private String mPostcode;
+    private String mDescription;
+    private String mCountry;
+
+    public void setmFirstName(String mFirstName) {
+        this.mFirstName = mFirstName;
+    }
+
+    public void setmLastName(String mLastName) {
+        this.mLastName = mLastName;
+    }
+
+    public void setmPhoneNumber(String mPhoneNumber) {
+        this.mPhoneNumber = mPhoneNumber;
+    }
+
+    public void setmEmail(String mEmail) {
+        this.mEmail = mEmail;
+    }
+
+    public void setmBusiness(String mBusiness) {
+        this.mBusiness = mBusiness;
+    }
+
+    public void setmAddress1(String mAddress1) {
+        this.mAddress1 = mAddress1;
+    }
+
+    public void setmAddress2(String mAddress2) {
+        this.mAddress2 = mAddress2;
+    }
+
+    public void setmCity(String mCity) {
+        this.mCity = mCity;
+    }
+
+    public void setmState(String mState) {
+        this.mState = mState;
+    }
+
+    public void setmZoneId(String mZoneId) {
+        this.mZoneId = mZoneId;
+    }
+
+    public void setmPostcode(String mPostcode) {
+        this.mPostcode = mPostcode;
+    }
+
+    public void setmDescription(String mDescription) {
+        this.mDescription = mDescription;
+    }
+
+    public void setmCountry(String mCountry) {
+        this.mCountry = mCountry;
+    }
 
     public String getmUsername() {
         return mUsername;
@@ -37,8 +108,8 @@ public class Seller implements Parcelable {
         return mEmail;
     }
 
-    public String getmCompany() {
-        return mCompany;
+    public String getmBusiness() {
+        return mBusiness;
     }
 
     public String getmCity() {
@@ -73,26 +144,9 @@ public class Seller implements Parcelable {
         return mThumbnail;
     }
 
-    private final String mUsername;
-    private final String mFirstName;
-    private final String mLastName;
-    private final String mPhoneNumber;
-    private final String mEmail;
-    private final String mCompany;
-    private final String mAddress1;
-    private final String mAddress2;
-    private final String mCity;
-    private final String mState;
-    private final String mPostcode;
-    private final String mDescription;
-    private final Uri mThumbnail;
-
     public String getmPassword() {
         return mPassword;
     }
-
-    //Samuel added
-    private  String mPassword;
 
     public String getmZoneId() {
         return mZoneId;
@@ -106,10 +160,6 @@ public class Seller implements Parcelable {
         return mCountry;
     }
 
-    private String mZoneId;
-    private String mAgree;
-    private String mCountry;
-
     private Seller(Parcel in) {
         this.mId = in.readInt();
         this.mUsername = in.readString();
@@ -117,7 +167,7 @@ public class Seller implements Parcelable {
         this.mLastName = in.readString();
         this.mPhoneNumber = in.readString();
         this.mEmail = in.readString();
-        this.mCompany = in.readString();
+        this.mBusiness = in.readString();
         this.mAddress1 = in.readString();
         this.mAddress2 = in.readString();
         this.mCity = in.readString();
@@ -150,7 +200,7 @@ public class Seller implements Parcelable {
         mLastName = lastName;
         mPhoneNumber = phoneNumber;
         mEmail = email;
-        mCompany = company;
+        mBusiness = company;
         mAddress1 = address1;
         mAddress2 = address2;
         mCity = city;
@@ -166,7 +216,7 @@ public class Seller implements Parcelable {
         System.out.println("mLastName "  + mLastName);
         System.out.println("mPhoneNumber " + mPhoneNumber);
         System.out.println("mEmail " + mEmail);
-        System.out.println("mCompany " + mCompany);
+        System.out.println("mBusiness " + mBusiness);
         System.out.println("mAddress1 " + mAddress1);
         System.out.println("mAddress2 " + mAddress2);
         System.out.println("mCity " + mCity);
@@ -186,7 +236,7 @@ public class Seller implements Parcelable {
         mLastName = lastName.trim();
         mPhoneNumber = phoneNumber.trim();
         mEmail = email.trim();
-        mCompany = company.trim();
+        mBusiness = company.trim();
         mAddress1 = address1.trim();
         mAddress2 = address2.trim();
         mCity = city.trim();
@@ -220,7 +270,7 @@ public class Seller implements Parcelable {
             return false;
         if (mEmail != null ? !mEmail.equals(seller.mEmail) : seller.mEmail != null)
             return false;
-        if (mCompany != null ? !mCompany.equals(seller.mCompany) : seller.mCompany != null)
+        if (mBusiness != null ? !mBusiness.equals(seller.mBusiness) : seller.mBusiness != null)
             return false;
         if (mAddress1 != null ? !mAddress1.equals(seller.mAddress1) : seller.mAddress1 != null)
             return false;
@@ -247,7 +297,7 @@ public class Seller implements Parcelable {
         result = 31 * result + (mLastName != null ? mLastName.hashCode() : 0);
         result = 31 * result + (mPhoneNumber != null ? mPhoneNumber.hashCode() : 0);
         result = 31 * result + (mEmail != null ? mEmail.hashCode() : 0);
-        result = 31 * result + (mCompany != null ? mCompany.hashCode() : 0);
+        result = 31 * result + (mBusiness != null ? mBusiness.hashCode() : 0);
         result = 31 * result + (mAddress1 != null ? mAddress1.hashCode() : 0);
         result = 31 * result + (mAddress2 != null ? mAddress2.hashCode() : 0);
         result = 31 * result + (mCity != null ? mCity.hashCode() : 0);
@@ -273,7 +323,7 @@ public class Seller implements Parcelable {
         dest.writeString(mLastName);
         dest.writeString(mPhoneNumber);
         dest.writeString(mEmail);
-        dest.writeString(mCompany);
+        dest.writeString(mBusiness);
         dest.writeString(mAddress1);
         dest.writeString(mAddress2);
         dest.writeString(mCity);
@@ -301,7 +351,7 @@ public class Seller implements Parcelable {
                 ", mLastName='" + mLastName + '\'' +
                 ", mPhoneNumber='" + mPhoneNumber + '\'' +
                 ", mEmail='" + mEmail + '\'' +
-                ", mCompany='" + mCompany + '\'' +
+                ", mBusiness='" + mBusiness + '\'' +
                 ", mCity='" + mCity + '\'' +
                 ", mPostcode='" + mPostcode + '\'' +
                 ", mThumbnail=" + mThumbnail +

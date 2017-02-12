@@ -43,4 +43,9 @@ public class Zone {
     public String getName() {
         return mName;
     }
+
+    @Override
+    public String toString() {
+        return mName;
+    }
 }
