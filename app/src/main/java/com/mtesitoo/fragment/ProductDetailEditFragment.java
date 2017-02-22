@@ -41,10 +41,13 @@ import com.mtesitoo.backend.service.ProductRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.IProductRequest;
 import com.mtesitoo.helper.FileHelper;
+import com.mtesitoo.helper.FormatHelper;
 import com.mtesitoo.model.ImageFile;
 
-import java.io.IOException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -54,7 +57,7 @@ import butterknife.ButterKnife;
 /**
  * Created by Nan on 12/31/2015.
  */
-public class ProductDetailEditFragment extends Fragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener {
+public class ProductDetailEditFragment extends Fragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener, View.OnClickListener{
     private static final int REQUEST_IMAGE_CAPTURE = 1;
     private static final int MAX_IMAGES = 3;
     private static final int IMAGE_SLIDER_DURATION = 8000;
@@ -80,6 +83,8 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     EditText mProductLocation;
     @Bind(R.id.product_detail_category_container)
     LinearLayout mProductCategoryContainer;
+    @Bind(R.id.product_detail_expiration_edit)
+    EditText mProductExpiration;
 
     @Bind(R.id.product_detail_unit_edit)
     EditText mProductUnit;
@@ -87,9 +92,6 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     EditText mProductQuantity;
     @Bind(R.id.product_detail_price_edit)
     EditText mProductPrice;
-
-//    @Bind(R.id.product_detail_expiration_date_edit)
-//    EditText mProductExpirationDate;
 
     public static ProductDetailEditFragment newInstance(Context context, Product product) {
         ProductDetailEditFragment fragment = new ProductDetailEditFragment();
@@ -124,15 +126,16 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         buildImageSlider();
 
         mProductName.setText(mProduct.getName());
-        mProductDescription.setText(mProduct.getDescription());
+        mProductDescription.setText(FormatHelper.formatDescription(mProduct.getDescription()));
         mProductLocation.setText(mProduct.getLocation());
         mProductUnit.setText(mProduct.getSIUnit());
         mProductQuantity.setText(mProduct.getQuantity().toString());
         mProductPrice.setText(mProduct.getPricePerUnit());
-        //mProductExpirationDate.setText(mProduct.getExpiration().toString());
+        mProductExpiration.setText(mProduct.getExpirationFormattedForApp());
 
         updateEditTextLengths();
         updateBorderPaddings();
+        mProductExpiration.setOnClickListener(this);
     }
 
     @Override
@@ -157,6 +160,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         int id = item.getItemId();
+        Date expiryDate;
 
         if (id == R.id.action_done_edit_product){
             int catID = categoryButtonGroup.indexOfChild(getActivity().findViewById(categoryButtonGroup.getCheckedRadioButtonId()));
@@ -172,6 +176,12 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
                 }
             }
 
+            try {
+                expiryDate = getDateFromDateField();
+            } catch (ParseException e) {
+                expiryDate = mProduct.getExpiration();
+            }
+
             // Save product here
             final Product updatedProduct = new Product(
                     mProduct.getId(),
@@ -182,7 +192,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
                     mProductUnit.getText().toString(),
                     mProductPrice.getText().toString(),
                     Integer.parseInt(mProductQuantity.getText().toString()),
-                    new Date(),
+                    expiryDate,
                     mProduct.getmThumbnail(),
                     mProduct.getAuxImages()
             );
@@ -412,8 +422,8 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         params = mProductPrice.getLayoutParams();
         params.width = (int) (metrics.widthPixels * 0.5);
 
-//        params = mProductExpirationDate.getLayoutParams();
-//        params.width = (int) (metrics.widthPixels * 0.5);
+        params = mProductExpiration.getLayoutParams();
+        params.width = (int) (metrics.widthPixels * 0.5);
     }
 
     private void updateBorderPaddings() {
@@ -445,6 +455,49 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         if(mImages.size() <= 1){
             mImageSlider.stopAutoCycle();
             mImageSlider.setIndicatorVisibility(PagerIndicator.IndicatorVisibility.Invisible);
+        }
+    }
+
+    public void onClick(View view){
+
+        if (view == mProductExpiration) {
+            DatePickerDialogFragment datePickerDialog = new DatePickerDialogFragment();
+
+            Calendar calendar = Calendar.getInstance();
+            try {
+                calendar.setTime(getDateFromDateField());
+            } catch (ParseException e) {
+                // Log
+            }
+
+            Bundle args = new Bundle();
+            args.putInt("year", calendar.get(Calendar.YEAR));
+            args.putInt("month", calendar.get(Calendar.MONTH));
+            args.putInt("day", calendar.get(Calendar.DAY_OF_MONTH));
+            datePickerDialog.setArguments(args);
+
+            DatePickerDialog.OnDateSetListener onDate = new DatePickerDialog.OnDateSetListener() {
+
+                public void onDateSet(DatePicker view, int year, int month,
+                                      int day) {
+
+                    mProductExpiration.setText(String.valueOf(year) + "-" + String.valueOf(month+1)
+                            + "-" + String.valueOf(day));
+                }
+            };
+
+            datePickerDialog.setCallBack(onDate);
+            datePickerDialog.show(getFragmentManager(), "Date Picker");
+        }
+    }
+
+    private Date getDateFromDateField() throws ParseException {
+        final SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        try {
+            return dateFormat.parse(mProductExpiration.getText().toString());
+        } catch (ParseException e) {
+            throw e;
         }
     }
 }

@@ -11,7 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.daimajia.slider.library.Indicators.PagerIndicator;
 import com.daimajia.slider.library.SliderLayout;
@@ -23,6 +22,8 @@ import com.mtesitoo.backend.model.Product;
 import com.mtesitoo.backend.service.ProductRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.IProductRequest;
+import com.mtesitoo.helper.FormatHelper;
+
 
 import java.util.ArrayList;
 
@@ -53,6 +54,8 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
     TextView mProductLocation;
     @Bind(R.id.product_detail_category)
     TextView mProductCategory;
+    @Bind(R.id.product_detail_expiration)
+    TextView mProductExpiration;
 
     @Bind(R.id.product_detail_unit)
     TextView mProductUnit;
@@ -63,8 +66,6 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
 
     @Bind(R.id.product_detail_posting_date)
     TextView mProductPostingDate;
-//    @Bind(R.id.product_detail_expiration_date)
-//    TextView mProductExpirationDate;
 
     ArrayList<Uri> auxImages;
     int productId;
@@ -117,13 +118,13 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
         mProduct = args.getParcelable(getString(R.string.bundle_product_key));
         productId = mProduct.getId();
         mProductName.setText(mProduct.getName());
-        mProductDescription.setText(mProduct.getDescription());
+        mProductDescription.setText(FormatHelper.formatDescription(mProduct.getDescription()));
         mProductLocation.setText(mProduct.getLocation());
         mProductCategory.setText(mProduct.getCategoriesStringList(this.getContext()));
+        mProductExpiration.setText(mProduct.getExpirationFormattedForApp());
         mProductUnit.setText(mProduct.getSIUnit());
         mProductQuantity.setText(mProduct.getQuantity().toString());
         mProductPrice.setText(mProduct.getPricePerUnit());
-       //mProductExpirationDate.setText(mProduct.getExpiration().toString());
 
         updateImageSlider();
         updateBorderPaddings();
