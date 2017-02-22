@@ -40,6 +40,7 @@
     <string name="path_vendor_profile_image">/vendor/profile_image</string>
 
     <string name="path_admin_password">/admin/password</string>
+    <string name="path_admin_forgot_password">/admin/forgot_password</string>
 
     <string name="path_product_vendor">/product/vendor</string>
     <string name="path_product_category">/product/category</string>

@@ -106,4 +106,15 @@
         android:layout_alignRight="@+id/password_holder"
         android:layout_alignEnd="@+id/password_holder" />
 
+    <Button
+        style="?android:attr/buttonStyleSmall"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Forgot Password"
+        android:id="@+id/forgotPassword"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/password_holder"
+        android:layout_alignStart="@+id/password_holder"
+        android:onClick="onClick (LoginActivity)" />
+
 </RelativeLayout>

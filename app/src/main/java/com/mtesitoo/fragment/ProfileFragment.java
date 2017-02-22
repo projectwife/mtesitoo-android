@@ -105,9 +105,20 @@ public class ProfileFragment extends Fragment {
     FloatingActionButton fabSettings;
     private boolean settingsFabExpanded = false;
 
+    //Password reset flag
+    private static boolean resetPasswordFlag = false;
+    private static String mTempPasswordToken = null;
+
     public static ProfileFragment newInstance(Context context, Seller seller) {
+        return newInstance(context, seller, false, null);
+    }
+
+    public static ProfileFragment newInstance(Context context, Seller seller,
+                                              boolean resetPassword, String token) {
         mContext = context;
         mSeller = seller;
+        resetPasswordFlag = resetPassword;
+        mTempPasswordToken = token;
         ProfileFragment fragment = new ProfileFragment();
         Bundle args = new Bundle();
         args.putParcelable(context.getString(R.string.bundle_seller_key), seller);
@@ -119,6 +130,10 @@ public class ProfileFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.frag_profile, container, false);
         ButterKnife.bind(this, view);
+
+        if (resetPasswordFlag && mTempPasswordToken != null) {
+            showPasswordPrompt();
+        }
 
         fabSettings.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -619,6 +634,10 @@ public class ProfileFragment extends Fragment {
         final EditText oldPassword = (EditText) promptsView.findViewById(R.id.editTextOldPassword);
         final EditText newPassword1 = (EditText) promptsView.findViewById(R.id.editTextNewPassword1);
         final EditText newPassword2 = (EditText) promptsView.findViewById(R.id.editTextNewPassword2);
+
+        if (mTempPasswordToken != null) {
+            oldPassword.setText(mTempPasswordToken);
+        }
 
         alertDialogBuilder
                 .setCancelable(false)
