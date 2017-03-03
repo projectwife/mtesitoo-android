@@ -100,7 +100,9 @@ public class ProductFragment extends ListFragment {
             @Override
             public void onResult(List<Product> result) {
                 mProductListAdapter.refresh((ArrayList<Product>) result);
-                pd.dismiss();
+                if (pd != null) {
+                    pd.dismiss();
+                }
             }
 
             @Override

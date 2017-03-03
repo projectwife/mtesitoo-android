@@ -26,6 +26,7 @@
         android:orientation="horizontal">
 
         <EditText
+            android:text="prityainbox@gmail.com"
             android:id="@+id/user_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -61,6 +62,7 @@
         android:orientation="horizontal">
 
         <EditText
+            android:text="tesitoo"
             android:id="@+id/password"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
