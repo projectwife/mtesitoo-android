@@ -13,4 +13,5 @@ public interface ISellerRequest {
     void submitProfileImage(final Uri imageUri, final ICallback<String> callback);
     void deleteProfileImage(final ICallback<String> callback);
     void updatePassword(final String oldPassword, final String newPassword, final ICallback<String> callback);
+    void forgotPassword(final String username, final ICallback<String> callback);
 }

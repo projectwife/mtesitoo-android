@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
@@ -40,7 +41,6 @@ import com.mtesitoo.backend.model.Product;
 import com.mtesitoo.backend.service.ProductRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.IProductRequest;
-import com.mtesitoo.helper.FileHelper;
 import com.mtesitoo.helper.FormatHelper;
 import com.mtesitoo.model.ImageFile;
 
@@ -59,8 +59,8 @@ import butterknife.ButterKnife;
  */
 public class ProductDetailEditFragment extends Fragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener, View.OnClickListener{
     private static final int REQUEST_IMAGE_CAPTURE = 1;
-    private static final int MAX_IMAGES = 3;
     private static final int IMAGE_SLIDER_DURATION = 8000;
+    private static final int MAX_IMAGES = Product.MAX_AUX_IMAGES;
 
     private Product mProduct;
     private ArrayList<ImageFile> mImages;
@@ -227,6 +227,11 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     @Override
     public void onSliderClick(final BaseSliderView slider) {
 
+        if (mProduct.getAuxImages().size() >= MAX_IMAGES) {
+            Snackbar.make(getView(), "Can't upload more than " + MAX_IMAGES + " pictures. Pick your best pictures !", Snackbar.LENGTH_LONG).show();
+            return;
+        }
+
         new AlertDialog.Builder(getActivity())
                 .setTitle(getString(R.string.EditImages))
                 .setPositiveButton("Add an image", new DialogInterface.OnClickListener() {
@@ -296,22 +301,26 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_CAPTURE) {
-            mImages.add(0,currentImage);
-            mProduct.addImage(currentImage.getUri());
-            updateImageSlider();
+            boolean isImageAdded = mProduct.addImage(currentImage.getUri());
+            if (isImageAdded) {
+                mImages.add(0, currentImage);
+                updateImageSlider();
 
-            IProductRequest productService = new ProductRequest(this.getContext());
-            productService.submitProductImage(mProduct, new ICallback<String>() {
-                @Override
-                public void onResult(String result) {
-                    Toast.makeText(getContext(), "Product Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
-                }
+                IProductRequest productService = new ProductRequest(this.getContext());
+                productService.submitProductImage(mProduct, new ICallback<String>() {
+                    @Override
+                    public void onResult(String result) {
+                        Toast.makeText(getContext(), "Product Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                    }
 
-                @Override
-                public void onError(Exception e) {
-                    Log.e("UploadImage", e.toString());
-                }
-            });
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("UploadImage", e.toString());
+                    }
+                });
+            } else {
+                Snackbar.make(getView(), "Can't upload more than " + MAX_IMAGES + " pictures. Pick your best pictures !", Snackbar.LENGTH_LONG).show();
+            }
         }
     }
 

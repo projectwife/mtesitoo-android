@@ -2,7 +2,6 @@ package com.mtesitoo;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -14,8 +13,6 @@ import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
 import com.mikepenz.materialdrawer.Drawer;
 import com.mikepenz.materialdrawer.DrawerBuilder;
-import com.mikepenz.materialdrawer.holder.BadgeStyle;
-import com.mikepenz.materialdrawer.holder.StringHolder;
 import com.mikepenz.materialdrawer.model.ProfileDrawerItem;
 import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
@@ -34,6 +31,7 @@ import butterknife.ButterKnife;
 public class HomeActivity extends AppCompatActivity {
     private Context mContext;
     private Seller mSeller;
+    private boolean resetPassword = false;
 
     private AccountHeader headerResult = null;
     private Drawer result = null;
@@ -47,13 +45,23 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_home);
         ButterKnife.bind(this);
         mContext = this;
+
         mSeller = getIntent().getExtras().getParcelable(getString(R.string.bundle_seller_key));
+        resetPassword = getIntent().getBooleanExtra(getString(R.string.automatic_login_key), false);
 
         setSupportActionBar(toolbar);
         buildNavigationDrawer();
 
         ProductFragment f = ProductFragment.newInstance(this, mSeller);
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
+
+        if (resetPassword) {
+            String token = getIntent().getExtras().getString(getString(R.string.automatic_login_token));
+            ProfileFragment profileFragment = ProfileFragment.newInstance(mContext, mSeller, resetPassword, token);
+            getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, profileFragment).addToBackStack(null).commit();
+
+            return;
+        }
     }
 
     public void buildNavigationDrawer() {
@@ -151,7 +159,7 @@ public class HomeActivity extends AppCompatActivity {
                         return false;
                     }
                 })
-                .withShowDrawerOnFirstLaunch(true)
+                .withShowDrawerOnFirstLaunch(!resetPassword)
                 .withSelectedItem(-1)
                 .build();
 

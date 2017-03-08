@@ -184,4 +184,22 @@ public class SellerRequest extends Request implements ISellerRequest {
 
         mRequestQueue.add(stringRequest);
     }
+
+    @Override
+    public void forgotPassword(final String username, final ICallback<String> callback) {
+        URL url = new URL(mContext, R.string.path_admin_password);
+        ForgotPasswordResponse response = new ForgotPasswordResponse(callback);
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), response, response) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put(mContext.getString(R.string.params_admin_username), username);
+                return params;
+            }
+        };
+
+        stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
+
+        mRequestQueue.add(stringRequest);
+    }
 }

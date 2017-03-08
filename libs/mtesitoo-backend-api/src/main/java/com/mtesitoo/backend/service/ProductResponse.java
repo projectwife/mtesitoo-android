@@ -4,9 +4,6 @@ import android.net.Uri;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.mtesitoo.backend.cache.CategoryCache;
-import com.mtesitoo.backend.cache.logic.ICategoryCache;
-import com.mtesitoo.backend.model.Category;
 import com.mtesitoo.backend.model.Product;
 import com.mtesitoo.backend.service.logic.ICallback;
 
@@ -47,6 +44,11 @@ public class ProductResponse implements Response.Listener<String>, Response.Erro
     }
 
     public List<Product> parseResponse(String response) throws JSONException {
+        //handling empty response from server
+        if (response.isEmpty()) {
+            return new ArrayList<>();
+        }
+
         JSONArray jsonProducts = new JSONArray(response);
 
         List<Product> result = new ArrayList<>(jsonProducts.length());

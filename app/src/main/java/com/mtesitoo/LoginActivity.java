@@ -7,18 +7,18 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-
+import android.text.InputType;
 import android.util.Log;
 import android.view.View;
-
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.LoginEvent;
-import com.crashlytics.android.answers.SignUpEvent;
 import com.mtesitoo.backend.cache.AuthorizationCache;
 import com.mtesitoo.backend.cache.CategoryCache;
 import com.mtesitoo.backend.cache.CountriesCache;
@@ -37,28 +37,29 @@ import com.mtesitoo.backend.model.Zone;
 import com.mtesitoo.backend.service.CategoryRequest;
 import com.mtesitoo.backend.service.CommonRequest;
 import com.mtesitoo.backend.service.CountriesRequest;
+import com.mtesitoo.backend.service.ForgotPasswordRequest;
 import com.mtesitoo.backend.service.LoginRequest;
 import com.mtesitoo.backend.service.SellerRequest;
 import com.mtesitoo.backend.service.ZoneRequest;
+import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.ICategoryRequest;
 import com.mtesitoo.backend.service.logic.ICommonRequest;
 import com.mtesitoo.backend.service.logic.ICountriesRequest;
+import com.mtesitoo.backend.service.logic.IForgotPasswordRequest;
 import com.mtesitoo.backend.service.logic.ILoginRequest;
-import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.ISellerRequest;
 import com.mtesitoo.backend.service.logic.IZoneRequest;
 
-import io.fabric.sdk.android.Fabric;
-import java.text.Collator;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.UnsupportedEncodingException;
 import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
+import io.fabric.sdk.android.Fabric;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private Context mContext;
@@ -77,82 +78,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         switch (view.getId()) {
             case R.id.login: {
                 final Intent intent = new Intent(this, HomeActivity.class);
-                final ILoginRequest loginService = new LoginRequest(this);
-
-                loginService.authenticateUser(mUsername.getText().toString().trim(), mPassword.getText().toString(), new ICallback<String>() {
-                    @Override
-                    public void onResult(String result) {
-
-                        Log.d("LOGIN - RESULT", result);
-                        ICategoryRequest categoryService = new CategoryRequest(mContext);
-                        ISellerRequest sellerService = new SellerRequest(mContext);
-                        ICommonRequest commonService = new CommonRequest(mContext);
-
-                        commonService.getLengthUnits(new ICallback<List<Unit>>() {
-                            @Override
-                            public void onResult(List<Unit> units) {
-                                IUnitCache cache = new UnitCache(mContext);
-                                cache.storeLengthUnits(units);
-                            }
-
-                            @Override
-                            public void onError(Exception e) {
-                                Log.e("LengthUnits", e.toString());
-                            }
-                        });
-
-                        commonService.getWeightUnits(new ICallback<List<Unit>>() {
-                            @Override
-                            public void onResult(List<Unit> units) {
-                                IUnitCache cache = new UnitCache(mContext);
-                                cache.storeWeightUnits(units);
-                            }
-
-                            @Override
-                            public void onError(Exception e) {
-                                Log.e("WeightUnits", e.toString());
-                            }
-                        });
-
-                        categoryService.getCategories(new ICallback<List<Category>>() {
-                            @Override
-                            public void onResult(List<Category> categories) {
-                                ICategoryCache cache = new CategoryCache(mContext);
-                                cache.storeCategories(categories);
-                            }
-
-                            @Override
-                            public void onError(Exception e) {
-                                Log.e("Categories", e.toString());
-                            }
-                        });
-
-                        sellerService.getSellerInfo(Integer.parseInt(result), new ICallback<Seller>() {
-                            @Override
-                            public void onResult(Seller result) {
-                                Log.d("Login - Seller Info", result.toString());
-
-                                logUser(result);
-                                logSuccessLogin(result);
-                                intent.putExtra(mContext.getString(R.string.bundle_seller_key), result);
-                                mContext.startActivity(intent);
-                                finish();
-                            }
-
-                            @Override
-                            public void onError(Exception e) {
-                                Log.e("getSellerInfo", e.toString());
-                            }
-                        });
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        Log.e("AuthenticateUser", e.toString());
-                        logFailLogin(mUsername.getText().toString(),e);
-                        Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
-                    }
-                });
+                logInUser(intent, null, null, false);
                 break;
             }
 
@@ -210,10 +136,165 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 break;
             }
 
-        }
+            case R.id.forgotPassword: {
 
+                AlertDialog.Builder builder = new AlertDialog.Builder(this);
+                builder.setTitle("Enter your registered email address");
+
+                final EditText input = new EditText(this);
+                input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_EMAIL_ADDRESS);
+                builder.setView(input);
+                builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //send request to forgot password API
+                        String username = input.getText().toString();
+                        if (!username.isEmpty()) {
+                            forgotPassword(username);
+                        }
+                    }
+                });
+                builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.cancel();
+                    }
+                });
+
+                builder.show();
+                break;
+            }
+        }
     }
 
+    private void forgotPassword(final String username) {
+        final IForgotPasswordRequest forgotPasswordRequest = new ForgotPasswordRequest(mContext);
+        forgotPasswordRequest.forgotPassword(username, new ICallback<String>() {
+            @Override
+            public void onResult(String result) {
+                Toast.makeText(mContext, getString(R.string.forgot_password_request), Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                VolleyError err = (VolleyError)e;
+
+                String errorMsg = "";
+                if(err.networkResponse.data!=null) {
+                    try {
+                        String body = new String(err.networkResponse.data,"UTF-8");
+                        Log.e("REG_ERR",body);
+                        JSONObject jsonErrors = new JSONObject(body);
+                        JSONObject error = jsonErrors.getJSONArray("errors").getJSONObject(0);
+                        errorMsg = error.getString("message");
+                    } catch (UnsupportedEncodingException encErr) {
+                        encErr.printStackTrace();
+                    } catch (JSONException jErr) {
+                        jErr.printStackTrace();
+                    } finally {
+                        if(errorMsg.equals("")){
+                            errorMsg = getString(R.string.forgot_password_request_error);
+                        }
+                    }
+                }
+
+                Toast.makeText(mContext, errorMsg, Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void logInUser(final Intent intent, String user, String pass, final boolean resetPassword) {
+        final ILoginRequest loginService = new LoginRequest(this);
+        String username = null;
+        String password = null;
+
+        if (user == null || pass == null) {
+            username = mUsername.getText().toString().trim();
+            password = mPassword.getText().toString();
+        } else {
+            username = user;
+            password = pass;
+        }
+
+        final String token = password;
+        loginService.authenticateUser(username, token, new ICallback<String>() {
+            @Override
+            public void onResult(String result) {
+                Log.d("LOGIN - RESULT", result);
+                ICategoryRequest categoryService = new CategoryRequest(mContext);
+                ISellerRequest sellerService = new SellerRequest(mContext);
+                ICommonRequest commonService = new CommonRequest(mContext);
+
+                commonService.getLengthUnits(new ICallback<List<Unit>>() {
+                    @Override
+                    public void onResult(List<Unit> units) {
+                        IUnitCache cache = new UnitCache(mContext);
+                        cache.storeLengthUnits(units);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("LengthUnits", e.toString());
+                    }
+                });
+
+                commonService.getWeightUnits(new ICallback<List<Unit>>() {
+                    @Override
+                    public void onResult(List<Unit> units) {
+                        IUnitCache cache = new UnitCache(mContext);
+                        cache.storeWeightUnits(units);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("WeightUnits", e.toString());
+                    }
+                });
+
+                categoryService.getCategories(new ICallback<List<Category>>() {
+                    @Override
+                    public void onResult(List<Category> categories) {
+                        ICategoryCache cache = new CategoryCache(mContext);
+                        cache.storeCategories(categories);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("Categories", e.toString());
+                    }
+                });
+
+                sellerService.getSellerInfo(Integer.parseInt(result), new ICallback<Seller>() {
+                    @Override
+                    public void onResult(Seller result) {
+                        Log.d("Login - Seller Info", result.toString());
+
+                        logUser(result);
+                        logSuccessLogin(result);
+                        intent.putExtra(mContext.getString(R.string.bundle_seller_key), result);
+                        intent.putExtra(mContext.getString(R.string.automatic_login_key), resetPassword);
+                        if (resetPassword) {
+                            intent.putExtra(mContext.getString(R.string.automatic_login_token), token);
+                        }
+                        mContext.startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("getSellerInfo", e.toString());
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e("AuthenticateUser", e.toString());
+                logFailLogin(mUsername.getText().toString(),e);
+                Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -226,7 +307,26 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         login.setOnClickListener(this);
         Button newUser = (Button) findViewById(R.id.newUser);
         newUser.setOnClickListener(this);
+        Button forgotPassword = (Button) findViewById(R.id.forgotPassword);
+        forgotPassword.setOnClickListener(this);
         mContext = this;
+
+        //Handling password reset request
+        Intent passwordResetIntent = getIntent();
+        String action = passwordResetIntent.getAction();
+        String data = passwordResetIntent.getDataString();
+
+        if (Intent.ACTION_VIEW.equals(action) && data != null) {
+            if (data.contains("username") && data.contains("token")) {
+                String username = data.substring(data.indexOf("username=") + "username=".length(),
+                        data.indexOf("&token"));
+                String token = data.substring(data.indexOf("&token=")+ "&token=".length());
+                logInUser(new Intent(this, HomeActivity.class), username, token, true);
+            } else {
+                Toast.makeText(mContext, "Broken Password reset link.", Toast.LENGTH_LONG).show();
+            }
+        }
+        //ends here
 
         mPrefs = this.getSharedPreferences("pref", Context.MODE_PRIVATE);
         mEditor = mPrefs.edit();

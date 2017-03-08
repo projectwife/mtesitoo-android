@@ -10,6 +10,8 @@
     <string name="bundle_seller_key">key_seller_parcel</string>
     <string name="bundle_order_product_key">key_order_product_parcel</string>
     <string name="action_settings">Settings</string>
+    <string name="automatic_login_key">automatic_login_parcel</string>
+    <string name="automatic_login_token">automatic_login_token_parcel</string>
 
     <string name="title_activity_order">Order Details</string>
     <string name="register_successful">Registered successfully, welcome!</string>
@@ -42,4 +44,7 @@
 
     <string name="profile_updated">Profile Updated</string>
     <string name="password_updated">Password Updated</string>
+
+    <string name="forgot_password_request">An email has been sent with password reset instructions.</string>
+    <string name="forgot_password_request_error">An error has occurred. Please try again !</string>
 </resources>
