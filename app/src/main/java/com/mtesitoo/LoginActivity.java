@@ -296,6 +296,87 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
+    private void logInByCode(final Intent intent, final String code, final boolean resetPassword) {
+        final ILoginRequest loginService = new LoginRequest(this);
+
+        loginService.authenticateUser(code, new ICallback<String>() {
+            @Override
+            public void onResult(String result) {
+                Log.d("LOGIN - RESULT", result);
+                ICategoryRequest categoryService = new CategoryRequest(mContext);
+                ISellerRequest sellerService = new SellerRequest(mContext);
+                ICommonRequest commonService = new CommonRequest(mContext);
+
+                commonService.getLengthUnits(new ICallback<List<Unit>>() {
+                    @Override
+                    public void onResult(List<Unit> units) {
+                        IUnitCache cache = new UnitCache(mContext);
+                        cache.storeLengthUnits(units);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("LengthUnits", e.toString());
+                    }
+                });
+
+                commonService.getWeightUnits(new ICallback<List<Unit>>() {
+                    @Override
+                    public void onResult(List<Unit> units) {
+                        IUnitCache cache = new UnitCache(mContext);
+                        cache.storeWeightUnits(units);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("WeightUnits", e.toString());
+                    }
+                });
+
+                categoryService.getCategories(new ICallback<List<Category>>() {
+                    @Override
+                    public void onResult(List<Category> categories) {
+                        ICategoryCache cache = new CategoryCache(mContext);
+                        cache.storeCategories(categories);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("Categories", e.toString());
+                    }
+                });
+
+                sellerService.getSellerInfo(Integer.parseInt(result), new ICallback<Seller>() {
+                    @Override
+                    public void onResult(Seller result) {
+                        Log.d("Login - Seller Info", result.toString());
+
+                        logUser(result);
+                        logSuccessLogin(result);
+                        intent.putExtra(mContext.getString(R.string.bundle_seller_key), result);
+                        intent.putExtra(mContext.getString(R.string.automatic_login_key), resetPassword);
+                        if (resetPassword) {
+                            intent.putExtra(mContext.getString(R.string.automatic_login_token), code);
+                        }
+                        mContext.startActivity(intent);
+                        finish();
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("getSellerInfo", e.toString());
+                    }
+                });
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e("AuthenticateUser", e.toString());
+                logFailLogin(mUsername.getText().toString(),e);
+                Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        });
+    }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -316,12 +397,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         String action = passwordResetIntent.getAction();
         String data = passwordResetIntent.getDataString();
 
+        //https://tesitoo.com/index.php?route=common/reset&code=84f6c6874e7ffd31fe3d84132c790824fc8b1024
         if (Intent.ACTION_VIEW.equals(action) && data != null) {
-            if (data.contains("username") && data.contains("token")) {
-                String username = data.substring(data.indexOf("username=") + "username=".length(),
-                        data.indexOf("&token"));
-                String token = data.substring(data.indexOf("&token=")+ "&token=".length());
-                logInUser(new Intent(this, HomeActivity.class), username, token, true);
+            if (data.contains("code")) {
+                String code = data.substring(data.indexOf("&code=")+ "&code=".length());
+                logInByCode(new Intent(this, HomeActivity.class), code, true);
             } else {
                 Toast.makeText(mContext, "Broken Password reset link.", Toast.LENGTH_LONG).show();
             }

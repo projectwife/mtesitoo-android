@@ -9,4 +9,5 @@ public interface ILoginRequest {
     void getAuthToken(ICallback<String> callback);
 
     void authenticateUser(String username, String password, ICallback<String> callback);
+    void authenticateUser(final String code, ICallback<String> callback);
 }

@@ -12,6 +12,8 @@
     <string name="client_id">mtesitooclientid</string>
     <string name="client_secret">mtesitooclientsecret</string>
 
+    <string name="params_admin_login_code">code</string>
+
     <string name="params_admin_username">username</string>
     <string name="params_admin_password">password</string>
 

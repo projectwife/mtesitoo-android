@@ -46,6 +46,7 @@
     <string name="path_product_vendor">/product/vendor</string>
     <string name="path_product_category">/product/category</string>
     <string name="path_admin_login">/admin/login</string>
+    <string name="path_admin_login_by_code">/admin/login_by_code</string>
     <string name="path_common_country">/common/country</string>
     <string name="path_common_length">/common/length</string>
     <string name="path_common_weight">/common/weight</string>

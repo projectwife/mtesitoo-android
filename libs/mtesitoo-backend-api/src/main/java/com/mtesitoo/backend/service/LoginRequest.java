@@ -26,6 +26,38 @@ public class LoginRequest extends Request implements ILoginRequest {
         super(context);
     }
 
+    @Override
+    public void authenticateUser(final String code, final ICallback<String> callback) {
+        Log.d("AUTH - USER", code);
+        URL url = new URL(mContext, R.string.path_admin_login_by_code);
+        Log.d("AUTH - URL", url.toString());
+        LoginResponse response = new LoginResponse(callback, LoginResponse.TYPE_AUTHENTICATE);
+        Log.d("AUTH - RESPONSE", response.toString());
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), response, response) {
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<>();
+                params.put(mContext.getString(R.string.params_admin_login_code), code);
+                Log.d("AUTH - PARAMS", params.toString());
+                return params;
+            }
+
+            @Override
+            protected Response<String> parseNetworkResponse(NetworkResponse response) {
+                if (response.headers.containsKey(mContext.getString(R.string.header_set_cookie))) {
+                    Log.d("NETWORK RESPONSE CODE", String.valueOf(response.statusCode));
+                    ISessionCache cache = new SessionCache(mContext);
+                    cache.storeSession(response.headers.get(mContext.getString(R.string.header_set_cookie)));
+                }
+                return super.parseNetworkResponse(response);
+            }
+        };
+
+        stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
+
+        mRequestQueue.add(stringRequest);
+    }
+
     public void authenticateUser(final String username, final String password, final ICallback<String> callback) {
         Log.d("AUTH - USER", username);
         URL url = new URL(mContext, R.string.path_admin_login);
