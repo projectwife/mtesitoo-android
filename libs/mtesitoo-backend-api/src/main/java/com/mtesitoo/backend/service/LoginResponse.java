@@ -9,8 +9,6 @@ import com.mtesitoo.backend.service.logic.ICallback;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Objects;
-
 /**
  * Created by Nan on 9/7/2015.
  */
@@ -48,7 +46,7 @@ public class LoginResponse implements Response.Listener<String>, Response.ErrorL
 
     @Override
     public void onErrorResponse(VolleyError error) {
-        Log.e("NETWORK ERROR", error.getMessage());
+        Log.e("NETWORK ERROR", "Empty response from server: " + error.getMessage());
     }
 
     private String parseToken(String response) throws JSONException {

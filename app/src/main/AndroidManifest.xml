@@ -35,10 +35,21 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+            <intent-filter android:label="@string/app_name" android:autoVerify="true">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <!-- Accepts URIs that begin with "https://tesitoo.com/index.php" -->
+                <data android:scheme="https"
+                    android:host="tesitoo.com"
+                    android:pathPrefix="/index.php"
+                    />
+            </intent-filter>
         </activity>
         <activity
             android:name=".HomeActivity"
-            android:label="@string/app_name" />
+            android:label="@string/app_name">
+        </activity>
         <activity
             android:name=".ProductActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"

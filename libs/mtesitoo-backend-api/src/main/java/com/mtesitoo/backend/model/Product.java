@@ -2,25 +2,26 @@ package com.mtesitoo.backend.model;
 
 import android.content.Context;
 import android.net.Uri;
-
-import java.net.URI;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import com.mtesitoo.backend.cache.CategoryCache;
 import com.mtesitoo.backend.cache.logic.ICategoryCache;
 
 import org.json.JSONArray;
 
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+
 /**
  * Model object for a Mtesitoo product.
  */
 public class Product implements Parcelable {
+    public static final int MAX_AUX_IMAGES = 3;
+
     private final int mId;
     private final String mName;
     private final String mDescription;
@@ -120,9 +121,22 @@ public class Product implements Parcelable {
 
     }
 
-    public void addImage(Uri imageUri){
-        mAuxImages.add(imageUri);
-        lastImage = imageUri;
+    /**
+     * Returns true if image is added successfully, otherwise false
+     * @param imageUri
+     * @return
+     */
+    public boolean addImage(Uri imageUri){
+        boolean success = false;
+        if (mAuxImages.size() < MAX_AUX_IMAGES) {
+            mAuxImages.add(imageUri);
+            lastImage = imageUri;
+            success = true;
+        } else {
+            Log.e("PRODUCT", "No more than " + MAX_AUX_IMAGES + " allowed per product");
+        }
+
+        return success;
     }
 
     public int getId() {

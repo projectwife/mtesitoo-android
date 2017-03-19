@@ -3,42 +3,28 @@ package com.mtesitoo.backend.service;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Matrix;
 import android.net.Uri;
-import android.util.Base64;
 import android.util.Log;
-import android.widget.Toast;
 
-import java.io.ByteArrayOutputStream;
-import java.io.FileNotFoundException;
-import java.io.InputStream;
-import java.io.UnsupportedEncodingException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.alexbbb.uploadservice.MultipartUploadRequest;
 import com.android.volley.AuthFailureError;
-import com.android.volley.NetworkResponse;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.mtesitoo.backend.ExifUtil;
 import com.mtesitoo.backend.MultipartRequest;
 import com.mtesitoo.backend.R;
-import com.mtesitoo.backend.ScalingUtilities;
-import com.mtesitoo.backend.model.header.Authorization;
 import com.mtesitoo.backend.model.AuthorizedStringRequest;
+import com.mtesitoo.backend.model.Product;
 import com.mtesitoo.backend.model.URL;
+import com.mtesitoo.backend.model.header.Authorization;
 import com.mtesitoo.backend.model.url.ProductImageURL;
 import com.mtesitoo.backend.model.url.ProductURL;
 import com.mtesitoo.backend.model.url.VendorProductsURL;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.IProductRequest;
-import com.mtesitoo.backend.model.Product;
 
-import org.json.JSONException;
-
-import static android.R.attr.path;
+import java.io.ByteArrayOutputStream;
+import java.io.FileNotFoundException;
+import java.io.InputStream;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Opencart API-based implementation of {@link IProductRequest}.
@@ -87,7 +73,7 @@ public class ProductRequest extends Request implements IProductRequest {
                 params.put(mContext.getString(R.string.params_product_description), product.getDescription());
                 params.put(mContext.getString(R.string.params_product_price), product.getPricePerUnit());
                 params.put(mContext.getString(R.string.params_product_quantity), Integer.toString(product.getQuantity()));
-                params.put(mContext.getString(R.string.params_product_category_ids), product.getCategoriesJSON());
+                params.put(mContext.getString(R.string.params_product_category_ids), product.getCategoriesIDStringList());
                 params.put(mContext.getString(R.string.params_product_meta_title), "meta_title");
                 params.put(mContext.getString(R.string.params_product_status), mContext.getString(R.string.params_product_status_enabled));
 
