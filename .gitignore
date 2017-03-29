@@ -9,3 +9,4 @@
 /libs/mtesitoo-backend-api/build
 /libs/materialdrawer/build
 **/*.iml
+**/*.apk
