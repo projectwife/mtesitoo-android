@@ -17,7 +17,7 @@ public class TesitooApplication extends Application {
         instance = this;
     }
 
-    public TesitooApplication getInstance(){
+    public static TesitooApplication getInstance(){
         return instance;
     }
 

@@ -11,12 +11,11 @@
         android:required="true" />
 
     <application
+        android:name=".TesitooApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:theme="@style/AppTheme"
-        android:name=".TesitooApplication">
-
+        android:theme="@style/AppTheme">
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.mtesitoo.fileprovider"
@@ -24,7 +23,7 @@
             android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/file_paths"></meta-data>
+                android:resource="@xml/file_paths" />
         </provider>
 
         <activity
@@ -61,10 +60,13 @@
         <activity
             android:name=".OrderActivity"
             android:label="@string/title_activity_order" />
-        <activity android:name=".RegistrationActivity"></activity>
+
         <meta-data
             android:name="io.fabric.ApiKey"
             android:value="bb91c88fa1fa1da1333ff238412c101be60c4f97" />
+
+        <activity android:name=".RegisterActivity" />
+        <activity android:name=".AddProductActivity2"></activity>
     </application>
 
 </manifest>

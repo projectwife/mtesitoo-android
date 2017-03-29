@@ -1,6 +1,7 @@
 machine:
     java:
         version: 'oraclejdk8'
+
 dependencies:
   pre:
     # Android SDK Platform 24
