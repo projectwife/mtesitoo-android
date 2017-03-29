@@ -10,8 +10,8 @@ dependencies:
     - if [ ! -d "/usr/local/android-sdk-linux/build-tools/25.0.0" ]; then echo y | android update sdk --no-ui --all --filter "build-tools-25.0.0"; fi
     # Android Support Repository, revision 35 / Local Maven repository for Support Libraries
     - if [ ! -d "/usr/local/android-sdk-linux/extras/android/m2repository/com/android/support/design/25.1.0" ]; then echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"; fi
-    # support-v4
-    - if [ ! -d "/usr/local/android-sdk-linux/extras/android/m2repository/com/android/support/support-v4/25.1.0" ]; then echo y | android update sdk --no-ui --all --filter "extra-android-m2repository"; fi
+    # google libs
+    - if [ ! -d "/usr/local/android-sdk-linux/extras/google/m2repository/com/google/android/gms/play-services/10.2.0" ]; then echo y | android update sdk --no-ui --all --filter "extra-google-m2repository"; fi
 
   cache_directories:
     - /usr/local/android-sdk-linux/platforms/android-25
