@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "628062641308",
+    "firebase_url": "https://tesitoo-215e9.firebaseio.com",
+    "project_id": "tesitoo-215e9",
+    "storage_bucket": "tesitoo-215e9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:628062641308:android:c6e08da69a63312e",
+        "android_client_info": {
+          "package_name": "com.tesitoo"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "628062641308-gq4l5qiere6vp71824sass5msklqe2es.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tesitoo",
+            "certificate_hash": "d90efd38eb51a5a3f3e2ab70428ed905114493b6"
+          }
+        },
+        {
+          "client_id": "628062641308-t77l5sikk6l0kiqblp8l9pqp3909g56e.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCRivlPtPOAH71i1x76x3Rdbjl-HxPzz20"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "628062641308-t77l5sikk6l0kiqblp8l9pqp3909g56e.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
