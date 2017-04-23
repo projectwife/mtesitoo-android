@@ -1,5 +1,6 @@
 package com.mtesitoo;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -8,20 +9,24 @@ import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
+import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
+import android.support.v7.widget.AppCompatCheckBox;
 import android.util.Log;
-import android.util.TypedValue;
-import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
+import com.mtesitoo.backend.cache.CategoryCache;
+import com.mtesitoo.backend.cache.logic.ICategoryCache;
+import com.mtesitoo.backend.model.Category;
+
+import java.util.List;
 
 public class AddProductActivity2 extends AppCompatActivity {
 
@@ -44,6 +49,8 @@ public class AddProductActivity2 extends AppCompatActivity {
         addPhotoBox = (RelativeLayout) findViewById(R.id.il_add_product_photo);
         addPhotoText = (TextView) findViewById(R.id.add_photo_text);
         photoDisplay = (ImageView) findViewById(R.id.photo_display);
+
+        addCategories(this);
 
         addButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -160,4 +167,17 @@ public class AddProductActivity2 extends AppCompatActivity {
         startActivityForResult(galleryPictureIntent, REQUEST_LOAD_IMAGE);
     }
 
+    private void addCategories(Context context) {
+        GridLayout categoriesGrid = (GridLayout) findViewById(R.id.category_grid);
+
+        ICategoryCache cache = new CategoryCache(context);
+        List<Category> categories = cache.getCategories();
+        String[] categoryNames = new String[categories.size()];
+        for (int i = 0; i < categories.size(); i++) {
+            categoryNames[i] = categories.get(i).getName();
+            android.support.v7.widget.AppCompatCheckBox compatCheckBox = new AppCompatCheckBox(context);
+            compatCheckBox.setText(categoryNames[i]);
+            categoriesGrid.addView(compatCheckBox, i);
+        }
+    }
 }
