@@ -1,13 +1,12 @@
 package com.mtesitoo;
 
-import android.app.Application;
 import android.content.Context;
 
 /**
  * Created by cma on 1/8/17.
  */
 
-public class TesitooApplication extends Application {
+public class TesitooApplication extends android.support.multidex.MultiDexApplication {
 
     private static TesitooApplication instance;
 

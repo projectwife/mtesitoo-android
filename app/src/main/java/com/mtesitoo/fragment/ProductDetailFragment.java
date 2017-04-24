@@ -3,6 +3,7 @@ package com.mtesitoo.fragment;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -19,11 +20,7 @@ import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.mtesitoo.R;
 import com.mtesitoo.backend.model.Product;
-import com.mtesitoo.backend.service.ProductRequest;
-import com.mtesitoo.backend.service.logic.ICallback;
-import com.mtesitoo.backend.service.logic.IProductRequest;
 import com.mtesitoo.helper.FormatHelper;
-
 
 import java.util.ArrayList;
 
@@ -116,6 +113,13 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
         Bundle args = this.getArguments();
 
         mProduct = args.getParcelable(getString(R.string.bundle_product_key));
+
+        if (mProduct == null) {
+            Snackbar.make(getView(),
+                    "Error occurred fetching product details. Try again later", Snackbar.LENGTH_LONG).show();
+            //TODO: there should be some way to notify admin or feedback for such issue.
+            return;
+        }
         productId = mProduct.getId();
         mProductName.setText(mProduct.getName());
         mProductDescription.setText(FormatHelper.formatDescription(mProduct.getDescription()));
