@@ -1,7 +1,6 @@
 package com.mtesitoo.backend.service;
 
 import android.net.Uri;
-import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -15,8 +14,6 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
 
 /**
  * Created by Carl on 9/11/2016.
@@ -53,6 +50,12 @@ public class ProductDetailResponse implements Response.Listener<String>, Respons
 
         Product result = null;
         try {
+            String expirationDate = jsonProduct.getString("expiration_date");
+
+            if (expirationDate == null || expirationDate.equals("null")) {
+                expirationDate = "0000-00-00 00:00:00";
+            }
+
             result = new Product(
                     Integer.parseInt(jsonProduct.getString("product_id")),
                     jsonProduct.getString("title"),
@@ -61,7 +64,7 @@ public class ProductDetailResponse implements Response.Listener<String>, Respons
                     resolveCategories(jsonProduct.getJSONArray("categories")),
                     "SI Unit",
                     jsonProduct.getString("price"), 100,
-                    formatter.parse(jsonProduct.getString("expiration_date")),
+                    formatter.parse(expirationDate),
                     Uri.parse(jsonProduct.getString("thumb_image")),
                     parseAuxImages(jsonProduct.getJSONArray("images"))
             );
