@@ -5,8 +5,16 @@
     android:layout_height="match_parent"
     android:padding="16dp">
 
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <RelativeLayout
-        android:id="@+id/registration_form"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+    <RelativeLayout
+        android:id="@+id/add_new_product_form"
         android:layout_alignParentTop="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content">
@@ -101,7 +109,7 @@
             android:layout_below="@id/il_add_product_ppu">
 
             <EditText
-                android:id="@+id/registration_firstname"
+                android:id="@+id/add_new_product_qty"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="Quantity"
@@ -139,7 +147,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/registration_form"
+        android:layout_below="@+id/add_new_product_form"
         android:paddingTop="32dp"
         >
 
@@ -161,5 +169,6 @@
 
 
     </RelativeLayout>
-
+    </RelativeLayout>
+</ScrollView>
 </RelativeLayout>
