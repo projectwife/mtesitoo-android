@@ -23,24 +23,20 @@ import com.mtesitoo.backend.cache.AuthorizationCache;
 import com.mtesitoo.backend.cache.CategoryCache;
 import com.mtesitoo.backend.cache.CountriesCache;
 import com.mtesitoo.backend.cache.UnitCache;
-import com.mtesitoo.backend.cache.ZoneCache;
 import com.mtesitoo.backend.cache.logic.IAuthorizationCache;
 import com.mtesitoo.backend.cache.logic.ICategoryCache;
 import com.mtesitoo.backend.cache.logic.ICountriesCache;
 import com.mtesitoo.backend.cache.logic.IUnitCache;
-import com.mtesitoo.backend.cache.logic.IZonesCache;
 import com.mtesitoo.backend.model.Category;
 import com.mtesitoo.backend.model.Countries;
 import com.mtesitoo.backend.model.Seller;
 import com.mtesitoo.backend.model.Unit;
-import com.mtesitoo.backend.model.Zone;
 import com.mtesitoo.backend.service.CategoryRequest;
 import com.mtesitoo.backend.service.CommonRequest;
 import com.mtesitoo.backend.service.CountriesRequest;
 import com.mtesitoo.backend.service.ForgotPasswordRequest;
 import com.mtesitoo.backend.service.LoginRequest;
 import com.mtesitoo.backend.service.SellerRequest;
-import com.mtesitoo.backend.service.ZoneRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.ICategoryRequest;
 import com.mtesitoo.backend.service.logic.ICommonRequest;
@@ -48,18 +44,18 @@ import com.mtesitoo.backend.service.logic.ICountriesRequest;
 import com.mtesitoo.backend.service.logic.IForgotPasswordRequest;
 import com.mtesitoo.backend.service.logic.ILoginRequest;
 import com.mtesitoo.backend.service.logic.ISellerRequest;
-import com.mtesitoo.backend.service.logic.IZoneRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
+
+import static android.content.ContentValues.TAG;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private Context mContext;
@@ -158,6 +154,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
+    /**
+     * Send Firebase token to server after user login
+     */
+    private void sendFirebaseTokenToServer() {
+        SharedPreferences mPrefs = this.getSharedPreferences("pref", Context.MODE_PRIVATE);
+        String refreshedToken = mPrefs.getString("firebase_token", "");
+
+        final ILoginRequest loginRequest = new LoginRequest(this);
+
+        loginRequest.sendRegistrationTokenToServer(refreshedToken, new ICallback<String>() {
+            @Override
+            public void onResult(String result) {
+                Log.d(TAG, "Success: " + result);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e(TAG, "Failed to send token to server: " + e.getMessage());
+
+            }
+        });
+
+
+    }
+
     private void logInUser(final Intent intent, String user, String pass, final boolean resetPassword) {
         final ILoginRequest loginService = new LoginRequest(this);
         String username = null;
@@ -176,6 +197,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResult(String result) {
                 Log.d("LOGIN - RESULT", result);
+                sendFirebaseTokenToServer();
+
                 ICategoryRequest categoryService = new CategoryRequest(mContext);
                 ISellerRequest sellerService = new SellerRequest(mContext);
                 ICommonRequest commonService = new CommonRequest(mContext);

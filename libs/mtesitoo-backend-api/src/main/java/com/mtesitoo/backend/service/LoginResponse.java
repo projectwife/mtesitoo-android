@@ -18,6 +18,7 @@ public class LoginResponse implements Response.Listener<String>, Response.ErrorL
 
     public final static String TYPE_TOKEN = "token";
     public final static String TYPE_AUTHENTICATE = "authenticate";
+    public final static String TYPE_REGISTER_FIREBASE_TOKEN = "register_firebase_token";
 
     public LoginResponse(ICallback<String> callback, String type) {
         mType = type;
@@ -36,6 +37,9 @@ public class LoginResponse implements Response.Listener<String>, Response.ErrorL
                 result = parseToken(response);
             }
 
+            if (mType.equals(TYPE_REGISTER_FIREBASE_TOKEN)) {
+                result = response;
+            }
             if (mCallback != null)
                 mCallback.onResult(result);
         } catch (JSONException e) {

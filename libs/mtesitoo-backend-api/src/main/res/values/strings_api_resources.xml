@@ -61,4 +61,7 @@
     <string name="params_order_placed_date">order_placed_date</string>
     <string name="params_order_payment_method">payment_method</string>
     <string name="params_order_status_id">order_status_id</string>
+
+    <string name="path_notification_device">/notification/device</string>
+    <string name="params_firebase_device_registration_token">firebase_device_registration_token</string>
 </resources>
