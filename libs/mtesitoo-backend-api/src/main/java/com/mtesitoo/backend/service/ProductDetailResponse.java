@@ -63,7 +63,8 @@ public class ProductDetailResponse implements Response.Listener<String>, Respons
                     jsonProduct.getString("location"),
                     resolveCategories(jsonProduct.getJSONArray("categories")),
                     "SI Unit",
-                    jsonProduct.getString("price"), 100,
+                    jsonProduct.getString("price"),
+                    jsonProduct.getInt("quantity"),
                     formatter.parse(expirationDate),
                     Uri.parse(jsonProduct.getString("thumb_image")),
                     parseAuxImages(jsonProduct.getJSONArray("images"))

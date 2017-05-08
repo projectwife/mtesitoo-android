@@ -62,7 +62,8 @@ public class ProductResponse implements Response.Listener<String>, Response.Erro
                             jsonProduct.getString("location"),
                             resolveCategories(jsonProduct.getJSONArray("categories")),
                             "SI Unit",
-                            jsonProduct.getString("price"), 100,
+                            jsonProduct.getString("price"),
+                            jsonProduct.getInt("quantity"),
                             new Date(),
                             Uri.parse(jsonProduct.getString("thumb_image")),
                             parseAuxImages()
