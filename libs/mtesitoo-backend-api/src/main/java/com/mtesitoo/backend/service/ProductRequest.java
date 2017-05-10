@@ -43,7 +43,7 @@ public class ProductRequest extends Request implements IProductRequest {
     @Override
     public void getProducts(final int sellerId, final ICallback<List<Product>> callback) {
         Log.d("getProducts - SellerId",String.valueOf(sellerId));
-        URL url = new VendorProductsURL(mContext, R.string.path_product_vendor, sellerId);
+        URL url = new VendorProductsURL(mContext, R.string.path_vendor_products);
         Log.d("Vendor Products URL",url.toString());
         ProductResponse response = new ProductResponse(callback);
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.GET, url.toString(), response, response);

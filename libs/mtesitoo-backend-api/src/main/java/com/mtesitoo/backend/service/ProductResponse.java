@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -59,16 +60,16 @@ public class ProductResponse implements Response.Listener<String>, Response.Erro
         for (int i = 0; i < jsonProducts.length(); ++i) {
             JSONObject jsonProduct = jsonProducts.getJSONObject(i);
 
-            String expirationDate = "0000-00-00 00:00:00";
+            String expirationStr = jsonProduct.getString("expiration_date");
+            Date expirationDate = null;
 
-            if (jsonProduct.has("expiration_date")) {
-                expirationDate = jsonProduct.getString("expiration_date");
+            if (expirationStr == null || expirationStr.equals("null")
+                    || expirationStr.equals("0000-00-00 00:00:00")) {
+                expirationDate = null;
+            } else {
+                expirationDate = formatter.parse(expirationStr);
             }
 
-            if (expirationDate == null || expirationDate.equals("null")) {
-                expirationDate = "0000-00-00 00:00:00";
-            }
-//formatter.parse(expirationDate)
             Product product =
                     new Product(
                             Integer.parseInt(jsonProduct.getString("product_id")),
@@ -77,8 +78,9 @@ public class ProductResponse implements Response.Listener<String>, Response.Erro
                             jsonProduct.getString("location"),
                             resolveCategories(jsonProduct.getJSONArray("categories")),
                             "SI Unit",
-                            jsonProduct.getString("price"), 100,
-                            null,
+                            jsonProduct.getString("price"),
+                            jsonProduct.getInt("quantity"),
+                            expirationDate,
                             Uri.parse(jsonProduct.getString("thumb_image")),
                             parseAuxImages()
                     );
