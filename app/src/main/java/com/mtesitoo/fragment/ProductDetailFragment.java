@@ -170,28 +170,35 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
     private void updateImageSlider() {
         ArrayList<String> urls = new ArrayList<>();
 
-        urls.add(mProduct.getmThumbnail().toString());
+        String thumbnail = mProduct.getmThumbnail().toString();
+        if (!thumbnail.isEmpty()) {
+            urls.add(thumbnail);
+        }
 
         for(Uri image : mProduct.getAuxImages()){
             urls.add(image.toString());
         }
 
         for (String url : urls) {
-            if(!url.equals("") && !url.equals(" ")){
+            url = url.trim();
+            if(!url.isEmpty()){
                 DefaultSliderView sliderView = new DefaultSliderView(getActivity());
                 sliderView
                         .image(url)
                         .setScaleType(BaseSliderView.ScaleType.CenterCrop)
                         .setOnSliderClickListener(this);
                 mImageSlider.addSlider(sliderView);
-            }else{
-                DefaultSliderView sliderView = new DefaultSliderView(getActivity());
-                sliderView
-                        .image("http://tesitoo.com/image/cache/no_image-100x100.png")
-                        .setScaleType(BaseSliderView.ScaleType.CenterCrop)
-                        .setOnSliderClickListener(this);
-                mImageSlider.addSlider(sliderView);
             }
+        }
+
+        //If there's no picture available for product, then show a no_image picture
+        if (urls.size() < 1) {
+            DefaultSliderView sliderView = new DefaultSliderView(getActivity());
+            sliderView
+                    .image("http://tesitoo.com/image/cache/no_image-100x100.png")
+                    .setScaleType(BaseSliderView.ScaleType.CenterCrop)
+                    .setOnSliderClickListener(this);
+            mImageSlider.addSlider(sliderView);
         }
 
         mImageSlider.setDuration(8000);

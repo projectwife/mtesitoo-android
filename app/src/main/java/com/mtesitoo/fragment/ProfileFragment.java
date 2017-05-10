@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.mtesitoo.Constants;
 import com.mtesitoo.R;
 import com.mtesitoo.backend.cache.ZoneCache;
 import com.mtesitoo.backend.cache.logic.IZonesCache;
@@ -407,7 +408,7 @@ public class ProfileFragment extends Fragment {
 
                                     if (image != null) {
                                         Uri imgUri = FileProvider.getUriForFile(getActivity(),
-                                                "com.mtesitoo.fileprovider",
+                                                Constants.FILE_PROVIDER,
                                                 image);
                                         mProfileImageFile = image;
                                         intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);

@@ -3,9 +3,9 @@ package com.mtesitoo;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.AppCompatButton;
 import android.util.Log;
 import android.view.View;
@@ -36,7 +36,6 @@ import com.mtesitoo.backend.service.logic.ISellerRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
@@ -137,11 +136,12 @@ public class RegisterActivity extends AppCompatActivity {
                         jErr.printStackTrace();
                     }
                 }
+
                 if(errorMsg.equals("")){
                     errorMsg = "Error registering account";
-                    displayToast(errorMsg);
                 }
 
+                displayToast(errorMsg);
             }
         });
     }
