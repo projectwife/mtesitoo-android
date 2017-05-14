@@ -1,10 +1,13 @@
 package com.mtesitoo.backend.service;
 
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
 import com.mtesitoo.backend.MultipartRequest;
@@ -118,6 +121,11 @@ public class ProductRequest extends Request implements IProductRequest {
         URL url = new ProductImageURL(mContext, R.string.path_product_product, productId);
         final Uri image = thumbnail;
 
+        if (image == null) {
+            Toast.makeText(mContext, "No Product photo selected yet.", Toast.LENGTH_LONG).show();
+            return;
+        }
+
         InputStream inputStream = null;
         try {
             inputStream = mContext.getContentResolver().openInputStream(image);
@@ -162,17 +170,35 @@ public class ProductRequest extends Request implements IProductRequest {
 
             resizedBitmap.recycle();
         } catch (FileNotFoundException e) {
-            e.printStackTrace();
+            Toast.makeText(mContext, "Failed to upload Product photo.", Toast.LENGTH_LONG).show();
         }
 
+    }
+
+    private String getRealPathFromURI(Uri contentURI) {
+        String result;
+        Cursor cursor = mContext.getContentResolver().query(contentURI, null, null, null, null);
+        if (cursor == null) {
+            result = contentURI.getPath();
+        } else {
+            cursor.moveToFirst();
+            int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+            result = cursor.getString(idx);
+            cursor.close();
+        }
+        return result;
     }
 
     @Override
     public void submitProductImage(final Product product, ICallback<String> callback) {
         URL url = new ProductImageURL(mContext, R.string.path_product_product, product.getId());
-        final Uri image = product.getLastImage();
+        final Uri imageUri = product.getLastImage();
 
-        Bitmap bm = BitmapFactory.decodeFile(image.getPath());
+        String imageFilePath = getRealPathFromURI(imageUri);
+        final String imageFileName = imageFilePath.substring(imageFilePath.lastIndexOf("/")+1);
+
+        Bitmap bm = BitmapFactory.decodeFile(imageFilePath);
+        //Bitmap bm = BitmapFactory.decodeFile(image.getPath());
 
         int DESIREDWIDTH = 500;
         int DESIREDHEIGHT = 500;
@@ -202,7 +228,7 @@ public class ProductRequest extends Request implements IProductRequest {
                 Map<String, DataPart> params = new HashMap<>();
                 // file name could found file base or direct access from real path
                 // for now just get bitmap data from ImageView
-                params.put("file", new DataPart(image.getLastPathSegment(), imageBytes, "image/jpeg"));
+                params.put("file", new DataPart(imageFileName, imageBytes, "image/jpeg"));
 
                 return params;
             }

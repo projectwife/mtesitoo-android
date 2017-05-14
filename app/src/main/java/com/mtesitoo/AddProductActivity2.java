@@ -289,7 +289,7 @@ public class AddProductActivity2 extends AppCompatActivity {
 
                 if (image != null) {
                     Uri imgUri = FileProvider.getUriForFile(this,
-                            "com.mtesitoo.fileprovider",
+                            Constants.FILE_PROVIDER,
                             image);
                     mProductImageFile = image;
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
@@ -360,15 +360,20 @@ public class AddProductActivity2 extends AppCompatActivity {
                     @Override
                     public void onResult(String result) {
                         Log.d("image thumb upload","Success");
+                        Toast.makeText(mContext, "Product thumbnail uploaded.", Toast.LENGTH_LONG).show();
                         finish();
                     }
 
                     @Override
                     public void onError(Exception e) {
                         Log.e("image thumb upload err",e.toString());
+                        Toast.makeText(mContext, "Error occurred while uploading Product thumbnail.", Toast.LENGTH_LONG).show();
                         finish();
                     }
                 });
+
+                Toast.makeText(mContext, "New Product Added.", Toast.LENGTH_LONG).show();
+                finish();
             }
 
             @Override

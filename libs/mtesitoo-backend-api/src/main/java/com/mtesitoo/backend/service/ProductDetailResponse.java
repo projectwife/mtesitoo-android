@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Carl on 9/11/2016.
@@ -50,10 +51,18 @@ public class ProductDetailResponse implements Response.Listener<String>, Respons
 
         Product result = null;
         try {
-            String expirationDate = jsonProduct.getString("expiration_date");
+            String expirationStr = null;
+            Date expirationDate = null;
 
-            if (expirationDate == null || expirationDate.equals("null")) {
-                expirationDate = "0000-00-00 00:00:00";
+            if (jsonProduct.has("expiration_date")) {
+                expirationStr = jsonProduct.getString("expiration_date");
+            }
+
+            if (expirationStr == null || expirationStr.equals("null")
+                    || expirationStr.equals("0000-00-00 00:00:00")) {
+                expirationDate = null;
+            } else {
+                expirationDate = formatter.parse(expirationStr);
             }
 
             result = new Product(
@@ -65,7 +74,7 @@ public class ProductDetailResponse implements Response.Listener<String>, Respons
                     "SI Unit",
                     jsonProduct.getString("price"),
                     jsonProduct.getInt("quantity"),
-                    formatter.parse(expirationDate),
+                    expirationDate,
                     Uri.parse(jsonProduct.getString("thumb_image")),
                     parseAuxImages(jsonProduct.getJSONArray("images"))
             );

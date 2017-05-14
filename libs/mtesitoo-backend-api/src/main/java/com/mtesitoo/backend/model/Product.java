@@ -243,7 +243,10 @@ public class Product implements Parcelable {
     public String getExpirationFormattedForApp() {
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedDate = (dateFormatter).format(mExpiration);
+        String formattedDate = "";
+        if (mExpiration != null) {
+            (dateFormatter).format(mExpiration);
+        }
 
         return formattedDate;
     }
@@ -251,7 +254,11 @@ public class Product implements Parcelable {
     public String getExpirationFormattedForAPI() {
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        String formattedDate = (dateFormatter).format(mExpiration);
+        String formattedDate = "0000-00-00 00:00:00";
+
+        if (mExpiration != null) {
+            (dateFormatter).format(mExpiration);
+        }
 
         return formattedDate;
     }
@@ -307,6 +314,10 @@ public class Product implements Parcelable {
         dest.writeString(mSIUnit);
         dest.writeString(mPricePerUnit);
         dest.writeInt(mQuantity);
-        dest.writeLong(mExpiration.getTime());
+        if (mExpiration != null) {
+            dest.writeLong(mExpiration.getTime());
+        } else {
+            dest.writeLong(0);
+        }
     }
 }
