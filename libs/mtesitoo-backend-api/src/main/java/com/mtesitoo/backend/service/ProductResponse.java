@@ -60,8 +60,12 @@ public class ProductResponse implements Response.Listener<String>, Response.Erro
         for (int i = 0; i < jsonProducts.length(); ++i) {
             JSONObject jsonProduct = jsonProducts.getJSONObject(i);
 
-            String expirationStr = jsonProduct.getString("expiration_date");
+            String expirationStr = null;
             Date expirationDate = null;
+
+            if (jsonProduct.has("expiration_date")) {
+                expirationStr = jsonProduct.getString("expiration_date");
+            }
 
             if (expirationStr == null || expirationStr.equals("null")
                     || expirationStr.equals("0000-00-00 00:00:00")) {
