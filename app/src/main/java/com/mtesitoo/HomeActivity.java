@@ -2,6 +2,7 @@ package com.mtesitoo;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
@@ -124,9 +125,9 @@ public class HomeActivity extends AppCompatActivity {
                                 .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_help_index)))
                                 .withSelectable(false),
                         new SecondaryDrawerItem()
-                                .withName(R.string.drawer_item_exit)
+                                .withName(R.string.drawer_item_logout)
                                 .withIcon(GoogleMaterial.Icon.gmd_exit_to_app)
-                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_exit_index)))
+                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_logout_index)))
                 )
                 .withOnDrawerItemClickListener(new Drawer.OnDrawerItemClickListener() {
                     @Override
@@ -147,8 +148,22 @@ public class HomeActivity extends AppCompatActivity {
                                 f = InfoFragment.newInstance();
                             } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_help_index))) {
                                 f = HelpFragment.newInstance();
-                            } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_exit_index))) {
-                                finish();
+                            } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_logout_index))) {
+                                //set logged_in to false and show LoginActivity
+                                SharedPreferences mPrefs = mContext.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
+                                SharedPreferences.Editor editor = mPrefs.edit();
+
+                                boolean isUserLoggedIn = mPrefs.getBoolean(Constants.IS_USER_LOGGED_IN_KEY, false);
+
+                                if (isUserLoggedIn) {
+                                    editor.putBoolean(Constants.IS_USER_LOGGED_IN_KEY, false);
+                                    editor.putString(Constants.LOGGED_IN_USER_ID_KEY, "");
+                                    editor.putString(Constants.LOGGED_IN_USER_PASS_KEY, "");
+                                    editor.commit();
+
+                                }
+                                startActivity(new Intent(mContext, LoginActivity.class));
+                                //finish();
                             }
 
                             if (f != null) {

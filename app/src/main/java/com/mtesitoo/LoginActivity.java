@@ -23,24 +23,20 @@ import com.mtesitoo.backend.cache.AuthorizationCache;
 import com.mtesitoo.backend.cache.CategoryCache;
 import com.mtesitoo.backend.cache.CountriesCache;
 import com.mtesitoo.backend.cache.UnitCache;
-import com.mtesitoo.backend.cache.ZoneCache;
 import com.mtesitoo.backend.cache.logic.IAuthorizationCache;
 import com.mtesitoo.backend.cache.logic.ICategoryCache;
 import com.mtesitoo.backend.cache.logic.ICountriesCache;
 import com.mtesitoo.backend.cache.logic.IUnitCache;
-import com.mtesitoo.backend.cache.logic.IZonesCache;
 import com.mtesitoo.backend.model.Category;
 import com.mtesitoo.backend.model.Countries;
 import com.mtesitoo.backend.model.Seller;
 import com.mtesitoo.backend.model.Unit;
-import com.mtesitoo.backend.model.Zone;
 import com.mtesitoo.backend.service.CategoryRequest;
 import com.mtesitoo.backend.service.CommonRequest;
 import com.mtesitoo.backend.service.CountriesRequest;
 import com.mtesitoo.backend.service.ForgotPasswordRequest;
 import com.mtesitoo.backend.service.LoginRequest;
 import com.mtesitoo.backend.service.SellerRequest;
-import com.mtesitoo.backend.service.ZoneRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.ICategoryRequest;
 import com.mtesitoo.backend.service.logic.ICommonRequest;
@@ -48,13 +44,11 @@ import com.mtesitoo.backend.service.logic.ICountriesRequest;
 import com.mtesitoo.backend.service.logic.IForgotPasswordRequest;
 import com.mtesitoo.backend.service.logic.ILoginRequest;
 import com.mtesitoo.backend.service.logic.ISellerRequest;
-import com.mtesitoo.backend.service.logic.IZoneRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.util.Arrays;
 import java.util.List;
 
 import butterknife.Bind;
@@ -158,7 +152,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
-    private void logInUser(final Intent intent, String user, String pass, final boolean resetPassword) {
+    private void logInUser(final Intent intent, final String user, final String pass, final boolean resetPassword) {
         final ILoginRequest loginService = new LoginRequest(this);
         String username = null;
         String password = null;
@@ -170,6 +164,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             username = user;
             password = pass;
         }
+
+        final String userId = username;
+        final String userPass = password;
 
         final String token = password;
         loginService.authenticateUser(username, token, new ICallback<String>() {
@@ -226,6 +223,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                         logUser(result);
                         logSuccessLogin(result);
+
+                        //Cache login state in sharedprefs
+                        mEditor.putBoolean(Constants.IS_USER_LOGGED_IN_KEY, true);
+                        mEditor.putString(Constants.LOGGED_IN_USER_ID_KEY, userId);
+                        mEditor.putString(Constants.LOGGED_IN_USER_PASS_KEY, userPass);
+                        mEditor.commit();
+
                         intent.putExtra(mContext.getString(R.string.bundle_seller_key), result);
                         intent.putExtra(mContext.getString(R.string.automatic_login_key), resetPassword);
                         if (resetPassword) {
@@ -246,7 +250,15 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onError(Exception e) {
                 Log.e("AuthenticateUser", e.toString());
                 logFailLogin(mUsername.getText().toString(),e);
-                Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                String errorMessage = "";
+
+                if (e.getMessage() != null) {
+                    errorMessage = "Failed to log in due to an error: " +
+                            e.getMessage() + ". Try again later.";
+                } else {
+                    errorMessage = "Failed to log in user !";
+                }
+                Toast.makeText(mContext, errorMessage, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -363,8 +375,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
         //ends here
 
-        mPrefs = this.getSharedPreferences("pref", Context.MODE_PRIVATE);
+        mPrefs = this.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
         mEditor = mPrefs.edit();
+
         ICountriesRequest countriesService = new CountriesRequest(mContext);
 
         countriesService.getCountries(new ICallback<List<Countries>>() {
@@ -401,6 +414,14 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Log.e("Login", e.toString());
             }
         });
+
+        //Automatically log-in for already logged-in user
+        boolean isUserLoggedIn = mPrefs.getBoolean(Constants.IS_USER_LOGGED_IN_KEY, false);
+        if (isUserLoggedIn) {
+            String username = mPrefs.getString(Constants.LOGGED_IN_USER_ID_KEY, "");
+            String password = mPrefs.getString(Constants.LOGGED_IN_USER_PASS_KEY, "");
+            logInUser(new Intent(this, HomeActivity.class), username, password, false);
+        }
     }
 
     private void logUser(Seller seller) {
