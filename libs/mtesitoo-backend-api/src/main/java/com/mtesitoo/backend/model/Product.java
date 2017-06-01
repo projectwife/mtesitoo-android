@@ -31,7 +31,7 @@ public class Product implements Parcelable {
     private final String mPricePerUnit;
     private final Integer mQuantity;
     private final Date mExpiration;
-    private final Uri mThumbnail;
+    private Uri mThumbnail;
     private final ArrayList<Uri> mAuxImages;
     private Uri lastImage;
 
@@ -137,6 +137,10 @@ public class Product implements Parcelable {
         }
 
         return success;
+    }
+
+    public void setThumbnail(Uri imageUri) {
+        mThumbnail = imageUri;
     }
 
     public int getId() {
