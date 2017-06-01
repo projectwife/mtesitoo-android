@@ -51,7 +51,7 @@ import org.json.JSONObject;
 import java.io.UnsupportedEncodingException;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 
@@ -61,10 +61,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected SharedPreferences mPrefs;
     String[] zonesNames;
 
-    @Bind(R.id.user_name)
+    @BindView(R.id.user_name)
     TextView mUsername;
 
-    @Bind(R.id.password)
+    @BindView(R.id.password)
     TextView mPassword;
 
     @Override

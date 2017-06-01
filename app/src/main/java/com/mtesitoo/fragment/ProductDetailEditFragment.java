@@ -56,7 +56,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
@@ -78,30 +78,30 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     private ImageFile currentImage;
     private RadioGroup categoryButtonGroup;
 
-    @Bind(R.id.product_image_slider_edit)
+    @BindView(R.id.product_image_slider_edit)
     SliderLayout mImageSlider;
-    @Bind(R.id.product_detail_info_border)
+    @BindView(R.id.product_detail_info_border)
     RelativeLayout mInfoBorder;
-    @Bind(R.id.product_detail_price_border)
+    @BindView(R.id.product_detail_price_border)
     RelativeLayout mPriceBorder;
 //    @Bind(R.id.product_detail_date_border)
 //    RelativeLayout mDateBorder;
-    @Bind(R.id.product_detail_name_edit)
+    @BindView(R.id.product_detail_name_edit)
     EditText mProductName;
-    @Bind(R.id.product_detail_description_edit)
+    @BindView(R.id.product_detail_description_edit)
     EditText mProductDescription;
-    @Bind(R.id.product_detail_location_edit)
+    @BindView(R.id.product_detail_location_edit)
     EditText mProductLocation;
-    @Bind(R.id.product_detail_category_container)
+    @BindView(R.id.product_detail_category_container)
     LinearLayout mProductCategoryContainer;
-    @Bind(R.id.product_detail_expiration_edit)
+    @BindView(R.id.product_detail_expiration_edit)
     EditText mProductExpiration;
 
-    @Bind(R.id.product_detail_unit_edit)
+    @BindView(R.id.product_detail_unit_edit)
     EditText mProductUnit;
-    @Bind(R.id.product_detail_quantity_edit)
+    @BindView(R.id.product_detail_quantity_edit)
     EditText mProductQuantity;
-    @Bind(R.id.product_detail_price_edit)
+    @BindView(R.id.product_detail_price_edit)
     EditText mProductPrice;
 
     private Activity mActivity;

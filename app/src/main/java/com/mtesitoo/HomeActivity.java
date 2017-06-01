@@ -26,7 +26,7 @@ import com.mtesitoo.fragment.OrderFragment;
 import com.mtesitoo.fragment.ProductFragment;
 import com.mtesitoo.fragment.ProfileFragment;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class HomeActivity extends AppCompatActivity {
@@ -37,7 +37,7 @@ public class HomeActivity extends AppCompatActivity {
     private AccountHeader headerResult = null;
     private Drawer result = null;
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
 
     @Override

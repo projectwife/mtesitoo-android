@@ -18,7 +18,7 @@ import com.mtesitoo.helper.FormatHelper;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -73,11 +73,11 @@ public class OrderListAdapter extends ArrayAdapter<Order> {
         Order order;
         Context context;
 
-        @Bind(R.id.order_id)          TextView orderId;
-        @Bind(R.id.order_customer_name)     TextView name;
-        @Bind(R.id.order_total_price)      TextView totalPrice;
-        @Bind(R.id.order_status)  TextView orderStatus;
-        @Bind(R.id.order_date_ordered)      TextView dateOrdered;
+        @BindView(R.id.order_id)          TextView orderId;
+        @BindView(R.id.order_customer_name)     TextView name;
+        @BindView(R.id.order_total_price)      TextView totalPrice;
+        @BindView(R.id.order_status)  TextView orderStatus;
+        @BindView(R.id.order_date_ordered)      TextView dateOrdered;
 
         @OnClick(R.id.order_details_link)
         public void onClick(View view) {

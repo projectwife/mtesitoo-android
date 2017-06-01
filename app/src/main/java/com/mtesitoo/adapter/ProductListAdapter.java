@@ -14,13 +14,13 @@ import android.widget.TextView;
 import com.mtesitoo.ProductActivity;
 import com.mtesitoo.R;
 import com.mtesitoo.backend.model.Product;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.squareup.picasso.Picasso;
 /**
  * Created by jackwu on 2015-07-11.
  */
@@ -97,17 +97,17 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         Product product;
         Context context;
 
-        @Bind(R.id.product_list_item)
+        @BindView(R.id.product_list_item)
         LinearLayout itemLayout;
-        @Bind(R.id.product_name)
+        @BindView(R.id.product_name)
         TextView productName;
-        @Bind(R.id.product_thumbnail)
+        @BindView(R.id.product_thumbnail)
         ImageView productThumbnail;
-        @Bind(R.id.product_category)
+        @BindView(R.id.product_category)
         TextView productCategory;
-        @Bind(R.id.product_price)
+        @BindView(R.id.product_price)
         TextView productPrice;
-        @Bind(R.id.product_layout_divider)
+        @BindView(R.id.product_layout_divider)
         View layoutDivider;
 
         @OnClick(R.id.product_see_details_link)
