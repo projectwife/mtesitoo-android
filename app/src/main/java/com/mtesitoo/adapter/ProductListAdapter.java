@@ -81,6 +81,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         holder.productCategory.setText(product.getCategoriesStringList(mContext));
         holder.productPrice.setText(product.getPricePerUnit());
         uri = product.getmThumbnail().toString();
+
         if(uri.contains(" ")){
             uri = uri.replace(" ","%20");
             Picasso.with(holder.context).load(uri).into(holder.productThumbnail);
@@ -110,7 +111,8 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         @BindView(R.id.product_layout_divider)
         View layoutDivider;
 
-        @OnClick(R.id.product_see_details_link)
+        //@OnClick(R.id.product_see_details_link)
+        @OnClick(R.id.product_thumbnail)
         public void onClick(View view) {
             Intent intent = new Intent(context, ProductActivity.class);
             intent.putExtra(context.getString(R.string.bundle_product_key), product);

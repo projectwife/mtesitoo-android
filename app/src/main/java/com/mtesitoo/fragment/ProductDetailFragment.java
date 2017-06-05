@@ -12,7 +12,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.daimajia.slider.library.Indicators.PagerIndicator;
 import com.daimajia.slider.library.SliderLayout;
@@ -21,9 +20,6 @@ import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
 import com.mtesitoo.R;
 import com.mtesitoo.backend.model.Product;
-import com.mtesitoo.backend.service.ProductRequest;
-import com.mtesitoo.backend.service.logic.ICallback;
-import com.mtesitoo.backend.service.logic.IProductRequest;
 import com.mtesitoo.helper.FormatHelper;
 
 import java.util.ArrayList;
@@ -124,6 +120,7 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
             //TODO: there should be some way to notify admin or feedback for such issue.
             return;
         }
+
         productId = mProduct.getId();
         mProductName.setText(mProduct.getName());
         mProductDescription.setText(FormatHelper.formatDescription(mProduct.getDescription()));
@@ -171,23 +168,7 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
         mDateBorder.setPadding(padding, padding / 2, padding, padding);
     }
 
-    private void refreshProduct() {
-        IProductRequest productService = new ProductRequest(getContext());
-
-        productService.getProduct(mProduct.getId(), new ICallback<Product>() {
-            @Override
-            public void onResult(Product result) {
-                mProduct = result;
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Toast.makeText(getActivity(), "Error getting product images", Toast.LENGTH_LONG).show();
-            }
-        });
-    }
     private void updateImageSlider() {
-        refreshProduct();
         ArrayList<String> urls = new ArrayList<>();
 
         String thumbnail = mProduct.getmThumbnail().toString();
