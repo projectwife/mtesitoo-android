@@ -60,7 +60,7 @@ android {
             storeFile file(new File("../" + RELEASE_KEYSTORE_FILE))
             storePassword RELEASE_KEYSTORE_PASSWORD
             keyAlias RELEASE_KEYSTORE_ALIAS
-            keyPassword RELEASE_KEYSTORE_PASSWORD
+            keyPassword System.getenv("RELEASE_KEYSTORE_PASSWORD")
         }
     }
 
