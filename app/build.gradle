@@ -14,6 +14,17 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('build.properties').newDataInputStream())
+
+def RELEASE_KEYSTORE_FILE = properties.getProperty('RELEASE_KEYSTORE_FILE')
+def RELEASE_KEYSTORE_PASSWORD = properties.getProperty('RELEASE_KEYSTORE_PASSWORD')
+def RELEASE_KEYSTORE_ALIAS = properties.getProperty('RELEASE_KEYSTORE_ALIAS')
+
+def DEBUG_KEYSTORE_FILE = properties.getProperty('DEBUG_KEYSTORE_FILE')
+def DEBUG_KEYSTORE_PASSWORD = properties.getProperty('DEBUG_KEYSTORE_PASSWORD')
+def DEBUG_KEYSTORE_ALIAS = properties.getProperty('DEBUG_KEYSTORE_ALIAS')
+
 
 android {
     compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
@@ -29,14 +40,44 @@ android {
         multiDexEnabled true
     }
 
+    lintOptions {
+        abortOnError false
+    }
+
     dexOptions {
         javaMaxHeapSize "4g"
     }
 
-    buildTypes {
+    signingConfigs {
+        debug {
+            storeFile file(new File("../" + DEBUG_KEYSTORE_FILE))
+            storePassword DEBUG_KEYSTORE_PASSWORD
+            keyAlias DEBUG_KEYSTORE_ALIAS
+            keyPassword DEBUG_KEYSTORE_PASSWORD
+        }
+
         release {
+            storeFile file(new File("../" + RELEASE_KEYSTORE_FILE))
+            storePassword RELEASE_KEYSTORE_PASSWORD
+            keyAlias RELEASE_KEYSTORE_ALIAS
+            keyPassword System.getenv("RELEASE_KEYSTORE_PASSWORD")
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            signingConfig signingConfigs.release
+
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            zipAlignEnabled true
         }
     }
 

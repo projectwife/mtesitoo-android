@@ -65,8 +65,8 @@ import static android.app.Activity.RESULT_OK;
  */
 public class ProductDetailEditFragment extends Fragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener, View.OnClickListener{
     private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
-    static final int REQUEST_IMAGE_CAPTURE = 1;
-    static final int REQUEST_LOAD_IMAGE = 2;
+    static final int REQUEST_IMAGE_CAPTURE = 2;
+    static final int REQUEST_LOAD_IMAGE = 3;
     static int REQUEST_IMAGE_TYPE = 0;
 
     private static final int IMAGE_SLIDER_DURATION = 8000;
@@ -238,13 +238,31 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         return super.onOptionsItemSelected(item);
     }
 
+    private void refreshProduct(int productId) {
+        IProductRequest productService = new ProductRequest(getContext());
+
+        productService.getProduct(productId, new ICallback<Product>() {
+            @Override
+            public void onResult(Product result) {
+                mProduct = result;
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(getActivity(), "Error getting product images", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     @Override
     public void onSliderClick(final BaseSliderView slider) {
 
+        //refreshProduct();
         Uri thumbnail = mProduct.getmThumbnail();
 
-        if (thumbnail!= null && !thumbnail.toString().isEmpty() &&
-                mProduct.getAuxImages().size() >= MAX_IMAGES) {
+        if ((thumbnail!= null && !thumbnail.toString().isEmpty() &&
+                mProduct.getAuxImages().size() >= MAX_IMAGES) ||
+                mImageUris.size() >= 4) {
             Snackbar.make(getView(), "Can't upload more than 4 pictures. Pick your best pictures !", Snackbar.LENGTH_LONG).show();
             //Image limit reached to maximum. Only show option to delete images.
             displayOnlyDeletePhotoOption(slider);
@@ -436,6 +454,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
                 mImageSlider.removeSliderAt(mImageSlider.getCurrentPosition());
                 mImageUris.remove(Uri.parse(imageUrl));
                 updateImageSlider();
+                refreshProduct(mProduct.getId());
                 Toast.makeText(getActivity(),"Deleted Image Successfully",Toast.LENGTH_SHORT).show();
             }
 
@@ -447,7 +466,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
 
         // Remove image from list if successful
 
-        //Toast.makeText(getActivity(),"delete " + slider.getUrl(),Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity()," delete " + slider.getUrl(),Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -483,7 +502,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
             }
             submitProductImage(selectedImageUri);
         } else {
-                Snackbar.make(getView(), "Can't upload more than " + MAX_IMAGES + " pictures. Pick your best pictures !", Snackbar.LENGTH_LONG).show();
+                Snackbar.make(getView(), "Failed to load picture. Try again !", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -502,14 +521,16 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     private void submitAuxProductImage(Uri imageUri) {
         boolean isImageAdded = mProduct.addImage(imageUri);
         if (isImageAdded) {
-            mImageUris.add(0, imageUri);
+            mImageUris.add(imageUri);
             updateImageSlider();
+            //mImageSlider.setCurrentPosition(0);
 
             IProductRequest productService = new ProductRequest(this.getContext());
             productService.submitProductImage(mProduct, new ICallback<String>() {
                 @Override
                 public void onResult(String result) {
                     Toast.makeText(getContext(), "Product Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                    refreshProduct(mProduct.getId());
                 }
 
                 @Override
@@ -521,28 +542,27 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     }
 
     private void submitProductThumbnail(Uri imageUri) {
-        boolean isImageAdded = mProduct.addImage(imageUri);
-        if (isImageAdded) {
-            mImageUris.add(0, imageUri);
-            updateImageSlider();
+        mImageUris.add(imageUri);
+        updateImageSlider();
+        //mImageSlider.setCurrentPosition(0);
 
-            mProduct.setThumbnail(imageUri);
+        mProduct.setThumbnail(imageUri);
 
-            IProductRequest productService = new ProductRequest(this.getContext());
-            productService.submitProductThumbnail(mProduct.getId(), mProduct.getmThumbnail(), new ICallback<String>() {
-                @Override
-                public void onResult(String result) {
-                    Log.d("image thumb upload","Success");
-                    Toast.makeText(getContext(), "Product thumbnail uploaded.", Toast.LENGTH_LONG).show();
-                }
+        IProductRequest productService = new ProductRequest(this.getContext());
+        productService.submitProductThumbnail(mProduct.getId(), mProduct.getmThumbnail(), new ICallback<String>() {
+            @Override
+            public void onResult(String result) {
+                Log.d("image thumb upload","Success");
+                Toast.makeText(getContext(), "Product thumbnail uploaded.", Toast.LENGTH_LONG).show();
+                refreshProduct(mProduct.getId());
+            }
 
-                @Override
-                public void onError(Exception e) {
-                    Log.e("image thumb upload err",e.toString());
-                    Toast.makeText(getContext(), "Error occurred while uploading Product thumbnail.", Toast.LENGTH_LONG).show();
-                }
-            });
-        }
+            @Override
+            public void onError(Exception e) {
+                Log.e("image thumb upload err",e.toString());
+                Toast.makeText(getContext(), "Error occurred while uploading Product thumbnail.", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public ImageFile getCurrentImage(){
