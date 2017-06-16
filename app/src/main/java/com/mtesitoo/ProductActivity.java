@@ -11,17 +11,16 @@ import com.mtesitoo.backend.model.Product;
 import com.mtesitoo.backend.service.ProductRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.IProductRequest;
-import com.mtesitoo.fragment.ProductDetailEditFragment;
 import com.mtesitoo.fragment.ProductDetailFragment;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class ProductActivity extends AppCompatActivity {
 
     private Product mProduct;
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
 
     @Override

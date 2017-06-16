@@ -1,5 +1,6 @@
 package com.mtesitoo;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -7,9 +8,12 @@ import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -26,12 +30,14 @@ import com.mtesitoo.backend.service.CommonRequest;
 import com.mtesitoo.backend.service.LoginRequest;
 import com.mtesitoo.backend.service.RegistrationRequest;
 import com.mtesitoo.backend.service.SellerRequest;
+import com.mtesitoo.backend.service.VendorTermsRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.ICategoryRequest;
 import com.mtesitoo.backend.service.logic.ICommonRequest;
 import com.mtesitoo.backend.service.logic.ILoginRequest;
 import com.mtesitoo.backend.service.logic.IRegistrationRequest;
 import com.mtesitoo.backend.service.logic.ISellerRequest;
+import com.mtesitoo.backend.service.logic.IVendorTerms;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -40,6 +46,8 @@ import java.io.UnsupportedEncodingException;
 import java.util.List;
 
 public class RegisterActivity extends AppCompatActivity {
+
+    final String TAG = "RegisterActivity";
 
     String password;
     String confirmPassword;
@@ -68,26 +76,7 @@ public class RegisterActivity extends AppCompatActivity {
                 phoneNumber = ((EditText)findViewById(R.id.registration_phone)).getText().toString();
 
                 if(verifyInput()){
-
-                    final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int choice) {
-                            switch (choice) {
-                                case DialogInterface.BUTTON_POSITIVE:
-                                    registerUser();
-                                    break;
-                                case DialogInterface.BUTTON_NEGATIVE:
-                                    dialog.dismiss();
-                                    break;
-                            }
-                        }
-                    };
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
-                    builder.setTitle("Terms and Conditions")
-                            .setMessage("<< Placeholder >>")
-                            .setPositiveButton("Agree", dialogClickListener)
-                            .setNegativeButton("Cancel", dialogClickListener).show();
+                    showToC();
                 }
             }
         });
@@ -101,7 +90,65 @@ public class RegisterActivity extends AppCompatActivity {
 
     }
 
+    @SuppressLint("ResourceType")
+    private void showToC() {
+        final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int choice) {
+                switch (choice) {
+                    case DialogInterface.BUTTON_POSITIVE:
+                        registerUser();
+                        break;
+                    case DialogInterface.BUTTON_NEGATIVE:
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        };
 
+        final AlertDialog.Builder builder = new AlertDialog.Builder(RegisterActivity.this);
+
+        final TextView textView = new TextView(this);
+        textView.setMovementMethod(LinkMovementMethod.getInstance());
+        textView.setPadding(16, 0,16, 0);
+
+        IVendorTerms vendorTerms = new VendorTermsRequest(this);
+        vendorTerms.getVendorTerms(new ICallback<String>() {
+            @Override
+            public void onResult(String result) {
+                //Show TOCs in dialog
+                String title = "Terms and Conditions";
+                String description = "";
+
+                try {
+                    JSONObject tocObj = new JSONObject(result);
+                    title = tocObj.getString("title");
+                    description = tocObj.getString("description");
+
+                    textView.setText(Html.fromHtml(description));
+                    builder.setView(textView);
+                    builder.setTitle(title)
+                            .setPositiveButton("Agree", dialogClickListener)
+                            .setNegativeButton("Cancel", dialogClickListener).show();
+                } catch (JSONException e) {
+                    description = "Error occurred. Try Again later.";
+                    Log.e(TAG, description +  " : " + e.getMessage());
+                    builder.setTitle(title)
+                            .setMessage(description)
+                            .setNegativeButton("Cancel", dialogClickListener).show();
+                }
+            }
+
+            @Override
+            public void onError(Exception e) {
+                String errMsg = "Failed to fetch Terms and Conditions. Please try again later.";
+                Log.e(TAG, errMsg + e.getMessage());
+                builder.setTitle("Terms and Conditions")
+                        .setMessage(errMsg)
+                        .setNegativeButton("Cancel", dialogClickListener).show();
+            }
+        });
+    }
     private void registerUser(){
 
         final Seller seller = new Seller(0, email, firstName, lastName,

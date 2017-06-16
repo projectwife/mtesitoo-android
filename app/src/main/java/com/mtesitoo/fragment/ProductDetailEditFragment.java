@@ -31,7 +31,6 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.daimajia.slider.library.Indicators.PagerIndicator;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
@@ -56,7 +55,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 import static android.app.Activity.RESULT_OK;
@@ -74,34 +73,35 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     private static final int MAX_IMAGES = Product.MAX_AUX_IMAGES;
 
     private Product mProduct;
-    private ArrayList<ImageFile> mImages;
+    //private ArrayList<ImageFile> mImages;
+    private ArrayList<Uri> mImageUris;
     private ImageFile currentImage;
     private RadioGroup categoryButtonGroup;
 
-    @Bind(R.id.product_image_slider_edit)
+    @BindView(R.id.product_image_slider_edit)
     SliderLayout mImageSlider;
-    @Bind(R.id.product_detail_info_border)
+    @BindView(R.id.product_detail_info_border)
     RelativeLayout mInfoBorder;
-    @Bind(R.id.product_detail_price_border)
+    @BindView(R.id.product_detail_price_border)
     RelativeLayout mPriceBorder;
 //    @Bind(R.id.product_detail_date_border)
 //    RelativeLayout mDateBorder;
-    @Bind(R.id.product_detail_name_edit)
+    @BindView(R.id.product_detail_name_edit)
     EditText mProductName;
-    @Bind(R.id.product_detail_description_edit)
+    @BindView(R.id.product_detail_description_edit)
     EditText mProductDescription;
-    @Bind(R.id.product_detail_location_edit)
+    @BindView(R.id.product_detail_location_edit)
     EditText mProductLocation;
-    @Bind(R.id.product_detail_category_container)
+    @BindView(R.id.product_detail_category_container)
     LinearLayout mProductCategoryContainer;
-    @Bind(R.id.product_detail_expiration_edit)
+    @BindView(R.id.product_detail_expiration_edit)
     EditText mProductExpiration;
 
-    @Bind(R.id.product_detail_unit_edit)
+    @BindView(R.id.product_detail_unit_edit)
     EditText mProductUnit;
-    @Bind(R.id.product_detail_quantity_edit)
+    @BindView(R.id.product_detail_quantity_edit)
     EditText mProductQuantity;
-    @Bind(R.id.product_detail_price_edit)
+    @BindView(R.id.product_detail_price_edit)
     EditText mProductPrice;
 
     private Activity mActivity;
@@ -119,7 +119,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
         mActivity = getActivity();
-        mImages = new ArrayList<>(MAX_IMAGES);
+        mImageUris = new ArrayList<>(MAX_IMAGES);
     }
 
     @Override
@@ -241,8 +241,11 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     @Override
     public void onSliderClick(final BaseSliderView slider) {
 
-        if (mProduct.getAuxImages().size() >= MAX_IMAGES) {
-            Snackbar.make(getView(), "Can't upload more than " + MAX_IMAGES + " pictures. Pick your best pictures !", Snackbar.LENGTH_LONG).show();
+        Uri thumbnail = mProduct.getmThumbnail();
+
+        if (thumbnail!= null && !thumbnail.toString().isEmpty() &&
+                mProduct.getAuxImages().size() >= MAX_IMAGES) {
+            Snackbar.make(getView(), "Can't upload more than 4 pictures. Pick your best pictures !", Snackbar.LENGTH_LONG).show();
             //Image limit reached to maximum. Only show option to delete images.
             displayOnlyDeletePhotoOption(slider);
             return;
@@ -422,7 +425,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         }
     }
 
-    private void deleteImage(String imageUrl) {
+    private void deleteImage(final String imageUrl) {
         final String imageFilename = imageUrl.substring(imageUrl.lastIndexOf('/')+1, imageUrl.length() );
 
         // Delete image request
@@ -431,6 +434,8 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
             @Override
             public void onResult(Product result) {
                 mImageSlider.removeSliderAt(mImageSlider.getCurrentPosition());
+                mImageUris.remove(Uri.parse(imageUrl));
+                updateImageSlider();
                 Toast.makeText(getActivity(),"Deleted Image Successfully",Toast.LENGTH_SHORT).show();
             }
 
@@ -483,9 +488,21 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     }
 
     private void submitProductImage(Uri imageUri) {
+        Uri thumbnail = mProduct.getmThumbnail();
+
+        //If thumbnail is not assigned yet, then add first picture as thumbnail
+        if (thumbnail == null || (thumbnail instanceof Uri && thumbnail.toString().isEmpty())) {
+            submitProductThumbnail(imageUri);
+        } else {
+            //thumbnail already exists, carry on adding aux images
+            submitAuxProductImage(imageUri);
+        }
+    }
+
+    private void submitAuxProductImage(Uri imageUri) {
         boolean isImageAdded = mProduct.addImage(imageUri);
         if (isImageAdded) {
-            mImages.add(0, currentImage);
+            mImageUris.add(0, imageUri);
             updateImageSlider();
 
             IProductRequest productService = new ProductRequest(this.getContext());
@@ -503,18 +520,34 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         }
     }
 
+    private void submitProductThumbnail(Uri imageUri) {
+        boolean isImageAdded = mProduct.addImage(imageUri);
+        if (isImageAdded) {
+            mImageUris.add(0, imageUri);
+            updateImageSlider();
+
+            mProduct.setThumbnail(imageUri);
+
+            IProductRequest productService = new ProductRequest(this.getContext());
+            productService.submitProductThumbnail(mProduct.getId(), mProduct.getmThumbnail(), new ICallback<String>() {
+                @Override
+                public void onResult(String result) {
+                    Log.d("image thumb upload","Success");
+                    Toast.makeText(getContext(), "Product thumbnail uploaded.", Toast.LENGTH_LONG).show();
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.e("image thumb upload err",e.toString());
+                    Toast.makeText(getContext(), "Error occurred while uploading Product thumbnail.", Toast.LENGTH_LONG).show();
+                }
+            });
+        }
+    }
+
     public ImageFile getCurrentImage(){
         return currentImage;
     }
-
-//    private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
-//        public void onDateSet(DatePicker view, int selectedYear,
-//                              int selectedMonth, int selectedDay) {
-//            mProductExpirationDate.setText(new StringBuilder().append(selectedMonth + 1)
-//                            .append("-").append(selectedDay).append("-").append(selectedYear)
-//            );
-//        }
-//    };
 
     private void buildProductCategories() {
         ICategoryCache cache = new CategoryCache(getActivity());
@@ -540,31 +573,24 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         mProductCategoryContainer.addView(categoryButtonGroup);
     }
 
-//    private void buildProductDatePicker() {
-//        mProductExpirationDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (hasFocus == true) {
-//                    new DatePickerDialog(getActivity(), datePickerListener, 2015, 11, 1).show();
-//                }
-//            }
-//        });
-//    }
-
     private void buildImageSlider() {
-
-        ArrayList<String> urls = new ArrayList<>();
-
-        String thumbnail = mProduct.getmThumbnail().toString();
-        if (!thumbnail.isEmpty()) {
-            urls.add(thumbnail);
+        Uri thumbnail = mProduct.getmThumbnail();
+        if (thumbnail instanceof Uri && !thumbnail.toString().isEmpty()) {
+            mImageUris.add(thumbnail);
         }
 
         for(Uri image : mProduct.getAuxImages()){
-            urls.add(image.toString());
+            mImageUris.add(image);
         }
 
-        for (String url : urls) {
+        updateImageSlider();
+    }
+
+    private void updateImageSlider() {
+        mImageSlider.removeAllSliders();
+
+        for (Uri uri : mImageUris) {
+            String url = uri.toString();
             url = url.trim();
             if(!url.isEmpty()){
                 DefaultSliderView sliderView = new DefaultSliderView(getActivity());
@@ -577,7 +603,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         }
 
         //If there's no picture available for product, then show a no_image picture
-        if (urls.size() < 1) {
+        if (mImageUris.size() < 1) {
             DefaultSliderView sliderView = new DefaultSliderView(getActivity());
             sliderView
                     .image("http://tesitoo.com/image/cache/no_image-100x100.png")
@@ -586,12 +612,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
             mImageSlider.addSlider(sliderView);
         }
 
-        mImageSlider.setDuration(IMAGE_SLIDER_DURATION);
-
-        if(urls.size() <= 1){
-            mImageSlider.stopAutoCycle();
-            mImageSlider.setIndicatorVisibility(PagerIndicator.IndicatorVisibility.Invisible);
-        }
+        mImageSlider.stopAutoCycle();
     }
 
     private void updateEditTextLengths() {
@@ -630,31 +651,6 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         mInfoBorder.setPadding(padding, padding, padding, padding / 2);
         mPriceBorder.setPadding(padding, padding / 2, padding, padding / 2);
         //mDateBorder.setPadding(padding, padding / 2, padding, padding);
-    }
-
-    private void updateImageSlider() {
-        mImageSlider.removeAllSliders();
-
-        for (ImageFile image : mImages) {
-
-            DefaultSliderView sliderView = new DefaultSliderView(getActivity());
-            sliderView
-                    .image(image)
-                    .setScaleType(BaseSliderView.ScaleType.Fit)
-                    .setOnSliderClickListener(this);
-
-            //Don't add blank image when there's at least one product image available
-            if (mImages.size() > 0 && !image.getName().contains("no_image")) {
-                mImageSlider.addSlider(sliderView);
-            }
-        }
-
-        mImageSlider.setDuration(IMAGE_SLIDER_DURATION);
-
-        if(mImages.size() <= 1){
-            mImageSlider.stopAutoCycle();
-            mImageSlider.setIndicatorVisibility(PagerIndicator.IndicatorVisibility.Invisible);
-        }
     }
 
     public void onClick(View view){

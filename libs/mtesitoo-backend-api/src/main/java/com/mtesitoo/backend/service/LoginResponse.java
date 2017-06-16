@@ -47,6 +47,9 @@ public class LoginResponse implements Response.Listener<String>, Response.ErrorL
     @Override
     public void onErrorResponse(VolleyError error) {
         Log.e("NETWORK ERROR", "Empty response from server: " + error.getMessage());
+        if (mCallback != null) {
+            mCallback.onError(error);
+        }
     }
 
     private String parseToken(String response) throws JSONException {

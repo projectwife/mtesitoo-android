@@ -53,7 +53,7 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -68,41 +68,41 @@ public class ProfileFragment extends Fragment {
     private static Context mContext;
     private ImageFile mProfileImageFile;
 
-    @Bind(R.id.profileImage)
+    @BindView(R.id.profileImage)
     ImageView mProfileImage;
-    @Bind(R.id.etFirstName)
+    @BindView(R.id.etFirstName)
     EditText mFirstName;
-    @Bind(R.id.etLastName)
+    @BindView(R.id.etLastName)
     EditText mLastName;
-    @Bind(R.id.etPhone)
+    @BindView(R.id.etPhone)
     EditText mProfileTelephone;
-    @Bind(R.id.etEmail)
+    @BindView(R.id.etEmail)
     EditText mProfileEmail;
-    @Bind(R.id.etBusiness)
+    @BindView(R.id.etBusiness)
     EditText mProfileCompanyName;
-    @Bind(R.id.etDescription)
+    @BindView(R.id.etDescription)
     EditText mProfileDescription;
-    @Bind(R.id.etAddress1)
+    @BindView(R.id.etAddress1)
     EditText mProfileAddress1;
-    @Bind(R.id.etAddress2)
+    @BindView(R.id.etAddress2)
     EditText mProfileAddress2;
-    @Bind(R.id.etCity)
+    @BindView(R.id.etCity)
     EditText mProfileCity;
-    @Bind(R.id.spinnerState)
+    @BindView(R.id.spinnerState)
     Spinner mProfileState;
-    @Bind(R.id.spinnerCountry)
+    @BindView(R.id.spinnerCountry)
     Spinner mProfileCountry;
-    @Bind(R.id.etPostCode)
+    @BindView(R.id.etPostCode)
     TextView mProfilePostcode;
 
     //Settings FAB
-    @Bind(R.id.layoutFabSave)
+    @BindView(R.id.layoutFabSave)
     LinearLayout layoutFabSave;
-    @Bind(R.id.layoutFabEdit)
+    @BindView(R.id.layoutFabEdit)
     LinearLayout layoutFabEdit;
-    @Bind(R.id.layoutFabPhoto)
+    @BindView(R.id.layoutFabPhoto)
     LinearLayout layoutFabPhoto;
-    @Bind(R.id.fabSetting)
+    @BindView(R.id.fabSetting)
     FloatingActionButton fabSettings;
     private boolean settingsFabExpanded = false;
 

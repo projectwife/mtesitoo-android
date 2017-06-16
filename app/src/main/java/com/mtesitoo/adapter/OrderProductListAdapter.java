@@ -1,16 +1,13 @@
 package com.mtesitoo.adapter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.mtesitoo.R;
 import com.mtesitoo.backend.model.Order;
@@ -20,7 +17,7 @@ import com.mtesitoo.helper.FormatHelper;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -92,14 +89,14 @@ public class OrderProductListAdapter extends ArrayAdapter<OrderProduct>
         OrderProduct orderProduct;
         Context context;
 
-        @Bind(R.id.order_product_id)            TextView orderProductId;
-        @Bind(R.id.order_product_name)          TextView productName;
-        @Bind(R.id.order_product_total_price)   TextView totalPrice;
-        @Bind(R.id.order_product_model)         TextView model;
-        @Bind(R.id.order_product_quantity)      TextView quantity;
-        @Bind(R.id.order_product_item_price)    TextView itemPrice;
-        @Bind(R.id.order_product_status_title)  TextView productStatusTitle;
-        @Bind(R.id.order_product_status)        TextView productStatus;
+        @BindView(R.id.order_product_id)            TextView orderProductId;
+        @BindView(R.id.order_product_name)          TextView productName;
+        @BindView(R.id.order_product_total_price)   TextView totalPrice;
+        @BindView(R.id.order_product_model)         TextView model;
+        @BindView(R.id.order_product_quantity)      TextView quantity;
+        @BindView(R.id.order_product_item_price)    TextView itemPrice;
+        @BindView(R.id.order_product_status_title)  TextView productStatusTitle;
+        @BindView(R.id.order_product_status)        TextView productStatus;
 
         @OnClick(R.id.order_product_edit_status)
         public void onClick(View view) {
