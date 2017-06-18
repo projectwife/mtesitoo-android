@@ -17,6 +17,10 @@ repositories {
 Properties properties = new Properties()
 properties.load(project.rootProject.file('build.properties').newDataInputStream())
 
+//TODO: Get these props from build.properties
+def ANDROID_BUILD_SDK_VERSION = properties.get('ANDROID_BUILD_SDK_VERSION')
+def ANDROID_BUILD_TOOLS_VERSION = properties.get('ANDROID_BUILD_TOOLS_VERSION')
+
 def RELEASE_KEYSTORE_FILE = properties.getProperty('RELEASE_KEYSTORE_FILE')
 def RELEASE_KEYSTORE_PASSWORD = properties.getProperty('RELEASE_KEYSTORE_PASSWORD')
 def RELEASE_KEYSTORE_ALIAS = properties.getProperty('RELEASE_KEYSTORE_ALIAS')
@@ -25,9 +29,12 @@ def DEBUG_KEYSTORE_FILE = properties.getProperty('DEBUG_KEYSTORE_FILE')
 def DEBUG_KEYSTORE_PASSWORD = properties.getProperty('DEBUG_KEYSTORE_PASSWORD')
 def DEBUG_KEYSTORE_ALIAS = properties.getProperty('DEBUG_KEYSTORE_ALIAS')
 
+if (project.hasProperty("signPass")) {
+    RELEASE_KEYSTORE_PASSWORD = project.getProperties().get("signPass")
+}
 
 android {
-    compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
+    compileSdkVersion  Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
     buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 
     defaultConfig {
@@ -60,7 +67,7 @@ android {
             storeFile file(new File("../" + RELEASE_KEYSTORE_FILE))
             storePassword RELEASE_KEYSTORE_PASSWORD
             keyAlias RELEASE_KEYSTORE_ALIAS
-            keyPassword System.getenv("RELEASE_KEYSTORE_PASSWORD")
+            keyPassword RELEASE_KEYSTORE_PASSWORD
         }
     }
 
