@@ -70,8 +70,8 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         ViewGroup.LayoutParams params = holder.itemLayout.getLayoutParams();
         params.width = (int) deviceWidth;
 
-        params = holder.layoutDivider.getLayoutParams();
-        params.width = (int) (0.85 * deviceWidth);
+//        params = holder.layoutDivider.getLayoutParams();
+//        params.width = (int) (0.85 * deviceWidth);
 
         params = holder.productThumbnail.getLayoutParams();
         params.height = (int) (0.4 * deviceWidth);
@@ -108,8 +108,8 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         TextView productCategory;
         @BindView(R.id.product_price)
         TextView productPrice;
-        @BindView(R.id.product_layout_divider)
-        View layoutDivider;
+//        @BindView(R.id.product_layout_divider)
+//        View layoutDivider;
 
         //@OnClick(R.id.product_see_details_link)
         @OnClick(R.id.product_thumbnail)

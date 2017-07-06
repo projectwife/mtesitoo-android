@@ -53,7 +53,7 @@
 
             </RelativeLayout>
 
-            <View
+            <!--View
                 android:id="@+id/product_layout_divider"
                 android:layout_width="350dip"
                 android:layout_height="1dip"
@@ -82,7 +82,7 @@
                     android:layout_alignParentRight="true"
                     android:text="..." />
 
-            </RelativeLayout>
+            </RelativeLayout-->
         </LinearLayout>
     </FrameLayout>
 </LinearLayout>
