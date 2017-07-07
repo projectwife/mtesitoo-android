@@ -17,6 +17,7 @@ import com.mtesitoo.backend.model.Product;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Date;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -53,7 +54,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         Product product = getItem(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.product_list_item, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.product_list_item2, parent, false);
         }
 
         int padding = Integer.parseInt(mContext.getString(R.string.padding));
@@ -74,12 +75,22 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
 //        params.width = (int) (0.85 * deviceWidth);
 
         params = holder.productThumbnail.getLayoutParams();
-        params.height = (int) (0.4 * deviceWidth);
-        params.width = (int) (0.4 * deviceWidth);
+        params.height = (int) (0.25 * deviceWidth);
+        params.width = (int) (0.25 * deviceWidth);
 
         holder.productName.setText(product.getName());
-        holder.productCategory.setText(product.getCategoriesStringList(mContext));
+
+        //Disabled category display for seller app.
+        //holder.productCategory.setText(product.getCategoriesStringList(mContext));
+
         holder.productPrice.setText(product.getPricePerUnit());
+
+        String expDate = "";
+        if (product.getExpiration() instanceof Date) {
+            expDate = product.getExpiration().toString();
+        }
+        holder.productExpDate.setText(expDate);
+
         uri = product.getmThumbnail().toString();
 
         if(uri.contains(" ")){
@@ -104,15 +115,21 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         TextView productName;
         @BindView(R.id.product_thumbnail)
         ImageView productThumbnail;
-        @BindView(R.id.product_category)
-        TextView productCategory;
         @BindView(R.id.product_price)
         TextView productPrice;
+        @BindView(R.id.mvExpirationDate)
+        TextView productExpDate;
+
+        //TODO: Show category for buyers app
+        //Disabled category display for seller app
+//        @BindView(R.id.product_category)
+//        TextView productCategory;
+
 //        @BindView(R.id.product_layout_divider)
 //        View layoutDivider;
 
         //@OnClick(R.id.product_see_details_link)
-        @OnClick(R.id.product_thumbnail)
+        @OnClick(R.id.gridViewProductListing)
         public void onClick(View view) {
             Intent intent = new Intent(context, ProductActivity.class);
             intent.putExtra(context.getString(R.string.bundle_product_key), product);
