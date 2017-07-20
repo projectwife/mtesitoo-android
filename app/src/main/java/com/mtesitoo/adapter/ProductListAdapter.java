@@ -2,6 +2,7 @@ package com.mtesitoo.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -87,9 +88,14 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
 
         String expDate = "";
         if (product.getExpiration() instanceof Date) {
-            expDate = product.getExpiration().toString();
+            expDate = product.getExpirationFormattedForApp().toString();
         }
-        holder.productExpDate.setText(expDate);
+        if (product.isProductExpired()) {
+            holder.productExpDate.setText(expDate);
+            holder.productExpDate.setTextColor(Color.RED);
+        } else {
+            holder.productExpDate.setText(expDate);
+        }
 
         uri = product.getmThumbnail().toString();
 

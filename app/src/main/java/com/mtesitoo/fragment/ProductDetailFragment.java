@@ -1,6 +1,7 @@
 package com.mtesitoo.fragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -126,10 +127,18 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
         mProductDescription.setText(FormatHelper.formatDescription(mProduct.getDescription()));
         mProductLocation.setText(mProduct.getLocation());
         mProductCategory.setText(mProduct.getCategoriesStringList(this.getContext()));
-        mProductExpiration.setText(mProduct.getExpirationFormattedForApp());
+
         mProductUnit.setText(mProduct.getSIUnit());
         mProductQuantity.setText(mProduct.getQuantity().toString());
         mProductPrice.setText(mProduct.getPricePerUnit());
+
+        String expDate = mProduct.getExpirationFormattedForApp();
+        if (mProduct.isProductExpired()) {
+            mProductExpiration.setText(expDate);
+            mProductExpiration.setTextColor(Color.RED);
+        } else {
+            mProductExpiration.setText(expDate);
+        }
 
         updateImageSlider();
         updateBorderPaddings();

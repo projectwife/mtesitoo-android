@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -145,7 +146,14 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         mProductUnit.setText(mProduct.getSIUnit());
         mProductQuantity.setText(mProduct.getQuantity().toString());
         mProductPrice.setText(mProduct.getPricePerUnit());
-        mProductExpiration.setText(mProduct.getExpirationFormattedForApp());
+
+        String expDate = mProduct.getExpirationFormattedForApp();
+        if (mProduct.isProductExpired()) {
+            mProductExpiration.setText(expDate);
+            mProductExpiration.setTextColor(Color.RED);
+        } else {
+            mProductExpiration.setText(expDate);
+        }
 
         updateEditTextLengths();
         updateBorderPaddings();

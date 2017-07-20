@@ -244,12 +244,40 @@ public class Product implements Parcelable {
         return mExpiration;
     }
 
+    public boolean isProductExpired() {
+        boolean expired = false;
+
+        Date today = new Date();
+        if (mExpiration != null && !expiringToday() && mExpiration.before(today)) {
+            //check if its today
+            expired = true;
+        }
+
+        return  expired;
+    }
+
+    public boolean expiringToday() {
+        boolean expiringToday = false;
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedTodayDate = dateFormatter.format(new Date());
+
+        String formattedProductExpDate = "";
+        if (mExpiration != null) {
+            formattedProductExpDate = (dateFormatter).format(mExpiration);
+        }
+
+        if (formattedTodayDate.equals(formattedProductExpDate)) {
+            expiringToday = true;
+        }
+
+        return expiringToday;
+    }
     public String getExpirationFormattedForApp() {
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = "";
         if (mExpiration != null) {
-            (dateFormatter).format(mExpiration);
+            formattedDate = (dateFormatter).format(mExpiration);
         }
 
         return formattedDate;
@@ -261,7 +289,7 @@ public class Product implements Parcelable {
         String formattedDate = "0000-00-00 00:00:00";
 
         if (mExpiration != null) {
-            (dateFormatter).format(mExpiration);
+            formattedDate = (dateFormatter).format(mExpiration);
         }
 
         return formattedDate;
