@@ -76,7 +76,8 @@ public class ProductDetailResponse implements Response.Listener<String>, Respons
                     jsonProduct.getInt("quantity"),
                     expirationDate,
                     Uri.parse(jsonProduct.getString("thumb_image")),
-                    parseAuxImages(jsonProduct.getJSONArray("images"))
+                    parseAuxImages(jsonProduct.getJSONArray("images")),
+                    jsonProduct.getInt("status")
             );
         } catch (ParseException e) {
             e.printStackTrace();

@@ -216,7 +216,7 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
                     Integer.parseInt(mProductQuantity.getText().toString()),
                     expiryDate,
                     mProduct.getmThumbnail(),
-                    mProduct.getAuxImages()
+                    mProduct.getAuxImages(), mProduct.getStatus()
             );
 
             IProductRequest productService = new ProductRequest(ProductDetailEditFragment.this.getContext());

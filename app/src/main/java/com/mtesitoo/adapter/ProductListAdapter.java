@@ -86,6 +86,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
 
         holder.productPrice.setText(product.getPricePerUnit());
 
+        //exp date
         String expDate = "";
         if (product.getExpiration() instanceof Date) {
             expDate = product.getExpirationFormattedForApp().toString();
@@ -96,6 +97,23 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         } else {
             holder.productExpDate.setText(expDate);
         }
+
+        //qty remaining
+        int qtyRemaining = product.getQuantity();
+        holder.productQtyRemaining.setText(String.valueOf(qtyRemaining));
+
+        //product status
+        int statusCode = product.getStatus();
+        String status = "";
+        if (statusCode == 0) {
+            status = "Disabled";
+        } else if (statusCode == 1) {
+            status = "Enabled";
+        } else if (statusCode == 5) {
+            status = "Pending Approval";
+        }
+
+        holder.productStatus.setText(status);
 
         uri = product.getmThumbnail().toString();
 
@@ -125,6 +143,10 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         TextView productPrice;
         @BindView(R.id.mvExpirationDate)
         TextView productExpDate;
+        @BindView(R.id.mvProductQtyRemaining)
+        TextView productQtyRemaining;
+        @BindView(R.id.mvProductStatus)
+        TextView productStatus;
 
         //TODO: Show category for buyers app
         //Disabled category display for seller app
