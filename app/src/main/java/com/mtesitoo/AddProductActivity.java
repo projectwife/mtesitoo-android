@@ -93,7 +93,7 @@ public class AddProductActivity extends ActionBarActivity implements
             }
 
             final Product product = new Product(0, name, description, "Location", category, "SI Unit",
-                    pricePerUnit, Integer.parseInt(quantity), new Date(), Uri.parse(thumbnail), null);
+                    pricePerUnit, Integer.parseInt(quantity), new Date(), Uri.parse(thumbnail), null, 1);
 
             IProductRequest productService = new ProductRequest(this);
             productService.submitProduct(product, new ICallback<String>() {

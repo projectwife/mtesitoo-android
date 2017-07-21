@@ -351,7 +351,7 @@ public class AddProductActivity2 extends AppCompatActivity {
         }
 
         final Product product = new Product(0, name, description, "Location", category, "SI Unit",
-                pricePerUnit, Integer.parseInt(quantity), new Date(), imageUri, null);//Uri.parse(thumbnail)
+                pricePerUnit, Integer.parseInt(quantity), new Date(), imageUri, null, 5);//Uri.parse(thumbnail)
 
         IProductRequest productService = new ProductRequest(this);
         productService.submitProduct(product, new ICallback<String>() {

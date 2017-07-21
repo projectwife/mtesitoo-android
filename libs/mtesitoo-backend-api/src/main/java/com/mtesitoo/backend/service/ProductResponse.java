@@ -86,7 +86,8 @@ public class ProductResponse implements Response.Listener<String>, Response.Erro
                             jsonProduct.getInt("quantity"),
                             expirationDate,
                             Uri.parse(jsonProduct.getString("thumb_image")),
-                            parseAuxImages()
+                            parseAuxImages(),
+                            jsonProduct.getInt("status")
                     );
             result.add(product);
         }

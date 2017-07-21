@@ -34,6 +34,8 @@ public class Product implements Parcelable {
     private Uri mThumbnail;
     private final ArrayList<Uri> mAuxImages;
     private Uri lastImage;
+    //0-disabled, 1-enabled, 5-pending approval
+    private int mStatus;
 
     private Product(Parcel in) {
         this.mId = in.readInt();
@@ -47,6 +49,7 @@ public class Product implements Parcelable {
         this.mExpiration = new Date(in.readLong());
         this.mThumbnail = null;
         this.mAuxImages = new ArrayList<>();
+        this.mStatus = in.readInt();
     }
 
     public static final Parcelable.Creator<Product> CREATOR = new Parcelable.Creator<Product>() {
@@ -76,7 +79,7 @@ public class Product implements Parcelable {
      * @param thumbnail    url of the product's thumbnail
      */
     public Product(int id, String name, String description, String location, ArrayList<String> categories, String siUnit,
-                   String pricePerUnit, Integer quantity, Date expiration, Uri thumbnail, ArrayList<Uri> auxImages) {
+                   String pricePerUnit, Integer quantity, Date expiration, Uri thumbnail, ArrayList<Uri> auxImages, int status) {
         mId = id;
         mName = name;
         mDescription = description;
@@ -88,6 +91,15 @@ public class Product implements Parcelable {
         mExpiration = expiration;
         mThumbnail = thumbnail;
         mAuxImages = auxImages;
+        mStatus = status;
+    }
+
+    public int getStatus() {
+        return mStatus;
+    }
+
+    public void setStatus(int mStatus) {
+        this.mStatus = mStatus;
     }
 
     /**
@@ -102,7 +114,8 @@ public class Product implements Parcelable {
      * @param thumbnail    url of the product's thumbnail
      */
     public Product(int id, String name, String description, String location, String category, String siUnit,
-                   String pricePerUnit, Integer quantity, Date expiration, Uri thumbnail, ArrayList<Uri> auxImages) {
+                   String pricePerUnit, Integer quantity, Date expiration, Uri thumbnail, ArrayList<Uri> auxImages,
+                   int status) {
 
         ArrayList<String> categoryList = new ArrayList<>();
         categoryList.add(category);
@@ -118,7 +131,7 @@ public class Product implements Parcelable {
         mExpiration = expiration;
         mThumbnail = thumbnail;
         mAuxImages = auxImages;
-
+        mStatus = status;
     }
 
     /**
@@ -244,12 +257,40 @@ public class Product implements Parcelable {
         return mExpiration;
     }
 
+    public boolean isProductExpired() {
+        boolean expired = false;
+
+        Date today = new Date();
+        if (mExpiration != null && !expiringToday() && mExpiration.before(today)) {
+            //check if its today
+            expired = true;
+        }
+
+        return  expired;
+    }
+
+    public boolean expiringToday() {
+        boolean expiringToday = false;
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedTodayDate = dateFormatter.format(new Date());
+
+        String formattedProductExpDate = "";
+        if (mExpiration != null) {
+            formattedProductExpDate = (dateFormatter).format(mExpiration);
+        }
+
+        if (formattedTodayDate.equals(formattedProductExpDate)) {
+            expiringToday = true;
+        }
+
+        return expiringToday;
+    }
     public String getExpirationFormattedForApp() {
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
         String formattedDate = "";
         if (mExpiration != null) {
-            (dateFormatter).format(mExpiration);
+            formattedDate = (dateFormatter).format(mExpiration);
         }
 
         return formattedDate;
@@ -261,7 +302,7 @@ public class Product implements Parcelable {
         String formattedDate = "0000-00-00 00:00:00";
 
         if (mExpiration != null) {
-            (dateFormatter).format(mExpiration);
+            formattedDate = (dateFormatter).format(mExpiration);
         }
 
         return formattedDate;
@@ -318,6 +359,7 @@ public class Product implements Parcelable {
         dest.writeString(mSIUnit);
         dest.writeString(mPricePerUnit);
         dest.writeInt(mQuantity);
+        dest.writeInt(mStatus);
         if (mExpiration != null) {
             dest.writeLong(mExpiration.getTime());
         } else {
