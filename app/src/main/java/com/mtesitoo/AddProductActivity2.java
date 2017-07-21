@@ -43,8 +43,9 @@ import com.mtesitoo.model.ImageFile;
 import java.util.Date;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class AddProductActivity2 extends AppCompatActivity {
     private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
@@ -57,19 +58,19 @@ public class AddProductActivity2 extends AppCompatActivity {
     ImageView photoDisplay;
     Drawable productPhotoDrawable;
 
-    @Bind(R.id.add_product_name)
+    @BindView(R.id.add_product_name)
     @NonNull
     EditText productName;
 
-    @Bind(R.id.add_product_description)
+    @BindView(R.id.add_product_description)
     @NonNull
     EditText productDescription;
 
-    @Bind(R.id.add_new_product_ppu)
+    @BindView(R.id.add_new_product_ppu)
     @NonNull
     EditText pricePerUnit;
 
-    @Bind(R.id.add_new_product_qty)
+    @BindView(R.id.add_new_product_qty)
     @NonNull
     EditText productQty;
 
@@ -78,11 +79,12 @@ public class AddProductActivity2 extends AppCompatActivity {
     private ImageFile mProductImageFile;
     private Context mContext;
 
+    private Unbinder unbinder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product2);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
 
         mContext =  this;
 
@@ -349,7 +351,7 @@ public class AddProductActivity2 extends AppCompatActivity {
         }
 
         final Product product = new Product(0, name, description, "Location", category, "SI Unit",
-                pricePerUnit, Integer.parseInt(quantity), new Date(), imageUri, null);//Uri.parse(thumbnail)
+                pricePerUnit, Integer.parseInt(quantity), new Date(), imageUri, null, 5);//Uri.parse(thumbnail)
 
         IProductRequest productService = new ProductRequest(this);
         productService.submitProduct(product, new ICallback<String>() {
@@ -387,7 +389,7 @@ public class AddProductActivity2 extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        ButterKnife.unbind(this);
+        unbinder.unbind();
         super.onDestroy();
     }
 }

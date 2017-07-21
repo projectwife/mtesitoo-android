@@ -7,12 +7,12 @@ import android.support.v7.widget.Toolbar;
 import com.mtesitoo.backend.model.Order;
 import com.mtesitoo.fragment.OrderDetailFragment;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 public class OrderActivity extends AppCompatActivity {
 
-    @Bind(R.id.toolbar)
+    @BindView(R.id.toolbar)
     Toolbar toolbar;
 
     @Override

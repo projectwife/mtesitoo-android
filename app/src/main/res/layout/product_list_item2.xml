@@ -1,0 +1,149 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/product_list_item"
+    style="@style/CardBorderTheme"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <FrameLayout
+        style="@style/CardTheme"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <GridLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:columnCount="3"
+            android:rowCount="6"
+            android:id="@+id/gridViewProductListing">
+
+            <TextView
+                android:id="@+id/product_name"
+                style="@style/TextTitleBoldTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Product Name"
+                android:layout_column="0"
+                android:layout_row="0"
+                android:layout_columnSpan="3"/>
+
+            <ImageView
+                android:id="@+id/product_thumbnail"
+                android:layout_width="150dip"
+                android:layout_height="150dip"
+                android:layout_gravity="center"
+                android:layout_marginTop="8dip"
+                android:scaleType="centerCrop"
+                android:src="@drawable/stock_order"
+                android:layout_column="0"
+                android:layout_row="1"
+                android:layout_rowSpan="5"
+                />
+
+            <TextView
+                android:id="@+id/tvProductPrice"
+                style="@style/TextTheme"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Price"
+                android:layout_column="1"
+                android:layout_row="1"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                android:layout_marginTop="8dip"/>
+            <TextView
+                android:id="@+id/product_price"
+                style="@style/TextBoldTheme"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_column="2"
+                android:layout_row="1"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                android:layout_marginTop="8dip"/>
+
+
+            <TextView
+                android:id="@+id/tvProductQtyRemaining"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Qty Remaining"
+                android:layout_column="1"
+                android:layout_row="2"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                style="@style/TextTheme"/>
+            <TextView
+                android:id="@+id/mvProductQtyRemaining"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_column="2"
+                android:layout_row="2"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                style="@style/TextBoldTheme"/>
+
+
+            <TextView
+                android:id="@+id/tvProductStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Status"
+                android:layout_column="1"
+                android:layout_row="3"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                style="@style/TextTheme"
+                />
+            <TextView
+                android:id="@+id/mvProductStatus"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_column="2"
+                android:layout_row="3"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                style="@style/TextBoldTheme"/>
+
+
+            <TextView
+                android:id="@+id/tvExpirationDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Expiration Date"
+                android:layout_column="1"
+                android:layout_row="4"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                style="@style/TextTheme"
+                />
+            <TextView
+                android:id="@+id/mvExpirationDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_column="2"
+                android:layout_row="4"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                style="@style/TextBoldTheme"
+                />
+
+            <TextView
+                android:id="@+id/tvOrderPending"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Orders Pending"
+                android:layout_column="1"
+                android:layout_row="5"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                style="@style/TextTheme"
+                />
+            <TextView
+                android:id="@+id/mvOrderPending"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_column="2"
+                android:layout_row="5"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                style="@style/TextBoldTheme"
+                />
+        </GridLayout>
+    </FrameLayout>
+</LinearLayout>

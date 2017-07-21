@@ -33,12 +33,11 @@ import android.widget.Button;
 import com.mtesitoo.backend.cache.CategoryCache;
 import com.mtesitoo.backend.cache.logic.ICategoryCache;
 import com.mtesitoo.backend.model.Category;
-import com.mtesitoo.backend.service.ProductRequest;
-import com.mtesitoo.backend.service.logic.IProductRequest;
-import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.model.Product;
+import com.mtesitoo.backend.service.ProductRequest;
+import com.mtesitoo.backend.service.logic.ICallback;
+import com.mtesitoo.backend.service.logic.IProductRequest;
 import com.mtesitoo.model.ProductWizard;
-
 import com.tech.freak.wizardpager.model.AbstractWizardModel;
 import com.tech.freak.wizardpager.model.ImagePage;
 import com.tech.freak.wizardpager.model.ModelCallbacks;
@@ -47,11 +46,10 @@ import com.tech.freak.wizardpager.ui.PageFragmentCallbacks;
 import com.tech.freak.wizardpager.ui.ReviewFragment;
 import com.tech.freak.wizardpager.ui.StepPagerStrip;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -65,13 +63,13 @@ public class AddProductActivity extends ActionBarActivity implements
     private boolean mEditingAfterReview;
     private boolean mConsumePageSelectedEvent;
 
-    @Bind(R.id.next_button)
+    @BindView(R.id.next_button)
     Button mNextButton;
-    @Bind(R.id.prev_button)
+    @BindView(R.id.prev_button)
     Button mPrevButton;
-    @Bind(R.id.item_pager)
+    @BindView(R.id.item_pager)
     ViewPager mPager;
-    @Bind(R.id.strip)
+    @BindView(R.id.strip)
     StepPagerStrip mStepPagerStrip;
 
     @OnClick(R.id.next_button)
@@ -95,7 +93,7 @@ public class AddProductActivity extends ActionBarActivity implements
             }
 
             final Product product = new Product(0, name, description, "Location", category, "SI Unit",
-                    pricePerUnit, Integer.parseInt(quantity), new Date(), Uri.parse(thumbnail), null);
+                    pricePerUnit, Integer.parseInt(quantity), new Date(), Uri.parse(thumbnail), null, 1);
 
             IProductRequest productService = new ProductRequest(this);
             productService.submitProduct(product, new ICallback<String>() {

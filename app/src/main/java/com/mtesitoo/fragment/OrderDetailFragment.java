@@ -23,7 +23,7 @@ import com.mtesitoo.helper.FormatHelper;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -33,34 +33,34 @@ public class OrderDetailFragment extends Fragment{
 
  private Order mOrder;
 
-    @Bind(R.id.order_detail_id)
+    @BindView(R.id.order_detail_id)
     TextView mOrderId;
-    @Bind(R.id.order_detail_status)
+    @BindView(R.id.order_detail_status)
     TextView mOrderStatus;
-    @Bind(R.id.order_detail_total_price)
+    @BindView(R.id.order_detail_total_price)
     TextView mTotal;
-    @Bind(R.id.order_detail_item_count_title)
+    @BindView(R.id.order_detail_item_count_title)
     TextView mOrderItemCountTitle;
-    @Bind(R.id.order_detail_item_count)
+    @BindView(R.id.order_detail_item_count)
     TextView mOrderItemCount;
-    @Bind(R.id.order_detail_date_ordered)
+    @BindView(R.id.order_detail_date_ordered)
     TextView mOrderPlacedDate;
 
-    @Bind(R.id.order_detail_customer_id)
+    @BindView(R.id.order_detail_customer_id)
     TextView mCustomerId;
-    @Bind(R.id.order_detail_customer_name)
+    @BindView(R.id.order_detail_customer_name)
     TextView mCustomerName;
-    @Bind(R.id.order_detail_customer_telephone)
+    @BindView(R.id.order_detail_customer_telephone)
     TextView mCustomerTelephone;
-    @Bind(R.id.order_detail_customer_email)
+    @BindView(R.id.order_detail_customer_email)
     TextView mCustomerEmail;
-    @Bind(R.id.order_detail_customer_address)
+    @BindView(R.id.order_detail_customer_address)
     TextView mCustomerAddress;
 
-    @Bind(R.id.order_detail_scrollView)
+    @BindView(R.id.order_detail_scrollView)
     ScrollView scrollView;
 
-    @Bind (R.id.listView_products)
+    @BindView (R.id.listView_products)
     ListView mListViewProducts;
 
     public static OrderDetailFragment newInstance(Context context, Order order) {

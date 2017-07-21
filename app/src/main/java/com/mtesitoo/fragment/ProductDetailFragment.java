@@ -1,6 +1,7 @@
 package com.mtesitoo.fragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.Snackbar;
@@ -24,7 +25,7 @@ import com.mtesitoo.helper.FormatHelper;
 
 import java.util.ArrayList;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 
 /**
@@ -34,34 +35,34 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
 
     private Product mProduct;
 
-    @Bind(R.id.product_image_slider)
+    @BindView(R.id.product_image_slider)
     SliderLayout mImageSlider;
-    @Bind(R.id.product_detail_info_border)
+    @BindView(R.id.product_detail_info_border)
     RelativeLayout mInfoBorder;
-    @Bind(R.id.product_detail_price_border)
+    @BindView(R.id.product_detail_price_border)
     RelativeLayout mPriceBorder;
-    @Bind(R.id.product_detail_date_border)
+    @BindView(R.id.product_detail_date_border)
     RelativeLayout mDateBorder;
 
-    @Bind(R.id.product_detail_name)
+    @BindView(R.id.product_detail_name)
     TextView mProductName;
-    @Bind(R.id.product_detail_description)
+    @BindView(R.id.product_detail_description)
     TextView mProductDescription;
-    @Bind(R.id.product_detail_location)
+    @BindView(R.id.product_detail_location)
     TextView mProductLocation;
-    @Bind(R.id.product_detail_category)
+    @BindView(R.id.product_detail_category)
     TextView mProductCategory;
-    @Bind(R.id.product_detail_expiration)
+    @BindView(R.id.product_detail_expiration)
     TextView mProductExpiration;
 
-    @Bind(R.id.product_detail_unit)
+    @BindView(R.id.product_detail_unit)
     TextView mProductUnit;
-    @Bind(R.id.product_detail_quantity)
+    @BindView(R.id.product_detail_quantity)
     TextView mProductQuantity;
-    @Bind(R.id.product_detail_price)
+    @BindView(R.id.product_detail_price)
     TextView mProductPrice;
 
-    @Bind(R.id.product_detail_posting_date)
+    @BindView(R.id.product_detail_posting_date)
     TextView mProductPostingDate;
 
     ArrayList<Uri> auxImages;
@@ -120,15 +121,24 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
             //TODO: there should be some way to notify admin or feedback for such issue.
             return;
         }
+
         productId = mProduct.getId();
         mProductName.setText(mProduct.getName());
         mProductDescription.setText(FormatHelper.formatDescription(mProduct.getDescription()));
         mProductLocation.setText(mProduct.getLocation());
         mProductCategory.setText(mProduct.getCategoriesStringList(this.getContext()));
-        mProductExpiration.setText(mProduct.getExpirationFormattedForApp());
+
         mProductUnit.setText(mProduct.getSIUnit());
         mProductQuantity.setText(mProduct.getQuantity().toString());
         mProductPrice.setText(mProduct.getPricePerUnit());
+
+        String expDate = mProduct.getExpirationFormattedForApp();
+        if (mProduct.isProductExpired()) {
+            mProductExpiration.setText(expDate);
+            mProductExpiration.setTextColor(Color.RED);
+        } else {
+            mProductExpiration.setText(expDate);
+        }
 
         updateImageSlider();
         updateBorderPaddings();
