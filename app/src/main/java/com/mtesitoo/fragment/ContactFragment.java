@@ -16,8 +16,8 @@ import butterknife.ButterKnife;
 
 public class ContactFragment extends Fragment {
 
-    public static HelpFragment newInstance() {
-        HelpFragment fragment = new HelpFragment();
+    public static ContactFragment newInstance() {
+        ContactFragment fragment = new ContactFragment();
         return fragment;
     }
 
