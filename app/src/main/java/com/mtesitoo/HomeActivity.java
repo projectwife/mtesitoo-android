@@ -1,10 +1,12 @@
 package com.mtesitoo;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -162,21 +164,8 @@ public class HomeActivity extends AppCompatActivity {
                             } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_contact_index))) {
                                 f = ContactFragment.newInstance();
                             } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_logout_index))) {
-                                //set logged_in to false and show LoginActivity
-                                SharedPreferences mPrefs = mContext.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = mPrefs.edit();
 
-                                boolean isUserLoggedIn = mPrefs.getBoolean(Constants.IS_USER_LOGGED_IN_KEY, false);
-
-                                if (isUserLoggedIn) {
-                                    editor.putBoolean(Constants.IS_USER_LOGGED_IN_KEY, false);
-                                    editor.putString(Constants.LOGGED_IN_USER_ID_KEY, "");
-                                    editor.putString(Constants.LOGGED_IN_USER_PASS_KEY, "");
-                                    editor.commit();
-
-                                }
-                                startActivity(new Intent(mContext, LoginActivity.class));
-                                //finish();
+                                showLogoutConfirmationDialog();
                             }
 
                             if (f != null) {
@@ -195,5 +184,39 @@ public class HomeActivity extends AppCompatActivity {
         // functionality not yet implemented.
         // Badge has been commented out above.
         // result.updateBadge(3, new StringHolder(10 + ""));
+    }
+
+    private void showLogoutConfirmationDialog() {
+        final AlertDialog.Builder logoutConfirmationDialog = new AlertDialog.Builder(this);
+        logoutConfirmationDialog.setTitle(R.string.logout_action_title)
+                .setMessage(R.string.logout_action_message)
+                .setPositiveButton(R.string.logout_action_confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        logout();
+                    }
+                })
+                .setNegativeButton(R.string.logout_action_cancel, null);
+        logoutConfirmationDialog.show();
+        result.setSelection(-1);
+    }
+
+    private void logout() {
+        final SharedPreferences sharedPreferences = mContext.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
+
+        boolean isUserLoggedIn = sharedPreferences.getBoolean(Constants.IS_USER_LOGGED_IN_KEY, false);
+
+        if (isUserLoggedIn) {
+
+            //set logged_in to false and show LoginActivity
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(Constants.IS_USER_LOGGED_IN_KEY, false);
+            editor.putString(Constants.LOGGED_IN_USER_ID_KEY, "");
+            editor.putString(Constants.LOGGED_IN_USER_PASS_KEY, "");
+            editor.apply();
+
+        }
+        startActivity(new Intent(mContext, LoginActivity.class));
+        finish();
     }
 }
