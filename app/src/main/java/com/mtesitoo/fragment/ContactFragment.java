@@ -43,13 +43,13 @@ public class ContactFragment extends Fragment {
 
     @OnClick(R.id.admin_phone_line1)
     public void dialSupportLine1(View view) {
-        String phone = getResources().getString(R.string.admin_email);
+        String phone = getResources().getString(R.string.admin_phone_line1);
         dialPhone(phone);
     }
 
     @OnClick(R.id.admin_phone_line2)
     public void dialSupportLine2(View view) {
-        String phone = getResources().getString(R.string.admin_email);
+        String phone = getResources().getString(R.string.admin_phone_line2);
         dialPhone(phone);
     }
 
