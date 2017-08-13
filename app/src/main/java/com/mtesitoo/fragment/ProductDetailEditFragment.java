@@ -40,6 +40,7 @@ import com.mtesitoo.Constants;
 import com.mtesitoo.R;
 import com.mtesitoo.backend.cache.CategoryCache;
 import com.mtesitoo.backend.cache.logic.ICategoryCache;
+import com.mtesitoo.backend.helper.ContentUriHelper;
 import com.mtesitoo.backend.model.Category;
 import com.mtesitoo.backend.model.Product;
 import com.mtesitoo.backend.service.ProductRequest;
@@ -502,6 +503,10 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
             cursor.close();
+
+            if (picturePath == null) {
+                picturePath = ContentUriHelper.getRealPathFromURI(getActivity(), selectedImageUri);
+            }
 
             try {
                 currentImage = new ImageFile(picturePath);
