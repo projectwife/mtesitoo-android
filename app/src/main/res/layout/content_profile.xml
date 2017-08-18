@@ -204,7 +204,8 @@
                 android:inputType="textEmailAddress"
                 android:hint="seller@gmail.com"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121" />
+                android:textColor="#212121"
+                android:enabled="false"/>
 
         </RelativeLayout>
 
