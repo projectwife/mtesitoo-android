@@ -50,4 +50,9 @@
     <string name="admin_email">admin@tesitoo.com</string>
     <string name="admin_phone_line1">+2208902719</string>
     <string name="admin_phone_line2">+2203533578</string>
+
+    <string name="registration_terms">I have read and accepted terms and condition</string>
+    <string name="registration_terms_view">View</string>
+    <string name="registration_terms_error">You have to accept terms and condition</string>
+
 </resources>
