@@ -34,14 +34,13 @@
                 android:id="@+id/etBusiness"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/tvBussiness"
                 android:layout_toRightOf="@id/tvBussiness"
-                android:hint="FirstName LastName"
+                android:hint="@string/profile_default_business"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121"
-                />
+                android:textColor="#212121" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -58,24 +57,22 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:text="Description"
-                />
+                android:text="Description" />
 
             <EditText
                 android:id="@+id/etDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/tvDescription"
                 android:layout_toRightOf="@id/tvDescription"
                 android:hint="Enter Business Description"
+                android:inputType="textMultiLine"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121"
-                android:inputType="textMultiLine"/>
+                android:textColor="#212121" />
 
         </RelativeLayout>
-
 
 
         <RelativeLayout
@@ -98,13 +95,13 @@
                 android:id="@+id/etFirstName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/tvFirstName"
                 android:layout_toRightOf="@id/tvFirstName"
                 android:ellipsize="end"
-                android:maxLines="1"
                 android:hint="First Name"
+                android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#212121" />
         </RelativeLayout>
@@ -115,28 +112,29 @@
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:padding="@dimen/activity_horizontal_margin">
+
             <TextView
                 android:id="@+id/tvLastName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:text="Last Name"
-                android:layout_marginRight="@dimen/activity_horizontal_margin" />
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:text="Last Name" />
 
             <EditText
                 android:id="@+id/etLastName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/tvLastName"
+                android:layout_toRightOf="@id/tvLastName"
                 android:ellipsize="end"
-                android:maxLines="1"
                 android:hint="Last Name"
+                android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_toRightOf="@id/tvLastName" />
+                android:textColor="#212121" />
         </RelativeLayout>
 
         <!--<include layout="@layout/item_divider" />-->
@@ -155,20 +153,19 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:src="@drawable/ic_phone_black_24dp"
-                />
+                android:src="@drawable/ic_phone_black_24dp" />
 
             <EditText
                 android:id="@+id/etPhone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/ivPhone"
                 android:layout_toRightOf="@id/ivPhone"
                 android:ellipsize="end"
-                android:maxLines="1"
                 android:inputType="phone"
+                android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#212121" />
 
@@ -188,27 +185,27 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
                 android:layout_marginRight="@dimen/activity_horizontal_margin"
-                android:src="@drawable/ic_email_black_24dp"
-                />
+                android:src="@drawable/ic_email_black_24dp" />
 
             <EditText
                 android:id="@+id/etEmail"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/ivEmail"
                 android:layout_toRightOf="@id/ivEmail"
                 android:ellipsize="end"
-                android:maxLines="1"
-                android:inputType="textEmailAddress"
                 android:hint="seller@gmail.com"
+                android:inputType="textEmailAddress"
+                android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="#212121" />
 
         </RelativeLayout>
 
         <include layout="@layout/item_divider" />
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -222,80 +219,36 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:src="@drawable/ic_location_on_black_24dp"
-                android:layout_marginRight="@dimen/activity_horizontal_margin" />
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
+                android:src="@drawable/ic_location_on_black_24dp" />
 
             <EditText
                 android:id="@+id/etAddress1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/ivAddress1"
+                android:layout_toRightOf="@id/ivAddress1"
                 android:ellipsize="end"
+                android:hint="@string/profile_address_label_hint"
                 android:maxLines="1"
-                android:hint="Enter Address"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_toRightOf="@id/ivAddress1" />
+                android:textColor="#212121" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/etAddress1"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@id/ivAddress1"
-                android:text="Address1"
+                android:layout_toRightOf="@id/ivAddress1"
+                android:text="@string/profile_address_label"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#727272"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_toRightOf="@id/ivAddress1" />
+                android:textColor="#727272" />
 
-        </RelativeLayout>
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:padding="@dimen/activity_horizontal_margin">
-
-            <ImageView
-                android:id="@+id/ivAddress2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:src="@drawable/ic_location_on_black_24dp"
-                android:visibility="invisible"
-                android:layout_marginRight="@dimen/activity_horizontal_margin" />
-
-            <EditText
-                android:id="@+id/etAddress2"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_toEndOf="@id/ivAddress2"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:hint="Address 2"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_toRightOf="@id/ivAddress2" />
-
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/etAddress2"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="8dp"
-                android:layout_toEndOf="@id/ivAddress2"
-                android:text="Address2"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#727272"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_toRightOf="@id/ivAddress2" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -304,41 +257,43 @@
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:padding="@dimen/activity_horizontal_margin">
+
             <ImageView
                 android:id="@+id/ivCity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:src="@drawable/ic_location_on_black_24dp"
-                android:visibility="invisible"
-                android:layout_marginRight="@dimen/activity_horizontal_margin" />
+                android:visibility="invisible" />
+
             <EditText
                 android:id="@+id/etCity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/ivCity"
+                android:layout_toRightOf="@id/ivCity"
                 android:ellipsize="end"
+                android:hint="@string/profile_city_label"
                 android:maxLines="1"
-                android:hint="City"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_toRightOf="@id/ivCity" />
+                android:textColor="#212121" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/etCity"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@id/ivCity"
-                android:text="City"
+                android:layout_toRightOf="@id/ivCity"
+                android:text="@string/profile_city_label"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#727272"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_toRightOf="@id/ivCity" />
+                android:textColor="#727272" />
 
         </RelativeLayout>
 
@@ -348,86 +303,43 @@
             android:background="?attr/selectableItemBackground"
             android:clickable="true"
             android:padding="@dimen/activity_horizontal_margin">
-            '
-            <ImageView
-                android:id="@+id/ivPostCode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
-                android:layout_marginEnd="@dimen/activity_horizontal_margin"
-                android:src="@drawable/ic_location_on_black_24dp"
-                android:visibility="invisible"
-                android:layout_marginRight="@dimen/activity_horizontal_margin" />
-            <EditText
-                android:id="@+id/etPostCode"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_toEndOf="@id/ivPostCode"
-                android:ellipsize="end"
-                android:maxLines="1"
-                android:hint="123456"
-                android:inputType="number"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_toRightOf="@id/ivPostCode" />
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_below="@id/etPostCode"
-                android:layout_marginStart="@dimen/activity_horizontal_margin"
-                android:layout_marginTop="8dp"
-                android:layout_toEndOf="@id/ivPostCode"
-                android:text="Post Code"
-                android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#727272"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_toRightOf="@id/ivPostCode" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/selectableItemBackground"
-            android:clickable="true"
-            android:padding="@dimen/activity_horizontal_margin">
             <ImageView
                 android:id="@+id/ivState"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:src="@drawable/ic_location_on_black_24dp"
-                android:visibility="invisible"
-                android:layout_marginRight="@dimen/activity_horizontal_margin" />
+                android:visibility="invisible" />
+
             <Spinner
                 android:id="@+id/spinnerState"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/ivState"
+                android:layout_toRightOf="@id/ivState"
                 android:ellipsize="end"
-                android:maxLines="1"
                 android:hint="Region/State"
+                android:maxLines="1"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_toRightOf="@id/ivState" />
+                android:textColor="#212121" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/spinnerState"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@id/ivState"
+                android:layout_toRightOf="@id/ivState"
                 android:text="Region/State"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#727272"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_toRightOf="@id/ivState" />
+                android:textColor="#727272" />
 
         </RelativeLayout>
 
@@ -444,33 +356,34 @@
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:layout_marginRight="@dimen/activity_horizontal_margin"
                 android:src="@drawable/ic_location_on_black_24dp"
-                android:visibility="invisible"
-                android:layout_marginRight="@dimen/activity_horizontal_margin" />
+                android:visibility="invisible" />
+
             <Spinner
                 android:id="@+id/spinnerCountry"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_toEndOf="@id/ivCountry"
+                android:layout_toRightOf="@id/ivCountry"
                 android:ellipsize="end"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                android:textColor="#212121"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_toRightOf="@id/ivCountry" />
+                android:textColor="#212121" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/spinnerCountry"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
                 android:layout_marginStart="@dimen/activity_horizontal_margin"
                 android:layout_marginTop="8dp"
                 android:layout_toEndOf="@id/ivCountry"
+                android:layout_toRightOf="@id/ivCountry"
                 android:text="Country"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#727272"
-                android:layout_marginLeft="@dimen/activity_horizontal_margin"
-                android:layout_toRightOf="@id/ivCountry" />
+                android:textColor="#727272" />
         </RelativeLayout>
     </LinearLayout>
 
