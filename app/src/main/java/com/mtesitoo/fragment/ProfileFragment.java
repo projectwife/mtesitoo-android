@@ -6,15 +6,11 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
@@ -31,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.mtesitoo.AbstractPermissionFragment;
 import com.mtesitoo.Constants;
 import com.mtesitoo.R;
 import com.mtesitoo.backend.cache.ZoneCache;
@@ -60,8 +57,7 @@ import butterknife.OnClick;
 /**
  * Created by Nan on 12/30/2015.
  */
-public class ProfileFragment extends Fragment {
-    final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+public class ProfileFragment extends AbstractPermissionFragment {
     private static final int SELECT_PICTURE = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     private static Seller mSeller;
@@ -331,51 +327,35 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    private void requestPhotoPermissions() {
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                Snackbar.make(getView(), "Please grant permissions to change profile photo", Snackbar.LENGTH_LONG).show();
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+    //// Run time Permissions Handling ////
 
-            } else {
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-            }
-        } else if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) {
-            photoOps();
-        }
+    @Override
+    protected String[] getDesiredPermissions() {
+        return(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE});
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay!
-                    photoOps();
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Snackbar.make(getView(), "Permissions Denied to access Photos", Snackbar.LENGTH_LONG).show();
-                }
-                return;
-            }
-        }
+    protected void onPermissionDenied() {
+        Toast.makeText(getActivity(), R.string.msg_permission_sorry, Toast.LENGTH_LONG)
+                .show();
     }
+
+    @Override
+    protected void onReady(Bundle state) {}
 
     @OnClick(R.id.fabPhoto)
     public void onUpdateProfileImage(View view) {
-       requestPhotoPermissions();
+        if (super.isReady()) {
+            photoOps();
+        } else {
+            Toast.makeText(getActivity(), R.string.msg_permission_sorry, Toast.LENGTH_LONG)
+                    .show();
+            super.requestPermissions();
+
+            if (super.isReady()) {
+                photoOps();
+            }
+        }
     }
 
     //If user has given needed permissions, then go ahead with accessing photos
