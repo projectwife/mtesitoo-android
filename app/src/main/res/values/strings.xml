@@ -44,10 +44,15 @@
 
     <string name="profile_updated">Profile Updated</string>
     <string name="password_updated">Password Updated</string>
+    <string name="profile_city_label">Town</string>
+    <string name="profile_address_label">Address</string>
+    <string name="profile_address_label_hint">Enter Address</string>
+    <string name="profile_default_business">Name of business</string>
 
     <string name="forgot_password_request">An email has been sent with password reset instructions.</string>
     <string name="forgot_password_request_error">An error has occurred. Please try again !</string>
     <string name="admin_email">admin@tesitoo.com</string>
     <string name="admin_phone_line1">+2208902719</string>
     <string name="admin_phone_line2">+2203533578</string>
+
 </resources>
