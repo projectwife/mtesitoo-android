@@ -4,14 +4,13 @@
 
     <string name="action_add_product">Add</string>
 
-    <string name="menu_item_list_products">1</string>
+    <string name="menu_item_home_index">1</string>
     <string name="menu_item_profile_index">2</string>
     <string name="menu_item_order_index">3</string>
     <string name="menu_item_add_product_index">4</string>
     <string name="menu_item_info_index">5</string>
     <string name="menu_item_help_index">6</string>
-    <string name="menu_item_contact_index">7</string>
-    <string name="menu_item_logout_index">8</string>
+    <string name="menu_item_logout_index">7</string>
 
     <string name="drawer_item_section_header_browse">Browse</string>
     <string name="drawer_item_section_header_account">Account</string>
@@ -19,15 +18,12 @@
     <string name="drawer_item_home">Home</string>
     <string name="drawer_item_profile">Profile</string>
     <string name="drawer_item_orders">Orders</string>
-    <string name="drawer_item_seller">Seller</string>
-    <string name="drawer_item_product_listing">Products</string>
     <string name="drawer_item_new">New Product</string>
     <string name="drawer_item_news">News</string>
     <string name="drawer_item_invite">Invite</string>
     <string name="drawer_item_settings">Settings</string>
     <string name="drawer_item_info">Info</string>
     <string name="drawer_item_help">Help</string>
-    <string name="drawer_item_contact">Contact</string>
     <string name="drawer_item_logout">Logout</string>
 
     <string name="menu_item_order_filterBy">Filter By</string>
@@ -38,9 +34,4 @@
     <string name="menu_item_order_filterBy_Clear">All Orders</string>
 
     <string name="menu_item_order_editOrder">Edit</string>
-
-    <string name="logout_action_title">Confirmation</string>
-    <string name="logout_action_message">Are you sure you want to logout?</string>
-    <string name="logout_action_cancel">Cancel</string>
-    <string name="logout_action_confirm">Continue</string>
 </resources>

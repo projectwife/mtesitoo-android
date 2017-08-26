@@ -27,6 +27,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
@@ -83,12 +84,16 @@ public class ProfileFragment extends Fragment {
     EditText mProfileDescription;
     @BindView(R.id.etAddress1)
     EditText mProfileAddress1;
+    @BindView(R.id.etAddress2)
+    EditText mProfileAddress2;
     @BindView(R.id.etCity)
     EditText mProfileCity;
     @BindView(R.id.spinnerState)
     Spinner mProfileState;
     @BindView(R.id.spinnerCountry)
     Spinner mProfileCountry;
+    @BindView(R.id.etPostCode)
+    TextView mProfilePostcode;
 
     //Settings FAB
     @BindView(R.id.layoutFabSave)
@@ -177,15 +182,19 @@ public class ProfileFragment extends Fragment {
 
         if (mSeller.getmBusiness() != null && !mSeller.getmBusiness().isEmpty()) {
             mProfileCompanyName.setText(mSeller.getmBusiness());
+        } else {
+            mProfileCompanyName.setText(mSeller.getmFirstName() + " " + mSeller.getmLastName());
         }
 
         mFirstName.setText(mSeller.getmFirstName());
         mLastName.setText(mSeller.getmLastName());
         mProfileAddress1.setText(mSeller.getmAddress1());
+        mProfileAddress2.setText(mSeller.getmAddress2());
         mProfileTelephone.setText(mSeller.getmPhoneNumber());
         mProfileEmail.setText(mSeller.getmEmail());
         mProfileDescription.setText(mSeller.getmDescription());
         mProfileCity.setText(mSeller.getmCity());
+        mProfilePostcode.setText(mSeller.getmPostcode());
 
         final SharedPreferences.Editor mEditor;
         final SharedPreferences mPrefs;
@@ -448,7 +457,9 @@ public class ProfileFragment extends Fragment {
         String email = mProfileEmail.getText().toString();
 
         String address1 = mProfileAddress1.getText().toString();
+        String address2 = mProfileAddress2.getText().toString();
         String city = mProfileCity.getText().toString();
+        String postCode = mProfilePostcode.getText().toString();
         Countries country = (Countries) mProfileCountry.getSelectedItem();
         Zone zone = (Zone)mProfileState.getSelectedItem();
 
@@ -457,6 +468,8 @@ public class ProfileFragment extends Fragment {
         mSeller.setmPhoneNumber(phoneNumber);
         mSeller.setmEmail(email);
         mSeller.setmAddress1(address1);
+        mSeller.setmAddress2(address2);
+        mSeller.setmPostcode(postCode);
         mSeller.setmCity(city);
         mSeller.setmZoneId(String.valueOf(zone.getId()));
         mSeller.setmCountry(String.valueOf(country.getId()));
