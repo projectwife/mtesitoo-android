@@ -1,10 +1,12 @@
 package com.mtesitoo;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
@@ -20,6 +22,7 @@ import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
 import com.mtesitoo.backend.model.Seller;
+import com.mtesitoo.fragment.ContactFragment;
 import com.mtesitoo.fragment.HelpFragment;
 import com.mtesitoo.fragment.InfoFragment;
 import com.mtesitoo.fragment.OrderFragment;
@@ -86,9 +89,22 @@ public class HomeActivity extends AppCompatActivity {
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
                         new SecondaryDrawerItem()
-                                .withName(R.string.drawer_item_home)
-                                .withIcon(GoogleMaterial.Icon.gmd_home)
-                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_home_index)))
+                                .withName(R.string.drawer_item_seller)
+                                .withSelectable(false),
+                        new SecondaryDrawerItem()
+                                .withName(R.string.drawer_item_product_listing)
+                                .withIcon(GoogleMaterial.Icon.gmd_list)
+                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_list_products)))
+                                .withSelectable(false),
+                        new SecondaryDrawerItem()
+                                .withName(R.string.drawer_item_new)
+                                .withIcon(GoogleMaterial.Icon.gmd_add)
+                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_add_product_index)))
+                                .withSelectable(false),
+                        new SecondaryDrawerItem()
+                                .withName(R.string.drawer_item_orders)
+                                .withIcon(GoogleMaterial.Icon.gmd_history)
+                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_order_index)))
                                 .withSelectable(false),
                         new SectionDrawerItem()
                                 .withName(R.string.drawer_item_section_header_account),
@@ -97,21 +113,13 @@ public class HomeActivity extends AppCompatActivity {
                                 .withIcon(GoogleMaterial.Icon.gmd_face)
                                 .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_profile_index)))
                                 .withSelectable(false),
-                        new SecondaryDrawerItem()
-                                .withName(R.string.drawer_item_orders)
-                                .withIcon(GoogleMaterial.Icon.gmd_history)
-                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_order_index)))
-                                .withSelectable(false),
+
                                 // Todo orders menu - displays number of pending orders.
                                 // Uncomment the lines below to display the number of orders next to the menu item
                                 /*.withBadgeStyle(new BadgeStyle()
                                         .withTextColor(Color.WHITE)
                                         .withColorRes(R.color.md_red_700)),*/
-                        new SecondaryDrawerItem()
-                                .withName(R.string.drawer_item_new)
-                                .withIcon(GoogleMaterial.Icon.gmd_add)
-                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_add_product_index)))
-                                .withSelectable(false),
+
                         new SectionDrawerItem()
                                 .withName(R.string.drawer_item_section_header_app),
                         new SecondaryDrawerItem()
@@ -125,6 +133,11 @@ public class HomeActivity extends AppCompatActivity {
                                 .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_help_index)))
                                 .withSelectable(false),
                         new SecondaryDrawerItem()
+                                .withName(R.string.drawer_item_contact)
+                                .withIcon(GoogleMaterial.Icon.gmd_contact_phone)
+                                .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_contact_index)))
+                                .withSelectable(false),
+                        new SecondaryDrawerItem()
                                 .withName(R.string.drawer_item_logout)
                                 .withIcon(GoogleMaterial.Icon.gmd_exit_to_app)
                                 .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_logout_index)))
@@ -135,7 +148,7 @@ public class HomeActivity extends AppCompatActivity {
                         if (drawerItem != null) {
                             Fragment f = null;
 
-                            if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_home_index))) {
+                            if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_list_products))) {
                                 f = ProductFragment.newInstance(mContext, mSeller);
                             } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_profile_index))) {
                                 f = ProfileFragment.newInstance(mContext, mSeller);
@@ -148,22 +161,11 @@ public class HomeActivity extends AppCompatActivity {
                                 f = InfoFragment.newInstance();
                             } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_help_index))) {
                                 f = HelpFragment.newInstance();
+                            } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_contact_index))) {
+                                f = ContactFragment.newInstance();
                             } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_logout_index))) {
-                                //set logged_in to false and show LoginActivity
-                                SharedPreferences mPrefs = mContext.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
-                                SharedPreferences.Editor editor = mPrefs.edit();
 
-                                boolean isUserLoggedIn = mPrefs.getBoolean(Constants.IS_USER_LOGGED_IN_KEY, false);
-
-                                if (isUserLoggedIn) {
-                                    editor.putBoolean(Constants.IS_USER_LOGGED_IN_KEY, false);
-                                    editor.putString(Constants.LOGGED_IN_USER_ID_KEY, "");
-                                    editor.putString(Constants.LOGGED_IN_USER_PASS_KEY, "");
-                                    editor.commit();
-
-                                }
-                                startActivity(new Intent(mContext, LoginActivity.class));
-                                //finish();
+                                showLogoutConfirmationDialog();
                             }
 
                             if (f != null) {
@@ -182,5 +184,39 @@ public class HomeActivity extends AppCompatActivity {
         // functionality not yet implemented.
         // Badge has been commented out above.
         // result.updateBadge(3, new StringHolder(10 + ""));
+    }
+
+    private void showLogoutConfirmationDialog() {
+        final AlertDialog.Builder logoutConfirmationDialog = new AlertDialog.Builder(this);
+        logoutConfirmationDialog.setTitle(R.string.logout_action_title)
+                .setMessage(R.string.logout_action_message)
+                .setPositiveButton(R.string.logout_action_confirm, new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        logout();
+                    }
+                })
+                .setNegativeButton(R.string.logout_action_cancel, null);
+        logoutConfirmationDialog.show();
+        result.setSelection(-1);
+    }
+
+    private void logout() {
+        final SharedPreferences sharedPreferences = mContext.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
+
+        boolean isUserLoggedIn = sharedPreferences.getBoolean(Constants.IS_USER_LOGGED_IN_KEY, false);
+
+        if (isUserLoggedIn) {
+
+            //set logged_in to false and show LoginActivity
+            SharedPreferences.Editor editor = sharedPreferences.edit();
+            editor.putBoolean(Constants.IS_USER_LOGGED_IN_KEY, false);
+            editor.putString(Constants.LOGGED_IN_USER_ID_KEY, "");
+            editor.putString(Constants.LOGGED_IN_USER_PASS_KEY, "");
+            editor.apply();
+
+        }
+        startActivity(new Intent(mContext, LoginActivity.class));
+        finish();
     }
 }
