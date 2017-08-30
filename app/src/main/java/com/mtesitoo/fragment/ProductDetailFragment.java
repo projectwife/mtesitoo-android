@@ -130,7 +130,7 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
 
         mProductUnit.setText(mProduct.getSIUnit());
         mProductQuantity.setText(mProduct.getQuantity().toString());
-        mProductPrice.setText(mProduct.getPricePerUnit());
+        mProductPrice.setText(mProduct.getDisplayPrice());
 
         String expDate = mProduct.getExpirationFormattedForApp();
         if (mProduct.isProductExpired()) {
