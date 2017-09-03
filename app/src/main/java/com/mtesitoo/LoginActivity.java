@@ -70,6 +70,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     ProgressDialog mLoginProgress;
 
+    @BindView(R.id.loading_progress_container)
+    View mLoadingViewContainer;
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -172,6 +175,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         final String userPass = password;
 
         final String token = password;
+
+        showLoginProgress("Logging In");
         loginService.authenticateUser(username, token, new ICallback<String>() {
             @Override
             public void onResult(String result) {
@@ -425,10 +430,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //Automatically log-in for already logged-in user
         boolean isUserLoggedIn = mPrefs.getBoolean(Constants.IS_USER_LOGGED_IN_KEY, false);
         if (isUserLoggedIn) {
-            mLoginProgress = new ProgressDialog(this);
-            mLoginProgress.setMessage("Logging in");
-            mLoginProgress.show();
-
             String username = mPrefs.getString(Constants.LOGGED_IN_USER_ID_KEY, "");
             String password = mPrefs.getString(Constants.LOGGED_IN_USER_PASS_KEY, "");
             logInUser(new Intent(this, HomeActivity.class), username, password, false);
@@ -454,10 +455,27 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .putCustomAttribute("Exception", e.getMessage()));
     }
 
-    private void dismissLoginProgress() {
-        if (mLoginProgress != null) {
-            mLoginProgress.dismiss();
+    private void showLoginProgress(String message) {
+        TextView loadingText = (TextView) findViewById(R.id.loading_text);
+        if (message != null) {
+            loadingText.setText(message);
         }
+        else {
+            loadingText.setText("Loading");
+        }
+
+        mLoadingViewContainer.setVisibility(View.VISIBLE);
+//        mLoginProgress = new ProgressDialog(this);
+//        mLoginProgress.setMessage("Logging in");
+//        mLoginProgress.show();
+    }
+
+    private void dismissLoginProgress() {
+//        if (mLoginProgress != null) {
+//            mLoginProgress.dismiss();
+//        }
+        mLoadingViewContainer.setVisibility(View.INVISIBLE);
+
     }
 
 }
