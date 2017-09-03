@@ -67,6 +67,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     @BindView(R.id.password)
     TextView mPassword;
 
+    @BindView(R.id.loading_progress_container)
+    View mLoadingViewContainer;
+
     @Override
     public void onClick(View view) {
         switch (view.getId()) {
@@ -169,6 +172,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         final String userPass = password;
 
         final String token = password;
+
+        showLoginProgress("Logging In");
         loginService.authenticateUser(username, token, new ICallback<String>() {
             @Override
             public void onResult(String result) {
@@ -441,6 +446,29 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .putSuccess(false)
                 .putCustomAttribute("Username", username)
                 .putCustomAttribute("Exception", e.getMessage()));
+    }
+
+    private void showLoginProgress(String message) {
+        TextView loadingText = (TextView) findViewById(R.id.loading_text);
+        if (message != null) {
+            loadingText.setText(message);
+        }
+        else {
+            loadingText.setText("Loading");
+        }
+
+        mLoadingViewContainer.setVisibility(View.VISIBLE);
+//        mLoginProgress = new ProgressDialog(this);
+//        mLoginProgress.setMessage("Logging in");
+//        mLoginProgress.show();
+    }
+
+    private void dismissLoginProgress() {
+//        if (mLoginProgress != null) {
+//            mLoginProgress.dismiss();
+//        }
+        mLoadingViewContainer.setVisibility(View.INVISIBLE);
+
     }
 
 }

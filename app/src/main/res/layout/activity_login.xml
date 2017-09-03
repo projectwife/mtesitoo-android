@@ -7,6 +7,7 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
+    android:clipToPadding="false"
     tools:context="com.mtesitoo.LoginActivity">
 
     <View
@@ -21,8 +22,8 @@
         android:id="@+id/user_name_holder"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:gravity="center"
         android:layout_below="@+id/line_break_1"
+        android:gravity="center"
         android:orientation="horizontal">
 
         <EditText
@@ -97,24 +98,26 @@
 
 
     <Button
+        android:id="@+id/newUser"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="New User"
-        android:id="@+id/newUser"
+        android:layout_alignEnd="@+id/password_holder"
         android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/password_holder"
-        android:layout_alignEnd="@+id/password_holder" />
+        android:text="New User" />
 
     <Button
+        android:id="@+id/forgotPassword"
         style="?android:attr/buttonStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Forgot Password"
-        android:id="@+id/forgotPassword"
-        android:layout_alignParentBottom="true"
         android:layout_alignLeft="@+id/password_holder"
+        android:layout_alignParentBottom="true"
         android:layout_alignStart="@+id/password_holder"
-        android:onClick="onClick (LoginActivity)" />
+        android:onClick="onClick (LoginActivity)"
+        android:text="Forgot Password" />
+
+    <include layout="@layout/loading_progress" />
 
 </RelativeLayout>
