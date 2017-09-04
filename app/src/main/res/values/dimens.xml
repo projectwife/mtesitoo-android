@@ -10,8 +10,10 @@
     <dimen name="cardview_vertical_padding">2dp</dimen>
 
     <dimen name="profile_labels_size">12sp</dimen>
-    <dimen name="profile_labels_margin">15dp</dimen>
+    <dimen name="profile_labels_margin">20dp</dimen>
     <dimen name="profile_labels_margin_bottom">5dp</dimen>
     <dimen name="profile_change_picture_size">100dp</dimen>
+    <dimen name="profile_change_password_margin">15dp</dimen>
+    <dimen name="profile_picture_size">90dp</dimen>
 
 </resources>

@@ -21,15 +21,14 @@
 
             <LinearLayout
                 android:layout_width="0dp"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:gravity="center"
                 android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/profileImage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/profile_picture_size"
+                    android:layout_height="@dimen/profile_picture_size"
                     android:src="@drawable/ic_launcher" />
 
                 <TextView
@@ -39,6 +38,7 @@
                     android:gravity="center"
                     android:lines="2"
                     android:text="@string/profile_picture_action"
+                    android:textColor="@color/colorPrimaryDark"
                     android:textSize="@dimen/profile_labels_size" />
 
             </LinearLayout>
@@ -50,7 +50,7 @@
                 android:orientation="vertical">
 
                 <TextView
-                    style="@style/ProfileTextTitleTheme"
+                    style="@style/ProfileFirstTextTitleTheme"
                     android:text="@string/profile_name_label" />
 
                 <EditText
@@ -161,16 +161,16 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/profile_text_colour" />
 
-
             <Button
                 android:id="@+id/change_password_button"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginBottom="@dimen/profile_change_password_margin"
+                android:layout_marginTop="@dimen/profile_change_password_margin"
+                android:background="@drawable/ripple_action_button"
                 android:text="@string/profile_password_action"
                 android:textAppearance="@style/TextAppearance.AppCompat.Small"
-                android:textColor="#727272" />
+                android:textColor="@color/md_white_1000" />
         </LinearLayout>
     </LinearLayout>
 

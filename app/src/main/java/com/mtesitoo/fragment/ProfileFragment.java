@@ -18,7 +18,6 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
-import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -44,7 +43,9 @@ import com.mtesitoo.backend.service.ZoneRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.ISellerRequest;
 import com.mtesitoo.backend.service.logic.IZoneRequest;
+import com.mtesitoo.helper.ImageHelper;
 import com.mtesitoo.model.ImageFile;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -96,6 +97,20 @@ public class ProfileFragment extends Fragment {
     private static boolean resetPasswordFlag = false;
     private static String mTempPasswordToken = null;
 
+    private Callback profilePicassoCallback = new Callback() {
+        @Override
+        public void onSuccess() {
+            Bitmap imageBitmap = ((BitmapDrawable) mProfileImage.getDrawable()).getBitmap();
+            RoundedBitmapDrawable imageDrawable = ImageHelper.createRoundedBitmapImageDrawableWithBorder(getContext(), imageBitmap);
+            mProfileImage.setImageDrawable(imageDrawable);
+        }
+
+        @Override
+        public void onError() {
+            mProfileImage.setImageResource(R.drawable.ic_account_circle_black_24dp);
+        }
+    };
+
     public static ProfileFragment newInstance(Context context, Seller seller) {
         return newInstance(context, seller, false, null);
     }
@@ -132,21 +147,7 @@ public class ProfileFragment extends Fragment {
         Bundle args = this.getArguments();
         mSeller = args.getParcelable(getString(R.string.bundle_seller_key));
         if (mSeller.getmThumbnail() != null && !mSeller.getmThumbnail().toString().equals("null")) {
-            Picasso.with(getContext()).load(mSeller.getmThumbnail().toString()).into(mProfileImage, new com.squareup.picasso.Callback() {
-                @Override
-                public void onSuccess() {
-                    Bitmap imageBitmap = ((BitmapDrawable) mProfileImage.getDrawable()).getBitmap();
-                    RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
-                    imageDrawable.setCircular(true);
-                    imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
-                    mProfileImage.setImageDrawable(imageDrawable);
-                }
-
-                @Override
-                public void onError() {
-                    mProfileImage.setImageResource(R.drawable.ic_account_circle_black_24dp);
-                }
-            });
+            Picasso.with(getContext()).load(mSeller.getmThumbnail().toString()).into(mProfileImage, profilePicassoCallback);
         }
 
         if (mSeller.getmBusiness() != null && !mSeller.getmBusiness().isEmpty()) {
@@ -267,7 +268,7 @@ public class ProfileFragment extends Fragment {
             sellerRequest.submitProfileImage(selectedImageURI, new ICallback<String>() {
                 @Override
                 public void onResult(String result) {
-                    mProfileImage.setImageURI(selectedImageURI);
+                    Picasso.with(getContext()).load(selectedImageURI).into(mProfileImage, profilePicassoCallback);
                     Snackbar.make(getView(), "Profile Image Uploaded Successfully",
                             Snackbar.LENGTH_SHORT).show();
                 }
@@ -285,7 +286,7 @@ public class ProfileFragment extends Fragment {
             sellerRequest.submitProfileImage(mProfileImageFile.getUri(), new ICallback<String>() {
                 @Override
                 public void onResult(String result) {
-                    mProfileImage.setImageURI(mProfileImageFile.getUri());
+                    Picasso.with(getContext()).load(mProfileImageFile.getUri()).into(mProfileImage, profilePicassoCallback);
                     Snackbar.make(getView(), "Profile Image Uploaded Successfully",
                             Snackbar.LENGTH_SHORT).show();
                 }
@@ -342,7 +343,7 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    @OnClick(R.id.change_picture_button)
+    @OnClick({R.id.change_picture_button, R.id.profileImage})
     public void onUpdateProfileImage(View view) {
         requestPhotoPermissions();
     }
