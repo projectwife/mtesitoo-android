@@ -5,11 +5,8 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
-
-import com.mtesitoo.R;
 
 /**
  * Created by eduardodiaz on 04/09/2017.
@@ -17,7 +14,7 @@ import com.mtesitoo.R;
 
 public class ImageHelper {
 
-    public static RoundedBitmapDrawable createRoundedBitmapImageDrawableWithBorder(Context context, Bitmap bitmap) {
+    public static RoundedBitmapDrawable createRoundedBitmapImageDrawableWithBorder(Context context, Bitmap bitmap, int color) {
         int bitmapWidthImage = bitmap.getWidth();
         int bitmapHeightImage = bitmap.getHeight();
         int borderWidthHalfImage = 4;
@@ -37,7 +34,7 @@ public class ImageHelper {
         Paint borderImagePaint = new Paint();
         borderImagePaint.setStyle(Paint.Style.STROKE);
         borderImagePaint.setStrokeWidth(borderWidthHalfImage * 2);
-        borderImagePaint.setColor(ContextCompat.getColor(context, R.color.primary_dark));
+        borderImagePaint.setColor(color);
         canvas.drawCircle(canvas.getWidth() / 2, canvas.getWidth() / 2, newBitmapSquareWidthImage / 2, borderImagePaint);
 
         RoundedBitmapDrawable roundedImageBitmapDrawable = RoundedBitmapDrawableFactory.create(context.getResources(), roundedImageBitmap);

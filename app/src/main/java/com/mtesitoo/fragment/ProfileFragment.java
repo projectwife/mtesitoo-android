@@ -101,7 +101,8 @@ public class ProfileFragment extends Fragment {
         @Override
         public void onSuccess() {
             Bitmap imageBitmap = ((BitmapDrawable) mProfileImage.getDrawable()).getBitmap();
-            RoundedBitmapDrawable imageDrawable = ImageHelper.createRoundedBitmapImageDrawableWithBorder(getContext(), imageBitmap);
+            RoundedBitmapDrawable imageDrawable = ImageHelper.createRoundedBitmapImageDrawableWithBorder(getContext(),
+                    imageBitmap, ContextCompat.getColor(getContext(), R.color.primary_dark));
             mProfileImage.setImageDrawable(imageDrawable);
         }
 
