@@ -8,4 +8,10 @@
     <dimen name="cardElevation">4dp</dimen>
     <dimen name="cardview_horizontal_padding">6dp</dimen>
     <dimen name="cardview_vertical_padding">2dp</dimen>
+
+    <dimen name="profile_labels_size">12sp</dimen>
+    <dimen name="profile_labels_margin">15dp</dimen>
+    <dimen name="profile_labels_margin_bottom">5dp</dimen>
+    <dimen name="profile_change_picture_size">100dp</dimen>
+
 </resources>

@@ -7,15 +7,18 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawableFactory;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -25,7 +28,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -90,17 +92,6 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.spinnerCountry)
     Spinner mProfileCountry;
 
-    //Settings FAB
-    @BindView(R.id.layoutFabSave)
-    LinearLayout layoutFabSave;
-    @BindView(R.id.layoutFabEdit)
-    LinearLayout layoutFabEdit;
-    @BindView(R.id.layoutFabPhoto)
-    LinearLayout layoutFabPhoto;
-    @BindView(R.id.fabSetting)
-    FloatingActionButton fabSettings;
-    private boolean settingsFabExpanded = false;
-
     //Password reset flag
     private static boolean resetPasswordFlag = false;
     private static String mTempPasswordToken = null;
@@ -124,45 +115,14 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.frag_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
 
         if (resetPasswordFlag && mTempPasswordToken != null) {
             showPasswordPrompt();
         }
 
-        fabSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (settingsFabExpanded == true){
-                    closeSettings();
-                } else {
-                    openSettings();
-                }
-            }
-        });
-
-        //Only main FAB is visible in the beginning
-        closeSettings();
-
         return view;
-    }
-
-    private void closeSettings(){
-        layoutFabSave.setVisibility(View.INVISIBLE);
-        layoutFabEdit.setVisibility(View.INVISIBLE);
-        layoutFabPhoto.setVisibility(View.INVISIBLE);
-        fabSettings.setImageResource(R.drawable.ic_settings_black_24dp);
-        settingsFabExpanded = false;
-    }
-
-    private void openSettings(){
-        layoutFabSave.setVisibility(View.VISIBLE);
-        layoutFabEdit.setVisibility(View.VISIBLE);
-        layoutFabPhoto.setVisibility(View.VISIBLE);
-        //Change settings icon to 'X' icon
-        fabSettings.setImageResource(R.drawable.ic_close_black_24dp);
-        settingsFabExpanded = true;
     }
 
     @Override
@@ -172,7 +132,21 @@ public class ProfileFragment extends Fragment {
         Bundle args = this.getArguments();
         mSeller = args.getParcelable(getString(R.string.bundle_seller_key));
         if (mSeller.getmThumbnail() != null && !mSeller.getmThumbnail().toString().equals("null")) {
-            Picasso.with(getContext()).load(mSeller.getmThumbnail().toString()).into(mProfileImage);
+            Picasso.with(getContext()).load(mSeller.getmThumbnail().toString()).into(mProfileImage, new com.squareup.picasso.Callback() {
+                @Override
+                public void onSuccess() {
+                    Bitmap imageBitmap = ((BitmapDrawable) mProfileImage.getDrawable()).getBitmap();
+                    RoundedBitmapDrawable imageDrawable = RoundedBitmapDrawableFactory.create(getResources(), imageBitmap);
+                    imageDrawable.setCircular(true);
+                    imageDrawable.setCornerRadius(Math.max(imageBitmap.getWidth(), imageBitmap.getHeight()) / 2.0f);
+                    mProfileImage.setImageDrawable(imageDrawable);
+                }
+
+                @Override
+                public void onError() {
+                    mProfileImage.setImageResource(R.drawable.ic_account_circle_black_24dp);
+                }
+            });
         }
 
         if (mSeller.getmBusiness() != null && !mSeller.getmBusiness().isEmpty()) {
@@ -207,8 +181,10 @@ public class ProfileFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 mProfileCountry.setSelection(i);
             }
+
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
         });
         mProfileCountry.setSelection(getSpinnerIndex(mProfileCountry, mSeller.getmCountry()));
 
@@ -262,16 +238,18 @@ public class ProfileFragment extends Fragment {
             public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                 mProfileState.setSelection(i);
             }
+
             @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
+            public void onNothingSelected(AdapterView<?> adapterView) {
+            }
         });
     }
 
     private int getSpinnerIndex(Spinner spinner, String myString) {
         int index = 0;
 
-        for (int i=0;i<spinner.getCount();i++){
-            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)) {
                 index = i;
                 break;
             }
@@ -364,14 +342,14 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    @OnClick(R.id.fabPhoto)
+    @OnClick(R.id.change_picture_button)
     public void onUpdateProfileImage(View view) {
-       requestPhotoPermissions();
+        requestPhotoPermissions();
     }
 
     //If user has given needed permissions, then go ahead with accessing photos
     private void photoOps() {
-        CharSequence options[] = new CharSequence[] {"Pick from Gallery", "Add an Image"};
+        CharSequence options[] = new CharSequence[]{"Pick from Gallery", "Add an Image"};
         new AlertDialog.Builder(getActivity())
                 .setTitle(getString(R.string.EditImages))
                 .setItems(options, new DialogInterface.OnClickListener() {
@@ -394,7 +372,7 @@ public class ProfileFragment extends Fragment {
                                     try {
                                         image = new ImageFile(getActivity());
                                     } catch (Exception e) {
-                                        Log.d("IMAGE_CAPTURE","Issue creating image file");
+                                        Log.d("IMAGE_CAPTURE", "Issue creating image file");
                                     }
 
                                     if (image != null) {
@@ -418,14 +396,14 @@ public class ProfileFragment extends Fragment {
                         sellerRequest.deleteProfileImage(new ICallback<String>() {
                             @Override
                             public void onResult(String result) {
-                                Toast.makeText(getActivity(),"Deleted Image Successfully",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "Deleted Image Successfully", Toast.LENGTH_SHORT).show();
                                 mProfileImage.setImageURI(null);
                                 mProfileImage.setImageResource(R.drawable.ic_account_circle_black_24dp);
                             }
 
                             @Override
                             public void onError(Exception e) {
-                                Toast.makeText(getActivity(),"Error Deleting Image",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "Error Deleting Image", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -438,7 +416,7 @@ public class ProfileFragment extends Fragment {
                 .show();
 
     }
-    @OnClick(R.id.fabSave)
+
     public void onUpdateProfileClick(View view) {
         String businessName = mProfileCompanyName.getText().toString();
         String description = mProfileDescription.getText().toString();
@@ -450,7 +428,7 @@ public class ProfileFragment extends Fragment {
         String address1 = mProfileAddress1.getText().toString();
         String city = mProfileCity.getText().toString();
         Countries country = (Countries) mProfileCountry.getSelectedItem();
-        Zone zone = (Zone)mProfileState.getSelectedItem();
+        Zone zone = (Zone) mProfileState.getSelectedItem();
 
         mSeller.setmFirstName(firstName);
         mSeller.setmLastName(lastName);
@@ -485,20 +463,20 @@ public class ProfileFragment extends Fragment {
                             errorMsg = "Error updating profile: " + e.getMessage();
                         } else {
                             VolleyError err = (VolleyError) e;
-                            if(err.networkResponse.data!=null) {
+                            if (err.networkResponse.data != null) {
                                 try {
-                                    String body = new String(err.networkResponse.data,"UTF-8");
-                                    Log.e("REG_ERR",body);
+                                    String body = new String(err.networkResponse.data, "UTF-8");
+                                    Log.e("REG_ERR", body);
                                     JSONObject jsonErrors = new JSONObject(body);
                                     JSONObject error = jsonErrors.getJSONArray("errors").getJSONObject(0);
                                     errorMsg = error.getString("message");
                                 } catch (UnsupportedEncodingException encErr) {
                                     encErr.printStackTrace();
                                 } catch (JSONException jErr) {
-                                    errorMsg = "Error updating profile: " +jErr.getMessage();
+                                    errorMsg = "Error updating profile: " + jErr.getMessage();
                                     jErr.printStackTrace();
                                 } finally {
-                                    if(errorMsg.equals("")){
+                                    if (errorMsg.equals("")) {
                                         errorMsg = "Error updating profile";
                                     }
                                 }
@@ -512,13 +490,13 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onError(Exception e) {
-                VolleyError err = (VolleyError)e;
+                VolleyError err = (VolleyError) e;
 
                 String errorMsg = "";
-                if(err.networkResponse.data!=null) {
+                if (err.networkResponse.data != null) {
                     try {
-                        String body = new String(err.networkResponse.data,"UTF-8");
-                        Log.e("REG_ERR",body);
+                        String body = new String(err.networkResponse.data, "UTF-8");
+                        Log.e("REG_ERR", body);
                         JSONObject jsonErrors = new JSONObject(body);
                         JSONObject error = jsonErrors.getJSONArray("errors").getJSONObject(0);
                         errorMsg = error.getString("message");
@@ -527,7 +505,7 @@ public class ProfileFragment extends Fragment {
                     } catch (JSONException jErr) {
                         jErr.printStackTrace();
                     } finally {
-                        if(errorMsg.equals("")){
+                        if (errorMsg.equals("")) {
                             errorMsg = "Error updating profile";
                         }
                     }
@@ -558,20 +536,20 @@ public class ProfileFragment extends Fragment {
                             errorMsg = "Error updating password: " + e.getMessage();
                         } else {
                             VolleyError err = (VolleyError) e;
-                            if(err.networkResponse.data!=null) {
+                            if (err.networkResponse.data != null) {
                                 try {
-                                    String body = new String(err.networkResponse.data,"UTF-8");
-                                    Log.e("REG_ERR",body);
+                                    String body = new String(err.networkResponse.data, "UTF-8");
+                                    Log.e("REG_ERR", body);
                                     JSONObject jsonErrors = new JSONObject(body);
                                     JSONObject error = jsonErrors.getJSONArray("errors").getJSONObject(0);
                                     errorMsg = error.getString("message");
                                 } catch (UnsupportedEncodingException encErr) {
                                     encErr.printStackTrace();
                                 } catch (JSONException jErr) {
-                                    errorMsg = "Error updating password: " +jErr.getMessage();
+                                    errorMsg = "Error updating password: " + jErr.getMessage();
                                     jErr.printStackTrace();
                                 } finally {
-                                    if(errorMsg.equals("")){
+                                    if (errorMsg.equals("")) {
                                         errorMsg = "Error updating password";
                                     }
                                 }
@@ -585,13 +563,13 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onError(Exception e) {
-                VolleyError err = (VolleyError)e;
+                VolleyError err = (VolleyError) e;
 
                 String errorMsg = "";
-                if(err.networkResponse.data!=null) {
+                if (err.networkResponse.data != null) {
                     try {
-                        String body = new String(err.networkResponse.data,"UTF-8");
-                        Log.e("REG_ERR",body);
+                        String body = new String(err.networkResponse.data, "UTF-8");
+                        Log.e("REG_ERR", body);
                         JSONObject jsonErrors = new JSONObject(body);
                         JSONObject error = jsonErrors.getJSONArray("errors").getJSONObject(0);
                         errorMsg = error.getString("message");
@@ -600,7 +578,7 @@ public class ProfileFragment extends Fragment {
                     } catch (JSONException jErr) {
                         jErr.printStackTrace();
                     } finally {
-                        if(errorMsg.equals("")){
+                        if (errorMsg.equals("")) {
                             errorMsg = "Error updating password";
                         }
                     }
@@ -611,7 +589,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    @OnClick(R.id.fabPasswordEdit)
+    @OnClick(R.id.change_password_button)
     public void showPasswordPrompt() {
 
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
@@ -631,7 +609,7 @@ public class ProfileFragment extends Fragment {
                 .setCancelable(false)
                 .setNegativeButton("Update",
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 String oldPass = (oldPassword != null) ? oldPassword.getText().toString() : "";
                                 String newPass1 = (newPassword1 != null) ? newPassword1.getText().toString() : "";
                                 String newPass2 = (newPassword2 != null) ? newPassword2.getText().toString() : "";
