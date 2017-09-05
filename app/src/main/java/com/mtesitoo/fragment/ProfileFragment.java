@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -331,7 +332,11 @@ public class ProfileFragment extends AbstractPermissionFragment {
 
     @Override
     protected String[] getDesiredPermissions() {
-        return(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE});
+        //Note: Add permissions here if permissions must be granted at the load of screen.
+        // Otherwise go for granular approach to grant permissions as needed.
+
+        //return(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE});
+        return null;
     }
 
     @Override
@@ -350,13 +355,31 @@ public class ProfileFragment extends AbstractPermissionFragment {
         } else {
             Toast.makeText(getActivity(), R.string.msg_permission_sorry, Toast.LENGTH_LONG)
                     .show();
-            super.requestPermissions();
+            super.requestPermission(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE});
 
             if (super.isReady()) {
+                photoOps();
+            } else if (super.hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
                 photoOps();
             }
         }
     }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == REQUEST_PERMISSION) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                photoOps();
+            }
+            else {
+                onPermissionDenied();
+            }
+        }
+    }
+
 
     //If user has given needed permissions, then go ahead with accessing photos
     private void photoOps() {

@@ -2,7 +2,6 @@ package com.mtesitoo;
 
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 
@@ -18,7 +17,7 @@ abstract public class AbstractPermissionFragment
     abstract protected void onPermissionDenied();
     abstract protected void onReady(Bundle state);
 
-    private static final int REQUEST_PERMISSION=61125;
+    protected static final int REQUEST_PERMISSION=61125;
     private static final String STATE_IN_PERMISSION="inPermission";
     private boolean isInPermission=false;
     private Bundle state;
@@ -68,11 +67,19 @@ abstract public class AbstractPermissionFragment
      * Shows dialog to request permissions.
      */
     public void requestPermissions() {
+        String[] permsReqs = getDesiredPermissions();
+        requestPermission(permsReqs);
+    }
+
+    public void requestPermission(String[] perms) {
         isInPermission=true;
 
-        ActivityCompat
-                .requestPermissions(getActivity(),
-                        netPermissions(getDesiredPermissions()),
+        if (perms == null || perms.length < 1) {
+            return;
+        }
+
+        //ActivityCompat.
+                requestPermissions(perms,
                         REQUEST_PERMISSION);
     }
 
@@ -88,7 +95,11 @@ abstract public class AbstractPermissionFragment
         return false;
     }
 
-    private boolean hasAllPermissions(String[] perms) {
+    public boolean hasAllPermissions(String[] perms) {
+        if (perms == null) {
+            return false;
+        }
+
         for (String perm : perms) {
             if (!hasPermission(perm)) {
                 return(false);
@@ -98,15 +109,19 @@ abstract public class AbstractPermissionFragment
         return(true);
     }
 
-    private boolean hasPermission(String perm) {
+    public boolean hasPermission(String perm) {
         return(ContextCompat.checkSelfPermission(getActivity(), perm)==
                 PackageManager.PERMISSION_GRANTED);
     }
 
-    private String[] netPermissions(String[] wanted) {
+    private String[] netPermissions(String[] wantedPerms) {
+        if (wantedPerms == null) {
+            return new String[0];
+        }
+
         ArrayList<String> result=new ArrayList<String>();
 
-        for (String perm : wanted) {
+        for (String perm : wantedPerms) {
             if (!hasPermission(perm)) {
                 result.add(perm);
             }
