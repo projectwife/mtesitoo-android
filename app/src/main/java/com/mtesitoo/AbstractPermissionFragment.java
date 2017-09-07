@@ -78,9 +78,8 @@ abstract public class AbstractPermissionFragment
             return;
         }
 
-        //ActivityCompat.
-                requestPermissions(perms,
-                        REQUEST_PERMISSION);
+        requestPermissions(perms,
+                REQUEST_PERMISSION);
     }
 
     /**
