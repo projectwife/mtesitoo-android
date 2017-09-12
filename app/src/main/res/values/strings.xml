@@ -62,6 +62,7 @@
 
     <string name="profile_picture_action">Change profile picture</string>
     <string name="profile_password_action">Change password</string>
+    <string name="profile_no_changes_message">There is no changes to update</string>
 
     <string name="forgot_password_request">An email has been sent with password reset instructions.</string>
     <string name="forgot_password_request_error">An error has occurred. Please try again !</string>

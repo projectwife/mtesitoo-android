@@ -13,6 +13,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,9 @@ import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -94,6 +98,10 @@ public class ProfileFragment extends Fragment {
     @BindView(R.id.spinnerCountry)
     Spinner mProfileCountry;
 
+    private Uri newProfileImageUri = null;
+    private int selectedStatePosition = -1;
+    private int selectedCountryPosition = -1;
+
     //Password reset flag
     private static boolean resetPasswordFlag = false;
     private static String mTempPasswordToken = null;
@@ -128,6 +136,12 @@ public class ProfileFragment extends Fragment {
         args.putParcelable(context.getString(R.string.bundle_seller_key), seller);
         fragment.setArguments(args);
         return fragment;
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
     }
 
     @Override
@@ -192,7 +206,8 @@ public class ProfileFragment extends Fragment {
                 public void onNothingSelected(AdapterView<?> adapterView) {
                 }
             });*/
-            mProfileCountry.setSelection(getSpinnerIndex(mProfileCountry, mSeller.getmCountry()));
+            selectedCountryPosition = getSpinnerIndex(mProfileCountry, mSeller.getmCountry());
+            mProfileCountry.setSelection(selectedCountryPosition);
             mProfileCountry.setEnabled(false);
 
             ArrayList<Zone> zoneArrayList;
@@ -222,7 +237,8 @@ public class ProfileFragment extends Fragment {
                                 finalZoneArrayList);
                         zoneAdapter[0].setDropDownViewResource(R.layout.item_spinner_profile);
                         mProfileState.setAdapter(zoneAdapter[0]);
-                        mProfileState.setSelection(getSpinnerIndex(mProfileState, mSeller.getmState()));
+                        selectedStatePosition = getSpinnerIndex(mProfileState, mSeller.getmState());
+                        mProfileState.setSelection(selectedStatePosition);
                     }
 
                     @Override
@@ -238,14 +254,15 @@ public class ProfileFragment extends Fragment {
                 zoneAdapter[0].setDropDownViewResource(R.layout.item_spinner_profile);
 
                 mProfileState.setAdapter(zoneAdapter[0]);
-                mProfileState.setSelection(getSpinnerIndex(mProfileState, mSeller.getmState()));
+                selectedStatePosition = getSpinnerIndex(mProfileState, mSeller.getmState());
+                mProfileState.setSelection(selectedStatePosition);
             }
-
 
             mProfileState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     mProfileState.setSelection(i);
+                    selectedStatePosition = i;
                 }
 
                 @Override
@@ -254,6 +271,24 @@ public class ProfileFragment extends Fragment {
             });
         }
 
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_profile, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_update_profile:
+                updateProfile();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private int getSpinnerIndex(Spinner spinner, String myString) {
@@ -272,42 +307,14 @@ public class ProfileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SELECT_PICTURE && resultCode == Activity.RESULT_OK
                 && data != null && data.getData() != null) {
-            final Uri selectedImageURI = data.getData();
 
-            ISellerRequest sellerRequest = new SellerRequest(this.getContext());
-            sellerRequest.submitProfileImage(selectedImageURI, new ICallback<String>() {
-                @Override
-                public void onResult(String result) {
-                    Picasso.with(getContext()).load(selectedImageURI).into(mProfileImage, profilePicassoCallback);
-                    Snackbar.make(getView(), "Profile Image Uploaded Successfully",
-                            Snackbar.LENGTH_SHORT).show();
-                }
+            newProfileImageUri = data.getData();
+            Picasso.with(getContext()).load(newProfileImageUri).into(mProfileImage, profilePicassoCallback);
 
-                @Override
-                public void onError(Exception e) {
-                    Snackbar.make(getView(), "Failed to upload profile Image",
-                            Snackbar.LENGTH_SHORT).show();
-                    Log.e("UploadImage", e.toString());
-                }
-            });
         } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_CAPTURE) {
 
-            ISellerRequest sellerRequest = new SellerRequest(this.getContext());
-            sellerRequest.submitProfileImage(mProfileImageFile.getUri(), new ICallback<String>() {
-                @Override
-                public void onResult(String result) {
-                    Picasso.with(getContext()).load(mProfileImageFile.getUri()).into(mProfileImage, profilePicassoCallback);
-                    Snackbar.make(getView(), "Profile Image Uploaded Successfully",
-                            Snackbar.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    Log.e("UploadImage", e.toString());
-                    Snackbar.make(getView(), "Failed to upload profile Image",
-                            Snackbar.LENGTH_SHORT).show();
-                }
-            });
+            newProfileImageUri = mProfileImageFile.getUri();
+            Picasso.with(getContext()).load(newProfileImageUri).into(mProfileImage, profilePicassoCallback);
         }
     }
 
@@ -354,7 +361,7 @@ public class ProfileFragment extends Fragment {
     }
 
     @OnClick({R.id.change_picture_button, R.id.profileImage})
-    public void onUpdateProfileImage(View view) {
+    public void onUpdateProfileImage() {
         requestPhotoPermissions();
     }
 
@@ -428,7 +435,54 @@ public class ProfileFragment extends Fragment {
 
     }
 
-    public void onUpdateProfileClick(View view) {
+    private void updateProfile() {
+
+        if (checkProfileChanges()) {
+            onUpdateProfileClick();
+            return;
+        }
+        if (newProfileImageUri != null) {
+            onUpdatePicture(newProfileImageUri);
+            return;
+        }
+        Snackbar.make(getView(), getString(R.string.profile_no_changes_message),
+                Snackbar.LENGTH_LONG).show();
+    }
+
+    private boolean checkProfileChanges() {
+
+        return (mSeller.getmBusiness() != null && !mSeller.getmBusiness().equals(mProfileCompanyName.getText().toString()))
+                || !mSeller.getmFirstName().equals(mFirstName.getText().toString())
+                || !mSeller.getmLastName().equals(mLastName.getText().toString())
+                || !mSeller.getmAddress1().equals(mProfileAddress1.getText().toString())
+                || !mSeller.getmPhoneNumber().equals(mProfileTelephone.getText().toString())
+                || !mSeller.getmEmail().equals(mProfileEmail.getText().toString())
+                || !mSeller.getmDescription().equals(mProfileDescription.getText().toString())
+                || !mSeller.getmCity().equals(mProfileCity.getText().toString())
+                || getSpinnerIndex(mProfileState, mSeller.getmState()) != selectedStatePosition;
+
+    }
+
+    private void onUpdatePicture(final Uri selectedImageURI) {
+        ISellerRequest sellerRequest = new SellerRequest(this.getContext());
+        sellerRequest.submitProfileImage(selectedImageURI, new ICallback<String>() {
+            @Override
+            public void onResult(String result) {
+                newProfileImageUri = null;
+                Snackbar.make(getView(), "Profile Image Uploaded Successfully",
+                        Snackbar.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Snackbar.make(getView(), "Failed to upload profile Image",
+                        Snackbar.LENGTH_SHORT).show();
+                Log.e("UploadImage", e.toString());
+            }
+        });
+    }
+
+    private void onUpdateProfileClick() {
         String businessName = mProfileCompanyName.getText().toString();
         String description = mProfileDescription.getText().toString();
         String firstName = mFirstName.getText().toString();
