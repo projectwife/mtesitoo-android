@@ -12,6 +12,7 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.support.annotation.NonNull;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -145,106 +146,114 @@ public class ProfileFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Bundle args = this.getArguments();
-        mSeller = args.getParcelable(getString(R.string.bundle_seller_key));
-        if (mSeller.getmThumbnail() != null && !mSeller.getmThumbnail().toString().equals("null")) {
-            Picasso.with(getContext()).load(mSeller.getmThumbnail().toString()).into(mProfileImage, profilePicassoCallback);
+        if (getArguments() != null && getArguments().containsKey(getString(R.string.bundle_seller_key))) {
+            mSeller = getArguments().getParcelable(getString(R.string.bundle_seller_key));
         }
 
-        if (mSeller.getmBusiness() != null && !mSeller.getmBusiness().isEmpty()) {
-            mProfileCompanyName.setText(mSeller.getmBusiness());
-        }
-
-        mFirstName.setText(mSeller.getmFirstName());
-        mLastName.setText(mSeller.getmLastName());
-        mProfileAddress1.setText(mSeller.getmAddress1());
-        mProfileTelephone.setText(mSeller.getmPhoneNumber());
-        mProfileEmail.setText(mSeller.getmEmail());
-        mProfileDescription.setText(mSeller.getmDescription());
-        mProfileCity.setText(mSeller.getmCity());
-
-        final SharedPreferences.Editor mEditor;
-        final SharedPreferences mPrefs;
-        mPrefs = mContext.getSharedPreferences("pref", Context.MODE_PRIVATE);
-        mEditor = mPrefs.edit();
-
-        //ICountriesCache countriesCache = new CountriesCache(mContext);
-        ArrayList<Countries> countriesArrayList = new ArrayList<Countries>();
-        //Note: hard-coding to Gambia.
-        countriesArrayList.add(new Countries(79, "Gambia"));
-        mEditor.putString("SelectedCountries", "79");
-        mEditor.apply();
-
-        mProfileCountry.setAdapter(new ArrayAdapter<Countries>(mContext,
-                android.R.layout.simple_spinner_item,
-                countriesArrayList));
-        mProfileCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                mProfileCountry.setSelection(i);
+        if (mSeller != null) {
+            if (mSeller.getmThumbnail() != null && !mSeller.getmThumbnail().toString().equals("null")) {
+                Picasso.with(getContext()).load(mSeller.getmThumbnail().toString()).into(mProfileImage, profilePicassoCallback);
             }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
+            if (mSeller.getmBusiness() != null && !mSeller.getmBusiness().isEmpty()) {
+                mProfileCompanyName.setText(mSeller.getmBusiness());
             }
-        });
-        mProfileCountry.setSelection(getSpinnerIndex(mProfileCountry, mSeller.getmCountry()));
 
-        ArrayList<Zone> zoneArrayList = new ArrayList<Zone>();
-        final ArrayAdapter[] zoneAdapter = {null};
-        IZonesCache zoneCache = new ZoneCache(mContext);
-        zoneArrayList = (ArrayList<Zone>) zoneCache.GetZones();
-        if (zoneArrayList.isEmpty()) {
-            IZoneRequest zoneService = new ZoneRequest(mContext);
-            final String[][] zonesNames = {null};
-            final ArrayList<Zone> finalZoneArrayList = zoneArrayList;
-            zoneService.getZones(new ICallback<List<Zone>>() {
+            mFirstName.setText(mSeller.getmFirstName());
+            mLastName.setText(mSeller.getmLastName());
+            mProfileAddress1.setText(mSeller.getmAddress1());
+            mProfileTelephone.setText(mSeller.getmPhoneNumber());
+            mProfileEmail.setText(mSeller.getmEmail());
+            mProfileDescription.setText(mSeller.getmDescription());
+            mProfileCity.setText(mSeller.getmCity());
+
+            final SharedPreferences.Editor mEditor;
+            final SharedPreferences mPrefs;
+            mPrefs = mContext.getSharedPreferences("pref", Context.MODE_PRIVATE);
+            mEditor = mPrefs.edit();
+
+            //ICountriesCache countriesCache = new CountriesCache(mContext);
+            ArrayList<Countries> countriesArrayList = new ArrayList<>();
+            //Note: hard-coding to Gambia.
+            countriesArrayList.add(new Countries(79, "Gambia"));
+            mEditor.putString("SelectedCountries", "79");
+            mEditor.apply();
+
+            mProfileCountry.setAdapter(new ArrayAdapter<>(mContext,
+                    android.R.layout.simple_spinner_item,
+                    countriesArrayList));
+            /*mProfileCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
-                public void onResult(List<Zone> zones) {
-                    IZonesCache zonesCache = new ZoneCache(mContext);
-                    zonesCache.storeZones(zones);
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    mProfileCountry.setSelection(i);
+                }
 
-                    List<Zone> zones1 = zones;
-                    zonesNames[0] = new String[zones1.size()];
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+                }
+            });*/
+            mProfileCountry.setSelection(getSpinnerIndex(mProfileCountry, mSeller.getmCountry()));
+            mProfileCountry.setEnabled(false);
 
-                    for (int i = 0; i < zones1.size(); i++) {
-                        zonesNames[0][i] = zones1.get(i).getName();
-                        Zone zone = zones1.get(i);
-                        finalZoneArrayList.add(new Zone(zone.getId(), zone.getName(), zone.getName()));
+            ArrayList<Zone> zoneArrayList;
+            final ArrayAdapter[] zoneAdapter = {null};
+            IZonesCache zoneCache = new ZoneCache(mContext);
+            zoneArrayList = (ArrayList<Zone>) zoneCache.GetZones();
+            if (zoneArrayList.isEmpty()) {
+                IZoneRequest zoneService = new ZoneRequest(mContext);
+                final String[][] zonesNames = {null};
+                final ArrayList<Zone> finalZoneArrayList = zoneArrayList;
+                zoneService.getZones(new ICallback<List<Zone>>() {
+                    @Override
+                    public void onResult(List<Zone> zones) {
+                        IZonesCache zonesCache = new ZoneCache(mContext);
+                        zonesCache.storeZones(zones);
+
+                        zonesNames[0] = new String[zones.size()];
+
+                        for (int i = 0; i < zones.size(); i++) {
+                            zonesNames[0][i] = zones.get(i).getName();
+                            Zone zone = zones.get(i);
+                            finalZoneArrayList.add(new Zone(zone.getId(), zone.getName(), zone.getName()));
+                        }
+
+                        zoneAdapter[0] = new ArrayAdapter<>(mContext,
+                                android.R.layout.simple_spinner_item,
+                                finalZoneArrayList);
+                        zoneAdapter[0].setDropDownViewResource(R.layout.item_spinner_profile);
+                        mProfileState.setAdapter(zoneAdapter[0]);
+                        mProfileState.setSelection(getSpinnerIndex(mProfileState, mSeller.getmState()));
                     }
 
-                    zoneAdapter[0] = new ArrayAdapter<Zone>(mContext,
-                            android.R.layout.simple_spinner_item,
-                            finalZoneArrayList);
-                    mProfileState.setAdapter(zoneAdapter[0]);
-                    mProfileState.setSelection(getSpinnerIndex(mProfileState, mSeller.getmState()));
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("Zones", e.toString());
+                    }
+                });
+
+            } else {
+                zoneAdapter[0] = new ArrayAdapter<>(mContext,
+                        android.R.layout.simple_spinner_item,
+                        zoneArrayList);
+                zoneAdapter[0].setDropDownViewResource(R.layout.item_spinner_profile);
+
+                mProfileState.setAdapter(zoneAdapter[0]);
+                mProfileState.setSelection(getSpinnerIndex(mProfileState, mSeller.getmState()));
+            }
+
+
+            mProfileState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    mProfileState.setSelection(i);
                 }
 
                 @Override
-                public void onError(Exception e) {
-                    Log.e("Zones", e.toString());
+                public void onNothingSelected(AdapterView<?> adapterView) {
                 }
             });
-
-        } else {
-            zoneAdapter[0] = new ArrayAdapter<Zone>(mContext,
-                    android.R.layout.simple_spinner_item,
-                    zoneArrayList);
-            mProfileState.setAdapter(zoneAdapter[0]);
-            mProfileState.setSelection(getSpinnerIndex(mProfileState, mSeller.getmState()));
         }
 
-
-        mProfileState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                mProfileState.setSelection(i);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-            }
-        });
     }
 
     private int getSpinnerIndex(Spinner spinner, String myString) {
@@ -327,7 +336,7 @@ public class ProfileFragment extends Fragment {
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
+                                           @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
                 if (grantResults.length > 0
@@ -502,10 +511,8 @@ public class ProfileFragment extends Fragment {
                         JSONObject jsonErrors = new JSONObject(body);
                         JSONObject error = jsonErrors.getJSONArray("errors").getJSONObject(0);
                         errorMsg = error.getString("message");
-                    } catch (UnsupportedEncodingException encErr) {
+                    } catch (UnsupportedEncodingException | JSONException encErr) {
                         encErr.printStackTrace();
-                    } catch (JSONException jErr) {
-                        jErr.printStackTrace();
                     } finally {
                         if (errorMsg.equals("")) {
                             errorMsg = "Error updating profile";
@@ -575,10 +582,8 @@ public class ProfileFragment extends Fragment {
                         JSONObject jsonErrors = new JSONObject(body);
                         JSONObject error = jsonErrors.getJSONArray("errors").getJSONObject(0);
                         errorMsg = error.getString("message");
-                    } catch (UnsupportedEncodingException encErr) {
+                    } catch (UnsupportedEncodingException | JSONException encErr) {
                         encErr.printStackTrace();
-                    } catch (JSONException jErr) {
-                        jErr.printStackTrace();
                     } finally {
                         if (errorMsg.equals("")) {
                             errorMsg = "Error updating password";

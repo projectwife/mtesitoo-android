@@ -145,7 +145,6 @@
                 android:ellipsize="end"
                 android:hint="@string/profile_region_label"
                 android:maxLines="1"
-                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/profile_text_colour" />
 
 

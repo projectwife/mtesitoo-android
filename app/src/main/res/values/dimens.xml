@@ -16,4 +16,7 @@
     <dimen name="profile_change_password_margin">15dp</dimen>
     <dimen name="profile_picture_size">90dp</dimen>
 
+    <dimen name="profile_spinner_padding">5dp</dimen>
+    <dimen name="profile_spinner_text_size">17sp</dimen>
+
 </resources>
