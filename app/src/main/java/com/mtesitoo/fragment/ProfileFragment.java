@@ -167,6 +167,9 @@ public class ProfileFragment extends Fragment {
         if (mSeller != null) {
             if (mSeller.getmThumbnail() != null && !mSeller.getmThumbnail().toString().equals("null")) {
                 Picasso.with(getContext()).load(mSeller.getmThumbnail().toString()).into(mProfileImage, profilePicassoCallback);
+            } else {
+                mProfileImage.setImageURI(null);
+                mProfileImage.setImageResource(R.drawable.ic_account_circle_black_24dp);
             }
 
             if (mSeller.getmBusiness() != null && !mSeller.getmBusiness().isEmpty()) {
