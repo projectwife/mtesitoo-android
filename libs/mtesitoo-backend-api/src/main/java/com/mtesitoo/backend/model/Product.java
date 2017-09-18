@@ -29,6 +29,8 @@ public class Product implements Parcelable {
     private ArrayList<String> mCategories = new ArrayList<>();
     private final String mSIUnit;
     private final String mPricePerUnit;
+    private final String mDisplayPrice;
+    private final String mCurrencyCode;
     private final Integer mQuantity;
     private final Date mExpiration;
     private Uri mThumbnail;
@@ -45,6 +47,8 @@ public class Product implements Parcelable {
         in.readStringList(mCategories);
         this.mSIUnit = in.readString();
         this.mPricePerUnit = in.readString();
+        this.mDisplayPrice = in.readString();
+        this.mCurrencyCode = in.readString();
         this.mQuantity = in.readInt();
         this.mExpiration = new Date(in.readLong());
         this.mThumbnail = null;
@@ -78,8 +82,10 @@ public class Product implements Parcelable {
      * @param expiration   product post expiration (e.g. YYYY-MM-DD)
      * @param thumbnail    url of the product's thumbnail
      */
-    public Product(int id, String name, String description, String location, ArrayList<String> categories, String siUnit,
-                   String pricePerUnit, Integer quantity, Date expiration, Uri thumbnail, ArrayList<Uri> auxImages, int status) {
+    public Product(int id, String name, String description, String location,
+                   ArrayList<String> categories, String siUnit,
+                   String pricePerUnit, String displayPrice, String currencyCode,
+                   Integer quantity, Date expiration, Uri thumbnail, ArrayList<Uri> auxImages, int status) {
         mId = id;
         mName = name;
         mDescription = description;
@@ -87,6 +93,8 @@ public class Product implements Parcelable {
         mCategories = categories;
         mSIUnit = siUnit;
         mPricePerUnit = pricePerUnit;
+        mDisplayPrice = displayPrice;
+        mCurrencyCode = currencyCode;
         mQuantity = quantity;
         mExpiration = expiration;
         mThumbnail = thumbnail;
@@ -114,7 +122,8 @@ public class Product implements Parcelable {
      * @param thumbnail    url of the product's thumbnail
      */
     public Product(int id, String name, String description, String location, String category, String siUnit,
-                   String pricePerUnit, Integer quantity, Date expiration, Uri thumbnail, ArrayList<Uri> auxImages,
+                   String pricePerUnit, String displayPrice, String currencyCode,
+                   Integer quantity, Date expiration, Uri thumbnail, ArrayList<Uri> auxImages,
                    int status) {
 
         ArrayList<String> categoryList = new ArrayList<>();
@@ -127,6 +136,8 @@ public class Product implements Parcelable {
         mCategories = categoryList;
         mSIUnit = siUnit;
         mPricePerUnit = pricePerUnit;
+        mDisplayPrice = displayPrice;
+        mCurrencyCode = currencyCode;
         mQuantity = quantity;
         mExpiration = expiration;
         mThumbnail = thumbnail;
@@ -249,6 +260,14 @@ public class Product implements Parcelable {
         return mPricePerUnit;
     }
 
+    public String getDisplayPrice() {
+        return mDisplayPrice;
+    }
+
+    public String getCurrencyCode() {
+        return mCurrencyCode;
+    }
+
     public Integer getQuantity() {
         return mQuantity;
     }
@@ -358,6 +377,8 @@ public class Product implements Parcelable {
         dest.writeStringList(mCategories);
         dest.writeString(mSIUnit);
         dest.writeString(mPricePerUnit);
+        dest.writeString(mDisplayPrice);
+        dest.writeString(mCurrencyCode);
         dest.writeInt(mQuantity);
         dest.writeInt(mStatus);
         if (mExpiration != null) {

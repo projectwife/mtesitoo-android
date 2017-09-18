@@ -38,6 +38,7 @@ import com.mtesitoo.backend.model.Product;
 import com.mtesitoo.backend.service.ProductRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.IProductRequest;
+import com.mtesitoo.helper.ProductPriceHelper;
 import com.mtesitoo.model.ImageFile;
 
 import java.util.Date;
@@ -351,7 +352,10 @@ public class AddProductActivity2 extends AppCompatActivity {
         }
 
         final Product product = new Product(0, name, description, "Location", category, "SI Unit",
-                pricePerUnit, Integer.parseInt(quantity), new Date(), imageUri, null, 5);//Uri.parse(thumbnail)
+                pricePerUnit,
+                ProductPriceHelper.getDisplayPrice(ProductPriceHelper.getDefaultCurrencyCode(), pricePerUnit),
+                ProductPriceHelper.getDefaultCurrencyCode(),
+                Integer.parseInt(quantity), new Date(), imageUri, null, 5);//Uri.parse(thumbnail)
 
         IProductRequest productService = new ProductRequest(this);
         productService.submitProduct(product, new ICallback<String>() {
