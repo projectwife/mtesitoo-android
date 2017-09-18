@@ -12,7 +12,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.mtesitoo.AddProductActivity;
 import com.mtesitoo.AddProductActivity2;
 import com.mtesitoo.R;
 import com.mtesitoo.adapter.ProductListAdapter;

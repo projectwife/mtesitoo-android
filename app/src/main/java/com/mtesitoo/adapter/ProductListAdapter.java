@@ -15,6 +15,7 @@ import android.widget.TextView;
 import com.mtesitoo.ProductActivity;
 import com.mtesitoo.R;
 import com.mtesitoo.backend.model.Product;
+import com.mtesitoo.helper.ProductPriceHelper;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -84,7 +85,13 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         //Disabled category display for seller app.
         //holder.productCategory.setText(product.getCategoriesStringList(mContext));
 
-        holder.productPrice.setText(product.getPricePerUnit());
+        String displayPrice = product.getDisplayPrice();
+        if (displayPrice.isEmpty()) {
+            //Hack to avoid showing empty displayPrice returned from server
+            displayPrice = ProductPriceHelper.getDisplayPrice(
+                    ProductPriceHelper.getDefaultCurrencyCode(), product.getPricePerUnit());
+        }
+        holder.productPrice.setText(displayPrice);
 
         //exp date
         String expDate = "";
