@@ -353,15 +353,15 @@ public class ProfileFragment extends AbstractPermissionFragment {
         if (super.isReady()) {
             photoOps();
         } else {
+            if (super.hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                photoOps();
+                return;
+            }
+
+            //Don't have permissions at this point, so go ahead and request permissions
             Toast.makeText(getActivity(), R.string.msg_permission_sorry, Toast.LENGTH_LONG)
                     .show();
             super.requestPermission(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE});
-
-            if (super.isReady()) {
-                photoOps();
-            } else if (super.hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                photoOps();
-            }
         }
     }
 
