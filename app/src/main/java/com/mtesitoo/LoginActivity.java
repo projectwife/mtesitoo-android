@@ -1,5 +1,6 @@
 package com.mtesitoo;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -66,6 +67,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
     @BindView(R.id.password)
     TextView mPassword;
+
+    ProgressDialog mLoginProgress;
 
     @Override
     public void onClick(View view) {
@@ -221,6 +224,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                     public void onResult(Seller result) {
                         Log.d("Login - Seller Info", result.toString());
 
+                        dismissLoginProgress();
+
                         logUser(result);
                         logSuccessLogin(result);
 
@@ -251,6 +256,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Log.e("AuthenticateUser", e.toString());
                 logFailLogin(mUsername.getText().toString(),e);
                 String errorMessage = "";
+
+                dismissLoginProgress();
 
                 if (e.getMessage() != null) {
                     errorMessage = "Failed to log in due to an error: " +
@@ -418,6 +425,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         //Automatically log-in for already logged-in user
         boolean isUserLoggedIn = mPrefs.getBoolean(Constants.IS_USER_LOGGED_IN_KEY, false);
         if (isUserLoggedIn) {
+            mLoginProgress = new ProgressDialog(this);
+            mLoginProgress.setMessage("Logging in");
+            mLoginProgress.show();
+
             String username = mPrefs.getString(Constants.LOGGED_IN_USER_ID_KEY, "");
             String password = mPrefs.getString(Constants.LOGGED_IN_USER_PASS_KEY, "");
             logInUser(new Intent(this, HomeActivity.class), username, password, false);
@@ -441,6 +452,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 .putSuccess(false)
                 .putCustomAttribute("Username", username)
                 .putCustomAttribute("Exception", e.getMessage()));
+    }
+
+    private void dismissLoginProgress() {
+        if (mLoginProgress != null) {
+            mLoginProgress.dismiss();
+        }
     }
 
 }
