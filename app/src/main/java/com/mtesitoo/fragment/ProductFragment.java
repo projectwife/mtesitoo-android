@@ -5,12 +5,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.mtesitoo.AddProductActivity2;
 import com.mtesitoo.R;
@@ -27,10 +29,10 @@ import java.util.List;
 /**
  * Created by Nan on 12/30/2015
  */
-public class ProductFragment extends ListFragment {
+public class ProductFragment extends ListFragment implements SwipeRefreshLayout.OnRefreshListener {
     private ProductListAdapter mProductListAdapter;
     private Seller mSeller;
-    ProgressDialog pd;
+    SwipeRefreshLayout mSwipeLayout;
 
     public static ProductFragment newInstance(Context context, Seller seller) {
         ProductFragment fragment = new ProductFragment();
@@ -81,15 +83,23 @@ public class ProductFragment extends ListFragment {
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        ListView listView = getListView();
         getListView().setDivider(null);
+
+        mSwipeLayout = new SwipeRefreshLayout(getActivity());
+        ((ViewGroup) listView.getParent()).addView(mSwipeLayout);
+        ((ViewGroup) listView.getParent()).removeView(listView);
+        mSwipeLayout.addView(listView);
+
+        mSwipeLayout.setOnRefreshListener(this);
+
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        pd = new ProgressDialog(this.getActivity());
-        pd.setMessage("Fetching products");
-        pd.show();
+        mSwipeLayout.setRefreshing(true);
         updateProductList();
     }
 
@@ -100,18 +110,21 @@ public class ProductFragment extends ListFragment {
             @Override
             public void onResult(List<Product> result) {
                 mProductListAdapter.refresh((ArrayList<Product>) result);
-                if (pd != null) {
-                    pd.dismiss();
-                }
+                mSwipeLayout.setRefreshing(false);
             }
 
             @Override
             public void onError(Exception e) {
-                pd.dismiss();
+                mSwipeLayout.setRefreshing(false);
             }
         });
 
         mProductListAdapter = new ProductListAdapter(getActivity(), new ArrayList<Product>());
         setListAdapter(mProductListAdapter);
+    }
+
+    @Override
+    public void onRefresh() {
+        updateProductList();
     }
 }
