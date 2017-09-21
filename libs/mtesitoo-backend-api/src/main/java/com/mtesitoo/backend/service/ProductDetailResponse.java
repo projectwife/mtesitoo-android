@@ -65,6 +65,16 @@ public class ProductDetailResponse implements Response.Listener<String>, Respons
                 expirationDate = formatter.parse(expirationStr);
             }
 
+            String displayPrice = "";
+            String currencyCode = "";
+            if (jsonProduct.has("display_price")) {
+                displayPrice = jsonProduct.getString("display_price");
+            }
+
+            if (jsonProduct.has("currency_code")) {
+                currencyCode = jsonProduct.getString("currency_code");
+            }
+
             result = new Product(
                     Integer.parseInt(jsonProduct.getString("product_id")),
                     jsonProduct.getString("title"),
@@ -73,6 +83,8 @@ public class ProductDetailResponse implements Response.Listener<String>, Respons
                     resolveCategories(jsonProduct.getJSONArray("categories")),
                     "SI Unit",
                     jsonProduct.getString("price"),
+                    displayPrice,
+                    currencyCode,
                     jsonProduct.getInt("quantity"),
                     expirationDate,
                     Uri.parse(jsonProduct.getString("thumb_image")),

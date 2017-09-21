@@ -47,6 +47,7 @@ import com.mtesitoo.backend.service.ProductRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.IProductRequest;
 import com.mtesitoo.helper.FormatHelper;
+import com.mtesitoo.helper.ProductPriceHelper;
 import com.mtesitoo.model.ImageFile;
 
 import java.io.IOException;
@@ -146,7 +147,7 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
         mProductLocation.setText(mProduct.getLocation());
         mProductUnit.setText(mProduct.getSIUnit());
         mProductQuantity.setText(mProduct.getQuantity().toString());
-        mProductPrice.setText(mProduct.getPricePerUnit());
+        mProductPrice.setText(mProduct.getDisplayPrice());
 
         String expDate = mProduct.getExpirationFormattedForApp();
         if (mProduct.isProductExpired()) {
@@ -205,6 +206,10 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
                 expiryDate = mProduct.getExpiration();
             }
 
+            //remove currency symbol from display price
+            String pricePerUnit =
+                    mProductPrice.getText().toString().replace(
+                            ProductPriceHelper.getCurrencySymbol(ProductPriceHelper.getDefaultCurrencyCode()), "");
             // Save product here
             final Product updatedProduct = new Product(
                     mProduct.getId(),
@@ -213,7 +218,9 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
                     mProduct.getLocation(),
                     category,
                     mProductUnit.getText().toString(),
-                    mProductPrice.getText().toString(),
+                    pricePerUnit,
+                    ProductPriceHelper.getDisplayPrice(ProductPriceHelper.getDefaultCurrencyCode(), pricePerUnit),
+                    ProductPriceHelper.getDefaultCurrencyCode(),
                     Integer.parseInt(mProductQuantity.getText().toString()),
                     expiryDate,
                     mProduct.getmThumbnail(),

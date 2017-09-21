@@ -45,10 +45,30 @@
     <string name="profile_updated">Profile Updated</string>
     <string name="password_updated">Password Updated</string>
 
+    <string name="profile_city_label">Town</string>
+    <string name="profile_name_label">First Name</string>
+    <string name="profile_last_name_label">Last Name</string>
+    <string name="profile_business_label">Business</string>
+    <string name="profile_description_label">Description</string>
+    <string name="profile_description_label_hint">Enter Business Description</string>
+    <string name="profile_phone_label">Phone</string>
+    <string name="profile_region_label">Region/State</string>
+    <string name="profile_country_label">Country</string>
+    <string name="profile_address_label">Address</string>
+    <string name="profile_address_label_hint">Enter Address</string>
+    <string name="profile_default_business">Name of business</string>
+    <string name="profile_email_label_hint">seller@gmail.com</string>
+    <string name="profile_email_label">Email</string>
+
+    <string name="profile_picture_action">Change profile picture</string>
+    <string name="profile_password_action">Change password</string>
+    <string name="profile_no_changes_message">There is no changes to update</string>
+
     <string name="forgot_password_request">An email has been sent with password reset instructions.</string>
     <string name="forgot_password_request_error">An error has occurred. Please try again !</string>
     <string name="admin_email">admin@tesitoo.com</string>
     <string name="admin_phone_line1">+2208902719</string>
     <string name="admin_phone_line2">+2203533578</string>
     <string name="msg_permission_sorry">Please provide permission to continue !</string>
+
 </resources>
