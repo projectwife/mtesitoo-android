@@ -17,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
@@ -367,7 +368,11 @@ public class AddProductActivity2 extends AppCompatActivity {
                     public void onResult(String result) {
                         Log.d("image thumb upload","Success");
                         Toast.makeText(mContext, "Product thumbnail uploaded.", Toast.LENGTH_LONG).show();
-                        finish();
+//                        finish(); // finish will be called in the onResult for submitProduct. Shouldn't be called multiple times.
+
+                        Intent intent = new Intent("submit_product_thumbnail");
+                        intent.putExtra("result", result);
+                        LocalBroadcastManager.getInstance(AddProductActivity2.this).sendBroadcast(intent);
                     }
 
                     @Override
