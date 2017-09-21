@@ -12,11 +12,8 @@ import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
@@ -36,6 +33,7 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.mtesitoo.AbstractPermissionFragment;
 import com.mtesitoo.Constants;
 import com.mtesitoo.R;
 import com.mtesitoo.backend.cache.ZoneCache;
@@ -67,8 +65,7 @@ import butterknife.OnClick;
 /**
  * Created by Nan on 12/30/2015.
  */
-public class ProfileFragment extends Fragment {
-    final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+public class ProfileFragment extends AbstractPermissionFragment {
     private static final int SELECT_PICTURE = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     private static Seller mSeller;
@@ -321,51 +318,56 @@ public class ProfileFragment extends Fragment {
         }
     }
 
-    private void requestPhotoPermissions() {
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                Snackbar.make(getView(), "Please grant permissions to change profile photo", Snackbar.LENGTH_LONG).show();
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+    //// Run time Permissions Handling ////
 
-            } else {
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-            }
-        } else if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) {
+    @Override
+    protected String[] getDesiredPermissions() {
+        //Note: Add permissions here if permissions must be granted at the load of screen.
+        // Otherwise go for granular approach to grant permissions as needed.
+
+        //return(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE});
+        return null;
+    }
+
+    @Override
+    protected void onPermissionDenied() {
+        Toast.makeText(getActivity(), R.string.msg_permission_sorry, Toast.LENGTH_LONG)
+                .show();
+    }
+
+    @Override
+    protected void onReady(Bundle state) {}
+
+    @OnClick({R.id.change_picture_button, R.id.profileImage})
+    public void onUpdateProfileImage() {
+        if (super.isReady()) {
             photoOps();
+        } else {
+            if (super.hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                photoOps();
+                return;
+            }
+
+            //Don't have permissions at this point, so go ahead and request permissions
+            Toast.makeText(getActivity(), R.string.msg_permission_sorry, Toast.LENGTH_LONG)
+                    .show();
+            super.requestPermission(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE});
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           @NonNull String permissions[], @NonNull int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay!
-                    photoOps();
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Snackbar.make(getView(), "Permissions Denied to access Photos", Snackbar.LENGTH_LONG).show();
-                }
-                return;
+                                           String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == REQUEST_PERMISSION) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                photoOps();
+            }
+            else {
+                onPermissionDenied();
             }
         }
-    }
-
-    @OnClick({R.id.change_picture_button, R.id.profileImage})
-    public void onUpdateProfileImage() {
-        requestPhotoPermissions();
     }
 
     //If user has given needed permissions, then go ahead with accessing photos
