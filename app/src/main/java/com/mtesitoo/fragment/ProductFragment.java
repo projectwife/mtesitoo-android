@@ -1,11 +1,15 @@
 package com.mtesitoo.fragment;
 
 import android.app.ProgressDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -101,6 +105,18 @@ public class ProductFragment extends ListFragment implements SwipeRefreshLayout.
         super.onResume();
         mSwipeLayout.setRefreshing(true);
         updateProductList();
+        LocalBroadcastManager.getInstance(getActivity()).registerReceiver(mMessageReceiver,
+                new IntentFilter("submit_product_thumbnail"));
+        Log.d("LocalBroadcastManager", "RegisterReceiver");
+
+        reloadProductList();
+    }
+
+    @Override
+    public void onPause() {
+        LocalBroadcastManager.getInstance(getActivity()).unregisterReceiver(mMessageReceiver);
+        Log.d("LocalBroadcastManager", "UnregisterReceiver");
+        super.onPause();
     }
 
     private void updateProductList() {
@@ -125,6 +141,21 @@ public class ProductFragment extends ListFragment implements SwipeRefreshLayout.
 
     @Override
     public void onRefresh() {
+        updateProductList();
+    }
+
+    private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // Get extra data included in the Intent
+            String message = intent.getStringExtra("result");
+            Log.d("LocalBroadcastManager", "result : " + message);
+            reloadProductList();
+        }
+    };
+
+    private void reloadProductList() {
+        mSwipeLayout.setRefreshing(true);
         updateProductList();
     }
 }

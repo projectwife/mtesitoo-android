@@ -69,5 +69,6 @@
     <string name="admin_email">admin@tesitoo.com</string>
     <string name="admin_phone_line1">+2208902719</string>
     <string name="admin_phone_line2">+2203533578</string>
+    <string name="msg_permission_sorry">Please provide permission to continue !</string>
 
 </resources>

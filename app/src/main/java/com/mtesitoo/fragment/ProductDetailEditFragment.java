@@ -1,5 +1,6 @@
 package com.mtesitoo.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
@@ -12,8 +13,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
@@ -36,6 +35,7 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
+import com.mtesitoo.AbstractPermissionFragment;
 import com.mtesitoo.Constants;
 import com.mtesitoo.R;
 import com.mtesitoo.backend.cache.CategoryCache;
@@ -66,7 +66,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by Nan on 12/31/2015.
  */
-public class ProductDetailEditFragment extends Fragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener, View.OnClickListener{
+public class ProductDetailEditFragment extends AbstractPermissionFragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener, View.OnClickListener{
     private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     static final int REQUEST_IMAGE_CAPTURE = 2;
     static final int REQUEST_LOAD_IMAGE = 3;
@@ -387,48 +387,57 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         requestPhotoPermissions();
     }
 
-    private void requestPhotoPermissions() {
-        if (ContextCompat.checkSelfPermission(mActivity,
-                android.Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (shouldShowRequestPermissionRationale(
-                    android.Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                Toast.makeText(mActivity, "Please grant permissions to change photo", Toast.LENGTH_LONG).show();
-                requestPermissions(
-                        new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
-                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+    //// Run time Permissions Handling ////
 
-            } else {
-                requestPermissions(
-                        new String[]{android.Manifest.permission.READ_EXTERNAL_STORAGE},
-                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-            }
-        } else if (ContextCompat.checkSelfPermission(mActivity,
-                android.Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) {
+    @Override
+    protected String[] getDesiredPermissions() {
+        //Note: Add permissions here if permissions must be granted at the load of screen.
+        // Otherwise go for granular approach to grant permissions as needed.
+
+        //return(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE});
+        return null;
+    }
+
+    @Override
+    protected void onPermissionDenied() {
+        Toast.makeText(getActivity(), R.string.msg_permission_sorry, Toast.LENGTH_LONG)
+                .show();
+    }
+
+    @Override
+    protected void onReady(Bundle state) {}
+
+
+    public void requestPhotoPermissions() {
+        if (super.isReady()) {
             addImage();
+        } else {
+            if (super.hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                addImage();
+                return;
+            }
+
+            //Don't have permissions at this point, so go ahead and request permissions
+            Toast.makeText(getActivity(), R.string.msg_permission_sorry, Toast.LENGTH_LONG)
+                    .show();
+            super.requestPermission(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE});
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay!
-                    addImage();
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Toast.makeText(mActivity, "Permissions Denied to access Photos", Toast.LENGTH_LONG).show();
-                }
-                return;
+                                           String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == REQUEST_PERMISSION) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                addImage();
+            }
+            else {
+                onPermissionDenied();
             }
         }
     }
-
     private void addImage() {
         if (REQUEST_IMAGE_TYPE == REQUEST_IMAGE_CAPTURE) {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
