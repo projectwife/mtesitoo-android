@@ -138,10 +138,9 @@ public class ProductFragment extends ListFragment {
     };
 
     private void reloadProductList() {
-        if (pd != null) {
-            pd.cancel();
+        if (pd == null) {
+            pd = new ProgressDialog(this.getActivity());
         }
-        pd = new ProgressDialog(this.getActivity());
         pd.setMessage("Fetching products");
         pd.show();
         updateProductList();
