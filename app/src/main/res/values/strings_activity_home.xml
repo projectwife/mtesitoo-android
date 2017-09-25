@@ -43,4 +43,6 @@
     <string name="logout_action_message">Are you sure you want to logout?</string>
     <string name="logout_action_cancel">Cancel</string>
     <string name="logout_action_confirm">Continue</string>
+
+    <string name="action_update_profile">Update</string>
 </resources>
