@@ -20,10 +20,9 @@ import com.mtesitoo.AddProductActivity2;
 import com.mtesitoo.R;
 import com.mtesitoo.adapter.ProductListAdapter;
 import com.mtesitoo.backend.model.Product;
-import com.mtesitoo.backend.model.Seller;
 import com.mtesitoo.backend.service.ProductRequest;
-import com.mtesitoo.backend.service.logic.IProductRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
+import com.mtesitoo.backend.service.logic.IProductRequest;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,13 +32,13 @@ import java.util.List;
  */
 public class ProductFragment extends ListFragment {
     private ProductListAdapter mProductListAdapter;
-    private Seller mSeller;
+    private Integer sellerId;
     ProgressDialog pd;
 
-    public static ProductFragment newInstance(Context context, Seller seller) {
+    public static ProductFragment newInstance(Context context, Integer sellerId) {
         ProductFragment fragment = new ProductFragment();
         Bundle args = new Bundle();
-        args.putParcelable(context.getString(R.string.bundle_seller_key), seller);
+        args.putInt(context.getString(R.string.bundle_seller_key), sellerId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -75,7 +74,7 @@ public class ProductFragment extends ListFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         Bundle args = this.getArguments();
-        mSeller = args.getParcelable(getString(R.string.bundle_seller_key));
+        sellerId = args.getInt(getString(R.string.bundle_seller_key));
 
         updateProductList();
 
@@ -108,7 +107,7 @@ public class ProductFragment extends ListFragment {
     private void updateProductList() {
         IProductRequest productService = new ProductRequest(getActivity());
 
-        productService.getProducts(mSeller.getId(), new ICallback<List<Product>>() {
+        productService.getProducts(sellerId, new ICallback<List<Product>>() {
             @Override
             public void onResult(List<Product> result) {
                 mProductListAdapter.refresh((ArrayList<Product>) result);

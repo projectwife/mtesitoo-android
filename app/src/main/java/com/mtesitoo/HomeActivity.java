@@ -56,12 +56,12 @@ public class HomeActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         buildNavigationDrawer();
 
-        ProductFragment f = ProductFragment.newInstance(this, mSeller);
+        ProductFragment f = ProductFragment.newInstance(this, mSeller.getId());
         getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
 
         if (resetPassword) {
             String token = getIntent().getExtras().getString(getString(R.string.automatic_login_token));
-            ProfileFragment profileFragment = ProfileFragment.newInstance(mContext, mSeller, resetPassword, token);
+            ProfileFragment profileFragment = ProfileFragment.newInstance(resetPassword, token);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, profileFragment).addToBackStack(null).commit();
 
             return;
@@ -149,11 +149,11 @@ public class HomeActivity extends AppCompatActivity {
                             Fragment f = null;
 
                             if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_list_products))) {
-                                f = ProductFragment.newInstance(mContext, mSeller);
+                                f = ProductFragment.newInstance(mContext, mSeller.getId());
                             } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_profile_index))) {
-                                f = ProfileFragment.newInstance(mContext, mSeller);
+                                f = ProfileFragment.newInstance();
                             } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_order_index))) {
-                                f = OrderFragment.newInstance(mContext, mSeller);
+                                f = OrderFragment.newInstance(mContext, mSeller.getId());
                             } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_add_product_index))) {
                                 Intent intent = new Intent(mContext, AddProductActivity2.class);
                                 mContext.startActivity(intent);
