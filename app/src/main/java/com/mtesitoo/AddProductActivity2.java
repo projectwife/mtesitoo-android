@@ -356,7 +356,7 @@ public class AddProductActivity2 extends AppCompatActivity {
                 pricePerUnit,
                 ProductPriceHelper.getDisplayPrice(ProductPriceHelper.getDefaultCurrencyCode(), pricePerUnit),
                 ProductPriceHelper.getDefaultCurrencyCode(),
-                Integer.parseInt(quantity), new Date(), imageUri, null, 5);//Uri.parse(thumbnail)
+                Integer.parseInt(quantity), new Date(), imageUri, null, 5, 0, 0);//Uri.parse(thumbnail)
 
         IProductRequest productService = new ProductRequest(this);
         productService.submitProduct(product, new ICallback<String>() {

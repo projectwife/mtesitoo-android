@@ -224,7 +224,8 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
                     Integer.parseInt(mProductQuantity.getText().toString()),
                     expiryDate,
                     mProduct.getmThumbnail(),
-                    mProduct.getAuxImages(), mProduct.getStatus()
+                    mProduct.getAuxImages(), mProduct.getStatus(), mProduct.getPendingOrders(),
+                    mProduct.getProcessingOrders()
             );
 
             IProductRequest productService = new ProductRequest(ProductDetailEditFragment.this.getContext());

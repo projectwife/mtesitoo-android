@@ -38,6 +38,8 @@ public class Product implements Parcelable {
     private Uri lastImage;
     //0-disabled, 1-enabled, 5-pending approval
     private int mStatus;
+    private int mPendingOrders;
+    private int mProcessingOrders;
 
     private Product(Parcel in) {
         this.mId = in.readInt();
@@ -54,6 +56,8 @@ public class Product implements Parcelable {
         this.mThumbnail = null;
         this.mAuxImages = new ArrayList<>();
         this.mStatus = in.readInt();
+        this.mPendingOrders = in.readInt();
+        this.mProcessingOrders = in.readInt();
     }
 
     public static final Parcelable.Creator<Product> CREATOR = new Parcelable.Creator<Product>() {
@@ -85,7 +89,8 @@ public class Product implements Parcelable {
     public Product(int id, String name, String description, String location,
                    ArrayList<String> categories, String siUnit,
                    String pricePerUnit, String displayPrice, String currencyCode,
-                   Integer quantity, Date expiration, Uri thumbnail, ArrayList<Uri> auxImages, int status) {
+                   Integer quantity, Date expiration, Uri thumbnail, ArrayList<Uri> auxImages,
+                   int status, int numPendingOrders, int numProcessingOrders) {
         mId = id;
         mName = name;
         mDescription = description;
@@ -100,6 +105,8 @@ public class Product implements Parcelable {
         mThumbnail = thumbnail;
         mAuxImages = auxImages;
         mStatus = status;
+        mPendingOrders = numPendingOrders;
+        mProcessingOrders = numProcessingOrders;
     }
 
     public int getStatus() {
@@ -124,7 +131,7 @@ public class Product implements Parcelable {
     public Product(int id, String name, String description, String location, String category, String siUnit,
                    String pricePerUnit, String displayPrice, String currencyCode,
                    Integer quantity, Date expiration, Uri thumbnail, ArrayList<Uri> auxImages,
-                   int status) {
+                   int status, int numPendingOrders, int numProcessingOrders) {
 
         ArrayList<String> categoryList = new ArrayList<>();
         categoryList.add(category);
@@ -143,6 +150,8 @@ public class Product implements Parcelable {
         mThumbnail = thumbnail;
         mAuxImages = auxImages;
         mStatus = status;
+        mPendingOrders = numPendingOrders;
+        mProcessingOrders = numProcessingOrders;
     }
 
     /**
@@ -185,6 +194,14 @@ public class Product implements Parcelable {
 
     public ArrayList<String> getCategories() {
         return mCategories;
+    }
+
+    public int getPendingOrders() {
+        return mPendingOrders;
+    }
+
+    public int getProcessingOrders() {
+        return mProcessingOrders;
     }
 
     public String getCategoriesJSON() {
@@ -381,6 +398,8 @@ public class Product implements Parcelable {
         dest.writeString(mCurrencyCode);
         dest.writeInt(mQuantity);
         dest.writeInt(mStatus);
+        dest.writeInt(mPendingOrders);
+        dest.writeInt(mProcessingOrders);
         if (mExpiration != null) {
             dest.writeLong(mExpiration.getTime());
         } else {

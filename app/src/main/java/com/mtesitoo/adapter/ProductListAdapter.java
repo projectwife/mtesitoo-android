@@ -94,7 +94,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         holder.productPrice.setText(displayPrice);
 
         //exp date
-        String expDate = "";
+        String expDate = "N/A";
         if (product.getExpiration() instanceof Date) {
             expDate = product.getExpirationFormattedForApp().toString();
         }
@@ -132,6 +132,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
             Picasso.with(holder.context).load(uri).into(holder.productThumbnail);
         }
 
+        holder.orderPending.setText(String.valueOf(product.getPendingOrders()));
         return convertView;
     }
 
@@ -154,6 +155,8 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         TextView productQtyRemaining;
         @BindView(R.id.mvProductStatus)
         TextView productStatus;
+        @BindView(R.id.mvOrderPending)
+        TextView orderPending;
 
         //TODO: Show category for buyers app
         //Disabled category display for seller app
