@@ -133,6 +133,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         }
 
         holder.orderPending.setText(String.valueOf(product.getPendingOrders()));
+        holder.orderProcessing.setText(String.valueOf(product.getProcessingOrders()));
         return convertView;
     }
 
@@ -157,6 +158,8 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         TextView productStatus;
         @BindView(R.id.mvOrderPending)
         TextView orderPending;
+        @BindView(R.id.mvOrderProcessing)
+        TextView orderProcessing;
 
         //TODO: Show category for buyers app
         //Disabled category display for seller app
