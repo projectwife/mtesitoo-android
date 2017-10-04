@@ -80,6 +80,10 @@ public class Seller implements Parcelable {
         this.mDescription = mDescription;
     }
 
+    public void setmThumbnail(String thumbnail) {
+        this.mThumbnail = Uri.parse(thumbnail);
+    }
+
     public void setmCountry(String mCountry) {
         this.mCountry = mCountry;
     }

@@ -11,7 +11,6 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.HttpHeaderParser;
 import com.mtesitoo.backend.cache.SessionCache;
 import com.mtesitoo.backend.cache.logic.ISessionCache;
-import com.mtesitoo.backend.service.ProductUpdateResponse;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -29,10 +28,10 @@ public class MultipartRequest extends Request<NetworkResponse> {
 
     private String mAuthorization;
     private Context mContext;
-    private final Response.Listener<NetworkResponse> mListener;
+    private final Response.Listener<String> mListener;
     private final Response.ErrorListener mErrorListener;
 
-    public MultipartRequest(Context context, String url, Response.Listener<NetworkResponse> listener, Response.ErrorListener errorListener) {
+    public MultipartRequest(Context context, String url, Response.Listener<String> listener, Response.ErrorListener errorListener) {
         super(Method.POST, url, errorListener);
         mContext = context;
         this.mListener = listener;
@@ -103,7 +102,11 @@ public class MultipartRequest extends Request<NetworkResponse> {
 
     @Override
     protected void deliverResponse(NetworkResponse response) {
-        mListener.onResponse(response);
+        try {
+            mListener.onResponse(new String(response.data, HttpHeaderParser.parseCharset(response.headers)));
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
     }
 
     @Override

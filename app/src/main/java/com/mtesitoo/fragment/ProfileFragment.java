@@ -41,6 +41,7 @@ import com.mtesitoo.R;
 import com.mtesitoo.backend.cache.ZoneCache;
 import com.mtesitoo.backend.cache.logic.IZonesCache;
 import com.mtesitoo.backend.model.Countries;
+import com.mtesitoo.backend.model.ProfilePicture;
 import com.mtesitoo.backend.model.Seller;
 import com.mtesitoo.backend.model.Zone;
 import com.mtesitoo.backend.service.SellerRequest;
@@ -421,6 +422,10 @@ public class ProfileFragment extends AbstractPermissionFragment {
                             @Override
                             public void onResult(String result) {
                                 Toast.makeText(getActivity(), "Deleted Image Successfully", Toast.LENGTH_SHORT).show();
+
+                                mSeller.setmThumbnail("null");
+                                updateProfileInPreferences();
+
                                 mProfileImage.setImageURI(null);
                                 mProfileImage.setImageResource(R.drawable.ic_account_circle_black_24dp);
                             }
@@ -481,8 +486,11 @@ public class ProfileFragment extends AbstractPermissionFragment {
         sellerRequest.submitProfileImage(selectedImageURI, new ICallback<String>() {
             @Override
             public void onResult(String result) {
-                //TODO: Request server to send back url
-                //updateProfileInPreferences();
+                if (result != null && !result.isEmpty()) {
+                    ProfilePicture profilePicture = gson.fromJson(result, ProfilePicture.class);
+                    mSeller.setmThumbnail(profilePicture.getThumbnailPath());
+                    updateProfileInPreferences();
+                }
                 newProfileImageUri = null;
                 Snackbar.make(getView(), "Profile Image Uploaded Successfully",
                         Snackbar.LENGTH_SHORT).show();
