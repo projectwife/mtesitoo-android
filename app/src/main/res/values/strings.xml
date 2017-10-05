@@ -52,7 +52,7 @@
     <string name="profile_description_label">Description</string>
     <string name="profile_description_label_hint">Enter Business Description</string>
     <string name="profile_phone_label">Phone</string>
-    <string name="profile_region_label">Region/State</string>
+    <string name="profile_region_label">Region</string>
     <string name="profile_country_label">Country</string>
     <string name="profile_address_label">Address</string>
     <string name="profile_address_label_hint">Enter Address</string>
