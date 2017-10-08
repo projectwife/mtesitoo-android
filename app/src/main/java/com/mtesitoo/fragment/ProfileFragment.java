@@ -25,6 +25,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -61,6 +62,8 @@ import java.util.List;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
  * Created by Nan on 12/30/2015.
@@ -336,7 +339,8 @@ public class ProfileFragment extends AbstractPermissionFragment {
     }
 
     @Override
-    protected void onReady(Bundle state) {}
+    protected void onReady(Bundle state) {
+    }
 
     @OnClick({R.id.change_picture_button, R.id.profileImage})
     public void onUpdateProfileImage() {
@@ -351,7 +355,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
             //Don't have permissions at this point, so go ahead and request permissions
             Toast.makeText(getActivity(), R.string.msg_permission_sorry, Toast.LENGTH_LONG)
                     .show();
-            super.requestPermission(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE});
+            super.requestPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
         }
     }
 
@@ -363,8 +367,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 photoOps();
-            }
-            else {
+            } else {
                 onPermissionDenied();
             }
         }
@@ -729,5 +732,13 @@ public class ProfileFragment extends AbstractPermissionFragment {
         // show it
         alertDialog.show();
 
+    }
+
+    @OnClick(R.id.profile_relative_layout)
+    void dismissKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
+        View currentFocusView = getActivity().getCurrentFocus();
+        if (currentFocusView != null)
+            imm.hideSoftInputFromWindow(currentFocusView.getWindowToken(), 0);
     }
 }
