@@ -71,4 +71,8 @@
     <string name="admin_phone_line2">+2203533578</string>
     <string name="msg_permission_sorry">Please provide permission to continue !</string>
 
+    <string name="registration_terms">I have read and accepted terms and condition</string>
+    <string name="registration_terms_view">View</string>
+    <string name="registration_terms_error">You have to accept terms and condition</string>
+
 </resources>
