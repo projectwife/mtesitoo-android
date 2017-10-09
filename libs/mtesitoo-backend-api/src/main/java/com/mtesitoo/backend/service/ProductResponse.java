@@ -85,7 +85,8 @@ public class ProductResponse implements Response.Listener<String>, Response.Erro
             }
 
             int numPendingOrders = 0, numProcessingOrders = 0;
-            if (jsonProduct.get("order_counts") instanceof JSONObject) {
+            if (jsonProduct.has("order_counts") &&
+                    jsonProduct.get("order_counts") instanceof JSONObject) {
                 JSONObject jsonObject = jsonProduct.getJSONObject("order_counts");
                 if (jsonObject.has("Pending")) {
                     numPendingOrders = jsonObject.getInt("Pending");
