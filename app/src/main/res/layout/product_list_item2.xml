@@ -14,7 +14,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:columnCount="3"
-            android:rowCount="6"
+            android:rowCount="7"
             android:id="@+id/gridViewProductListing">
 
             <TextView
@@ -37,7 +37,7 @@
                 android:src="@drawable/stock_order"
                 android:layout_column="0"
                 android:layout_row="1"
-                android:layout_rowSpan="5"
+                android:layout_rowSpan="6"
                 />
 
             <TextView
@@ -141,6 +141,27 @@
                 android:text=""
                 android:layout_column="2"
                 android:layout_row="5"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                style="@style/TextBoldTheme"
+                />
+
+            <TextView
+                android:id="@+id/tvOrderProcessing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Orders Processing"
+                android:layout_column="1"
+                android:layout_row="6"
+                android:layout_marginLeft="@dimen/activity_vertical_margin"
+                style="@style/TextTheme"
+                />
+            <TextView
+                android:id="@+id/mvOrderProcessing"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:layout_column="2"
+                android:layout_row="6"
                 android:layout_marginLeft="@dimen/activity_vertical_margin"
                 style="@style/TextBoldTheme"
                 />

@@ -75,6 +75,19 @@ public class ProductDetailResponse implements Response.Listener<String>, Respons
                 currencyCode = jsonProduct.getString("currency_code");
             }
 
+            int numPendingOrders = 0, numProcessingOrders = 0;
+            if (jsonProduct.has("order_counts") &&
+                    jsonProduct.get("order_counts") instanceof JSONObject) {
+                JSONObject jsonObject = jsonProduct.getJSONObject("order_counts");
+                if (jsonObject.has("Pending")) {
+                    numPendingOrders = jsonObject.getInt("Pending");
+                }
+
+                if (jsonObject.has("Processing")) {
+                    numProcessingOrders = jsonObject.getInt("Processing");
+                }
+            }
+
             result = new Product(
                     Integer.parseInt(jsonProduct.getString("product_id")),
                     jsonProduct.getString("title"),
@@ -89,7 +102,7 @@ public class ProductDetailResponse implements Response.Listener<String>, Respons
                     expirationDate,
                     Uri.parse(jsonProduct.getString("thumb_image")),
                     parseAuxImages(jsonProduct.getJSONArray("images")),
-                    jsonProduct.getInt("status")
+                    jsonProduct.getInt("status"), numPendingOrders, numProcessingOrders
             );
         } catch (ParseException e) {
             e.printStackTrace();

@@ -83,6 +83,20 @@ public class ProductResponse implements Response.Listener<String>, Response.Erro
             if (jsonProduct.has("currency_code")) {
                 currencyCode = jsonProduct.getString("currency_code");
             }
+
+            int numPendingOrders = 0, numProcessingOrders = 0;
+            if (jsonProduct.has("order_counts") &&
+                    jsonProduct.get("order_counts") instanceof JSONObject) {
+                JSONObject jsonObject = jsonProduct.getJSONObject("order_counts");
+                if (jsonObject.has("Pending")) {
+                    numPendingOrders = jsonObject.getInt("Pending");
+                }
+
+                if (jsonObject.has("Processing")) {
+                    numProcessingOrders = jsonObject.getInt("Processing");
+                }
+            }
+
             Product product =
                     new Product(
                             Integer.parseInt(jsonProduct.getString("product_id")),
@@ -98,7 +112,7 @@ public class ProductResponse implements Response.Listener<String>, Response.Erro
                             expirationDate,
                             Uri.parse(jsonProduct.getString("thumb_image")),
                             parseAuxImages(),
-                            jsonProduct.getInt("status")
+                            jsonProduct.getInt("status"), numPendingOrders, numProcessingOrders
                     );
             result.add(product);
         }
