@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -20,6 +21,8 @@ import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.answers.Answers;
 import com.crashlytics.android.answers.LoginEvent;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mtesitoo.backend.cache.AuthorizationCache;
 import com.mtesitoo.backend.cache.CategoryCache;
 import com.mtesitoo.backend.cache.CountriesCache;
@@ -45,6 +48,7 @@ import com.mtesitoo.backend.service.logic.ICountriesRequest;
 import com.mtesitoo.backend.service.logic.IForgotPasswordRequest;
 import com.mtesitoo.backend.service.logic.ILoginRequest;
 import com.mtesitoo.backend.service.logic.ISellerRequest;
+import com.mtesitoo.helper.UriAdapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -234,6 +238,12 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         mEditor.putBoolean(Constants.IS_USER_LOGGED_IN_KEY, true);
                         mEditor.putString(Constants.LOGGED_IN_USER_ID_KEY, userId);
                         mEditor.putString(Constants.LOGGED_IN_USER_PASS_KEY, userPass);
+
+                        Gson gson = new GsonBuilder()
+                                .registerTypeAdapter(Uri.class, new UriAdapter())
+                                .create();
+                        mEditor.putString(Constants.LOGGED_IN_USER_DATA, gson.toJson(result));
+
                         mEditor.commit();
 
                         intent.putExtra(mContext.getString(R.string.bundle_seller_key), result);

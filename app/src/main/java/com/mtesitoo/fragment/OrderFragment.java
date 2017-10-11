@@ -14,7 +14,6 @@ import android.view.ViewGroup;
 import com.mtesitoo.R;
 import com.mtesitoo.adapter.OrderListAdapter;
 import com.mtesitoo.backend.model.Order;
-import com.mtesitoo.backend.model.Seller;
 import com.mtesitoo.backend.model.OrderStatus;
 import com.mtesitoo.backend.service.logic.IOrderRequest;
 import com.mtesitoo.backend.service.OrderRequest;
@@ -38,13 +37,13 @@ import java.util.List;
 
 public class OrderFragment extends ListFragment {
     private OrderListAdapter mOrderListAdapter;
-    private Seller mSeller;
+    private Integer sellerId;
     private OrderStatus orderStatus;
 
-    public static OrderFragment newInstance(Context context, Seller seller) {
+    public static OrderFragment newInstance(Context context, Integer sellerId) {
         OrderFragment fragment = new OrderFragment();
         Bundle args = new Bundle();
-        args.putParcelable(context.getString(R.string.bundle_seller_key), seller);
+        args.putInt(context.getString(R.string.bundle_seller_key), sellerId);
         fragment.setArguments(args);
         return fragment;
     }
@@ -102,7 +101,7 @@ public class OrderFragment extends ListFragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         Bundle args = this.getArguments();
-        mSeller = args.getParcelable(getString(R.string.bundle_seller_key));
+        sellerId = args.getInt(getString(R.string.bundle_seller_key));
 
         orderStatus = OrderStatus.PENDING;
 
@@ -135,7 +134,7 @@ public class OrderFragment extends ListFragment {
     private void updateOrderList() {
         IOrderRequest orderService = new OrderRequest(getActivity());
 
-        orderService.getOrders(mSeller.getId(), orderStatus, new ICallback<List<Order>>() {
+        orderService.getOrders(sellerId, orderStatus, new ICallback<List<Order>>() {
             @Override
             public void onResult(List<Order> result) {
                 mOrderListAdapter.refresh((ArrayList<Order>) result);

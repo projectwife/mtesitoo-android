@@ -34,12 +34,15 @@ import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mtesitoo.AbstractPermissionFragment;
 import com.mtesitoo.Constants;
 import com.mtesitoo.R;
 import com.mtesitoo.backend.cache.ZoneCache;
 import com.mtesitoo.backend.cache.logic.IZonesCache;
 import com.mtesitoo.backend.model.Countries;
+import com.mtesitoo.backend.model.ProfilePicture;
 import com.mtesitoo.backend.model.Seller;
 import com.mtesitoo.backend.model.Zone;
 import com.mtesitoo.backend.service.SellerRequest;
@@ -48,6 +51,7 @@ import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.ISellerRequest;
 import com.mtesitoo.backend.service.logic.IZoneRequest;
 import com.mtesitoo.helper.ImageHelper;
+import com.mtesitoo.helper.UriAdapter;
 import com.mtesitoo.model.ImageFile;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -72,7 +76,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
     private static final int SELECT_PICTURE = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     private static Seller mSeller;
-    private static Context mContext;
+    private Context mContext;
     private ImageFile mProfileImageFile;
 
     @BindView(R.id.profileImage)
@@ -106,6 +110,9 @@ public class ProfileFragment extends AbstractPermissionFragment {
     private static boolean resetPasswordFlag = false;
     private static String mTempPasswordToken = null;
 
+    private SharedPreferences sharedPreferences;
+    private Gson gson;
+
     private Callback profilePicassoCallback = new Callback() {
         @Override
         public void onSuccess() {
@@ -121,27 +128,27 @@ public class ProfileFragment extends AbstractPermissionFragment {
         }
     };
 
-    public static ProfileFragment newInstance(Context context, Seller seller) {
-        return newInstance(context, seller, false, null);
+    public static ProfileFragment newInstance() {
+        return newInstance(false, null);
     }
 
-    public static ProfileFragment newInstance(Context context, Seller seller,
-                                              boolean resetPassword, String token) {
-        mContext = context;
-        mSeller = seller;
+    public static ProfileFragment newInstance(boolean resetPassword, String token) {
         resetPasswordFlag = resetPassword;
         mTempPasswordToken = token;
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(context.getString(R.string.bundle_seller_key), seller);
-        fragment.setArguments(args);
-        return fragment;
+
+        return new ProfileFragment();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+
+        mContext = getContext();
+        sharedPreferences = mContext.getSharedPreferences("pref", Context.MODE_PRIVATE);
+        gson = new GsonBuilder()
+                .registerTypeAdapter(Uri.class, new UriAdapter())
+                .create();
     }
 
     @Override
@@ -160,11 +167,9 @@ public class ProfileFragment extends AbstractPermissionFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (getArguments() != null && getArguments().containsKey(getString(R.string.bundle_seller_key))) {
-            mSeller = getArguments().getParcelable(getString(R.string.bundle_seller_key));
-        }
+        if (sharedPreferences.contains(Constants.LOGGED_IN_USER_DATA)) {
+            mSeller = gson.fromJson(sharedPreferences.getString(Constants.LOGGED_IN_USER_DATA, ""), Seller.class);
 
-        if (mSeller != null) {
             if (mSeller.getmThumbnail() != null && !mSeller.getmThumbnail().toString().equals("null")) {
                 Picasso.with(getContext()).load(mSeller.getmThumbnail().toString()).into(mProfileImage, profilePicassoCallback);
             } else {
@@ -184,10 +189,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
             mProfileDescription.setText(mSeller.getmDescription());
             mProfileCity.setText(mSeller.getmCity());
 
-            final SharedPreferences.Editor mEditor;
-            final SharedPreferences mPrefs;
-            mPrefs = mContext.getSharedPreferences("pref", Context.MODE_PRIVATE);
-            mEditor = mPrefs.edit();
+            final SharedPreferences.Editor mEditor = sharedPreferences.edit();
 
             //ICountriesCache countriesCache = new CountriesCache(mContext);
             ArrayList<Countries> countriesArrayList = new ArrayList<>();
@@ -423,6 +425,10 @@ public class ProfileFragment extends AbstractPermissionFragment {
                             @Override
                             public void onResult(String result) {
                                 Toast.makeText(getActivity(), "Deleted Image Successfully", Toast.LENGTH_SHORT).show();
+
+                                mSeller.setmThumbnail("null");
+                                updateProfileInPreferences();
+
                                 mProfileImage.setImageURI(null);
                                 mProfileImage.setImageResource(R.drawable.ic_account_circle_black_24dp);
                             }
@@ -445,16 +451,23 @@ public class ProfileFragment extends AbstractPermissionFragment {
 
     private void updateProfile() {
 
-        if (checkProfileChanges()) {
-            onUpdateProfileClick();
+        if (checkProfileChanges() || newProfileImageUri != null) {
+
+            if (checkProfileChanges()) {
+                onUpdateProfileClick();
+            }
+            if (newProfileImageUri != null) {
+                onUpdatePicture(newProfileImageUri);
+            }
             return;
         }
-        if (newProfileImageUri != null) {
-            onUpdatePicture(newProfileImageUri);
-            return;
-        }
+
         Snackbar.make(getView(), getString(R.string.profile_no_changes_message),
                 Snackbar.LENGTH_LONG).show();
+    }
+
+    private void updateProfileInPreferences() {
+        sharedPreferences.edit().putString(Constants.LOGGED_IN_USER_DATA, gson.toJson(mSeller)).apply();
     }
 
     private boolean checkProfileChanges() {
@@ -476,6 +489,11 @@ public class ProfileFragment extends AbstractPermissionFragment {
         sellerRequest.submitProfileImage(selectedImageURI, new ICallback<String>() {
             @Override
             public void onResult(String result) {
+                if (result != null && !result.isEmpty()) {
+                    ProfilePicture profilePicture = gson.fromJson(result, ProfilePicture.class);
+                    mSeller.setmThumbnail(profilePicture.getThumbnailPath());
+                    updateProfileInPreferences();
+                }
                 newProfileImageUri = null;
                 Snackbar.make(getView(), "Profile Image Uploaded Successfully",
                         Snackbar.LENGTH_SHORT).show();
@@ -525,6 +543,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
                         if (result == null) {
                             Snackbar.make(getView(), getString(R.string.profile_updated),
                                     Snackbar.LENGTH_LONG).show();
+                            updateProfileInPreferences();
                         }
                     }
 

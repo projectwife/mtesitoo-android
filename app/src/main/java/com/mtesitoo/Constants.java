@@ -14,4 +14,6 @@ public class Constants {
     public static final String LOGGED_IN_USER_ID_KEY = "loggedInUserId";
     public static final String LOGGED_IN_USER_PASS_KEY = "loggedInUserPass";
 
+    public static final String LOGGED_IN_USER_DATA = "loggedInUserData";
+
 }
