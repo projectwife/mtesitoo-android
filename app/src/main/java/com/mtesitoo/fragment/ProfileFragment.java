@@ -145,7 +145,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
         setHasOptionsMenu(true);
 
         mContext = getContext();
-        sharedPreferences = mContext.getSharedPreferences("pref", Context.MODE_PRIVATE);
+        sharedPreferences = mContext.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
         gson = new GsonBuilder()
                 .registerTypeAdapter(Uri.class, new UriAdapter())
                 .create();

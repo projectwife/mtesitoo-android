@@ -4,13 +4,19 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.drawable.Drawable;
+import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.ImageView;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mikepenz.google_material_typeface_library.GoogleMaterial;
 import com.mikepenz.materialdrawer.AccountHeader;
 import com.mikepenz.materialdrawer.AccountHeaderBuilder;
@@ -21,6 +27,7 @@ import com.mikepenz.materialdrawer.model.SecondaryDrawerItem;
 import com.mikepenz.materialdrawer.model.SectionDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IDrawerItem;
 import com.mikepenz.materialdrawer.model.interfaces.IProfile;
+import com.mikepenz.materialdrawer.util.DrawerImageLoader;
 import com.mtesitoo.backend.model.Seller;
 import com.mtesitoo.fragment.ContactFragment;
 import com.mtesitoo.fragment.HelpFragment;
@@ -28,6 +35,8 @@ import com.mtesitoo.fragment.InfoFragment;
 import com.mtesitoo.fragment.OrderFragment;
 import com.mtesitoo.fragment.ProductFragment;
 import com.mtesitoo.fragment.ProfileFragment;
+import com.mtesitoo.helper.UriAdapter;
+import com.squareup.picasso.Picasso;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -64,14 +73,42 @@ public class HomeActivity extends AppCompatActivity {
             ProfileFragment profileFragment = ProfileFragment.newInstance(resetPassword, token);
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, profileFragment).addToBackStack(null).commit();
 
-            return;
         }
     }
 
     public void buildNavigationDrawer() {
+        DrawerImageLoader.init(new DrawerImageLoader.IDrawerImageLoader() {
+            @Override
+            public void set(ImageView imageView, Uri uri, Drawable drawable) {
+                Picasso.with(imageView.getContext()).load(uri)
+                        .error(R.drawable.ic_account_circle_black_24dp)
+                        .into(imageView);
+            }
+
+            @Override
+            public void cancel(ImageView imageView) {
+
+            }
+
+            @Override
+            public Drawable placeholder(Context context) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+                    return context.getDrawable(R.drawable.ic_account_circle_black_24dp);
+                }
+                //noinspection deprecation
+                return context.getResources().getDrawable(R.drawable.ic_account_circle_black_24dp);
+            }
+        });
+
         final IProfile profile = new ProfileDrawerItem()
+                .withIdentifier(mSeller.getId())
                 .withName(mSeller.getUsername())
                 .withEmail(getString(R.string.role_seller));
+
+        if (!mSeller.getmThumbnail().getPath().equals("null")) {
+            profile.withIcon(mSeller.getmThumbnail());
+        }
+
 
         headerResult = new AccountHeaderBuilder()
                 .withActivity(this)
@@ -85,7 +122,6 @@ public class HomeActivity extends AppCompatActivity {
         result = new DrawerBuilder()
                 .withActivity(this)
                 .withToolbar(toolbar)
-
                 .withAccountHeader(headerResult)
                 .addDrawerItems(
                         new SecondaryDrawerItem()
@@ -114,8 +150,8 @@ public class HomeActivity extends AppCompatActivity {
                                 .withIdentifier(Integer.parseInt(mContext.getString(R.string.menu_item_profile_index)))
                                 .withSelectable(false),
 
-                                // Todo orders menu - displays number of pending orders.
-                                // Uncomment the lines below to display the number of orders next to the menu item
+                        // Todo orders menu - displays number of pending orders.
+                        // Uncomment the lines below to display the number of orders next to the menu item
                                 /*.withBadgeStyle(new BadgeStyle()
                                         .withTextColor(Color.WHITE)
                                         .withColorRes(R.color.md_red_700)),*/
@@ -176,6 +212,22 @@ public class HomeActivity extends AppCompatActivity {
                         return false;
                     }
                 })
+                .withOnDrawerListener(new Drawer.OnDrawerListener() {
+                    @Override
+                    public void onDrawerOpened(View view) {
+                        checkProfilePicture(profile);
+                    }
+
+                    @Override
+                    public void onDrawerClosed(View view) {
+
+                    }
+
+                    @Override
+                    public void onDrawerSlide(View view, float v) {
+
+                    }
+                })
                 .withShowDrawerOnFirstLaunch(!resetPassword)
                 .withSelectedItem(-1)
                 .build();
@@ -184,6 +236,26 @@ public class HomeActivity extends AppCompatActivity {
         // functionality not yet implemented.
         // Badge has been commented out above.
         // result.updateBadge(3, new StringHolder(10 + ""));
+    }
+
+    private void checkProfilePicture(IProfile profile) {
+        final SharedPreferences sharedPreferences = mContext.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
+
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Uri.class, new UriAdapter())
+                .create();
+
+        Seller seller = gson.fromJson(sharedPreferences.getString(Constants.LOGGED_IN_USER_DATA, ""), Seller.class);
+
+        if (!seller.getmThumbnail().getPath().equals("null") &&
+                (profile.getIcon() == null || !profile.getIcon().getUri().equals(seller.getmThumbnail()))) {
+            updateProfilePicture(profile, seller);
+        }
+    }
+
+    private void updateProfilePicture(IProfile profile, Seller seller) {
+        profile.withIcon(seller.getmThumbnail());
+        headerResult.updateProfileByIdentifier(profile);
     }
 
     private void showLogoutConfirmationDialog() {
@@ -210,9 +282,7 @@ public class HomeActivity extends AppCompatActivity {
 
             //set logged_in to false and show LoginActivity
             SharedPreferences.Editor editor = sharedPreferences.edit();
-            editor.putBoolean(Constants.IS_USER_LOGGED_IN_KEY, false);
-            editor.putString(Constants.LOGGED_IN_USER_ID_KEY, "");
-            editor.putString(Constants.LOGGED_IN_USER_PASS_KEY, "");
+            editor.clear();
             editor.apply();
 
         }
