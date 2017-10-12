@@ -81,7 +81,8 @@ public class HomeActivity extends AppCompatActivity {
             @Override
             public void set(ImageView imageView, Uri uri, Drawable drawable) {
                 Picasso.with(imageView.getContext()).load(uri)
-                        .error(R.drawable.ic_account_circle_black_24dp)
+                        .placeholder(getDefaultDrawable())
+                        .error(getDefaultDrawable())
                         .into(imageView);
             }
 
@@ -92,11 +93,7 @@ public class HomeActivity extends AppCompatActivity {
 
             @Override
             public Drawable placeholder(Context context) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                    return context.getDrawable(R.drawable.ic_account_circle_black_24dp);
-                }
-                //noinspection deprecation
-                return context.getResources().getDrawable(R.drawable.ic_account_circle_black_24dp);
+                return getDefaultDrawable();
             }
         });
 
@@ -107,6 +104,8 @@ public class HomeActivity extends AppCompatActivity {
 
         if (!mSeller.getmThumbnail().getPath().equals("null")) {
             profile.withIcon(mSeller.getmThumbnail());
+        } else {
+            profile.withIcon(getDefaultDrawable());
         }
 
 
@@ -247,15 +246,23 @@ public class HomeActivity extends AppCompatActivity {
 
         Seller seller = gson.fromJson(sharedPreferences.getString(Constants.LOGGED_IN_USER_DATA, ""), Seller.class);
 
-        if (!seller.getmThumbnail().getPath().equals("null") &&
-                (profile.getIcon() == null || !profile.getIcon().getUri().equals(seller.getmThumbnail()))) {
-            updateProfilePicture(profile, seller);
+        if (profile.getIcon().getUri() != null && !profile.getIcon().getUri().equals(seller.getmThumbnail())
+                || profile.getIcon().getIcon() != null && !seller.getmThumbnail().getPath().equals("null")) {
+            if (!seller.getmThumbnail().getPath().equals("null")) {
+                profile.withIcon(seller.getmThumbnail());
+            } else {
+                profile.withIcon(getDefaultDrawable());
+            }
+            headerResult.updateProfileByIdentifier(profile);
         }
     }
 
-    private void updateProfilePicture(IProfile profile, Seller seller) {
-        profile.withIcon(seller.getmThumbnail());
-        headerResult.updateProfileByIdentifier(profile);
+    private Drawable getDefaultDrawable() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            return getDrawable(R.drawable.ic_account_circle_black_24dp);
+        }
+        //noinspection deprecation
+        return getResources().getDrawable(R.drawable.ic_account_circle_black_24dp);
     }
 
     private void showLogoutConfirmationDialog() {
