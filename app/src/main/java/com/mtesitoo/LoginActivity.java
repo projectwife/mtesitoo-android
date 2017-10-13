@@ -60,6 +60,8 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import io.fabric.sdk.android.Fabric;
 
+import static android.content.ContentValues.TAG;
+
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private Context mContext;
     protected SharedPreferences.Editor mEditor;
@@ -160,6 +162,31 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         });
     }
 
+    /**
+     * Send Firebase token to server after user login
+     */
+    private void sendFirebaseTokenToServer() {
+        SharedPreferences mPrefs = this.getSharedPreferences("pref", Context.MODE_PRIVATE);
+        String refreshedToken = mPrefs.getString("firebase_token", "");
+
+        final ILoginRequest loginRequest = new LoginRequest(this);
+
+        loginRequest.sendRegistrationTokenToServer(refreshedToken, new ICallback<String>() {
+            @Override
+            public void onResult(String result) {
+                Log.d(TAG, "Success: " + result);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e(TAG, "Failed to send token to server: " + e.getMessage());
+
+            }
+        });
+
+
+    }
+
     private void logInUser(final Intent intent, final String user, final String pass, final boolean resetPassword) {
         final ILoginRequest loginService = new LoginRequest(this);
         String username = null;
@@ -183,6 +210,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             @Override
             public void onResult(String result) {
                 Log.d("LOGIN - RESULT", result);
+                sendFirebaseTokenToServer();
+
                 ICategoryRequest categoryService = new CategoryRequest(mContext);
                 ISellerRequest sellerService = new SellerRequest(mContext);
                 ICommonRequest commonService = new CommonRequest(mContext);

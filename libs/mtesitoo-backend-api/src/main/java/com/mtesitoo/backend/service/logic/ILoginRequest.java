@@ -10,4 +10,6 @@ public interface ILoginRequest {
 
     void authenticateUser(String username, String password, ICallback<String> callback);
     void authenticateUser(final String code, ICallback<String> callback);
+
+    void sendRegistrationTokenToServer(final String refreshedToken, ICallback<String> callback);
 }
