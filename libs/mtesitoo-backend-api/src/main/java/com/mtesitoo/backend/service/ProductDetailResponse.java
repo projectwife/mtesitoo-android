@@ -14,6 +14,7 @@ import org.json.JSONObject;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by Carl on 9/11/2016.
@@ -50,10 +51,41 @@ public class ProductDetailResponse implements Response.Listener<String>, Respons
 
         Product result = null;
         try {
-            String expirationDate = jsonProduct.getString("expiration_date");
+            String expirationStr = null;
+            Date expirationDate = null;
 
-            if (expirationDate == null || expirationDate.equals("null")) {
-                expirationDate = "0000-00-00 00:00:00";
+            if (jsonProduct.has("expiration_date")) {
+                expirationStr = jsonProduct.getString("expiration_date");
+            }
+
+            if (expirationStr == null || expirationStr.equals("null")
+                    || expirationStr.equals("0000-00-00 00:00:00")) {
+                expirationDate = null;
+            } else {
+                expirationDate = formatter.parse(expirationStr);
+            }
+
+            String displayPrice = "";
+            String currencyCode = "";
+            if (jsonProduct.has("display_price")) {
+                displayPrice = jsonProduct.getString("display_price");
+            }
+
+            if (jsonProduct.has("currency_code")) {
+                currencyCode = jsonProduct.getString("currency_code");
+            }
+
+            int numPendingOrders = 0, numProcessingOrders = 0;
+            if (jsonProduct.has("order_counts") &&
+                    jsonProduct.get("order_counts") instanceof JSONObject) {
+                JSONObject jsonObject = jsonProduct.getJSONObject("order_counts");
+                if (jsonObject.has("Pending")) {
+                    numPendingOrders = jsonObject.getInt("Pending");
+                }
+
+                if (jsonObject.has("Processing")) {
+                    numProcessingOrders = jsonObject.getInt("Processing");
+                }
             }
 
             result = new Product(
@@ -63,10 +95,14 @@ public class ProductDetailResponse implements Response.Listener<String>, Respons
                     jsonProduct.getString("location"),
                     resolveCategories(jsonProduct.getJSONArray("categories")),
                     "SI Unit",
-                    jsonProduct.getString("price"), 100,
-                    formatter.parse(expirationDate),
+                    jsonProduct.getString("price"),
+                    displayPrice,
+                    currencyCode,
+                    jsonProduct.getInt("quantity"),
+                    expirationDate,
                     Uri.parse(jsonProduct.getString("thumb_image")),
-                    parseAuxImages(jsonProduct.getJSONArray("images"))
+                    parseAuxImages(jsonProduct.getJSONArray("images")),
+                    jsonProduct.getInt("status"), numPendingOrders, numProcessingOrders
             );
         } catch (ParseException e) {
             e.printStackTrace();

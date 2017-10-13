@@ -2,6 +2,7 @@ package com.mtesitoo.adapter;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +15,15 @@ import android.widget.TextView;
 import com.mtesitoo.ProductActivity;
 import com.mtesitoo.R;
 import com.mtesitoo.backend.model.Product;
+import com.mtesitoo.helper.ProductPriceHelper;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
+import java.util.Date;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.squareup.picasso.Picasso;
 /**
  * Created by jackwu on 2015-07-11.
  */
@@ -53,7 +56,7 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         Product product = getItem(position);
 
         if (convertView == null) {
-            convertView = LayoutInflater.from(getContext()).inflate(R.layout.product_list_item, parent, false);
+            convertView = LayoutInflater.from(getContext()).inflate(R.layout.product_list_item2, parent, false);
         }
 
         int padding = Integer.parseInt(mContext.getString(R.string.padding));
@@ -70,17 +73,57 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         ViewGroup.LayoutParams params = holder.itemLayout.getLayoutParams();
         params.width = (int) deviceWidth;
 
-        params = holder.layoutDivider.getLayoutParams();
-        params.width = (int) (0.85 * deviceWidth);
+//        params = holder.layoutDivider.getLayoutParams();
+//        params.width = (int) (0.85 * deviceWidth);
 
         params = holder.productThumbnail.getLayoutParams();
-        params.height = (int) (0.4 * deviceWidth);
-        params.width = (int) (0.4 * deviceWidth);
+        params.height = (int) (0.25 * deviceWidth);
+        params.width = (int) (0.25 * deviceWidth);
 
         holder.productName.setText(product.getName());
-        holder.productCategory.setText(product.getCategoriesStringList(mContext));
-        holder.productPrice.setText(product.getPricePerUnit());
+
+        //Disabled category display for seller app.
+        //holder.productCategory.setText(product.getCategoriesStringList(mContext));
+
+        String displayPrice = product.getDisplayPrice();
+        if (displayPrice.isEmpty()) {
+            //Hack to avoid showing empty displayPrice returned from server
+            displayPrice = ProductPriceHelper.getDisplayPrice(
+                    ProductPriceHelper.getDefaultCurrencyCode(), product.getPricePerUnit());
+        }
+        holder.productPrice.setText(displayPrice);
+
+        //exp date
+        String expDate = "N/A";
+        if (product.getExpiration() instanceof Date) {
+            expDate = product.getExpirationFormattedForApp().toString();
+        }
+        if (product.isProductExpired()) {
+            holder.productExpDate.setText(expDate);
+            holder.productExpDate.setTextColor(Color.RED);
+        } else {
+            holder.productExpDate.setText(expDate);
+        }
+
+        //qty remaining
+        int qtyRemaining = product.getQuantity();
+        holder.productQtyRemaining.setText(String.valueOf(qtyRemaining));
+
+        //product status
+        int statusCode = product.getStatus();
+        String status = "";
+        if (statusCode == 0) {
+            status = "Disabled";
+        } else if (statusCode == 1) {
+            status = "Enabled";
+        } else if (statusCode == 5) {
+            status = "Pending Approval";
+        }
+
+        holder.productStatus.setText(status);
+
         uri = product.getmThumbnail().toString();
+
         if(uri.contains(" ")){
             uri = uri.replace(" ","%20");
             Picasso.with(holder.context).load(uri).into(holder.productThumbnail);
@@ -89,6 +132,8 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
             Picasso.with(holder.context).load(uri).into(holder.productThumbnail);
         }
 
+        holder.orderPending.setText(String.valueOf(product.getPendingOrders()));
+        holder.orderProcessing.setText(String.valueOf(product.getProcessingOrders()));
         return convertView;
     }
 
@@ -97,20 +142,35 @@ public class ProductListAdapter extends ArrayAdapter<Product> {
         Product product;
         Context context;
 
-        @Bind(R.id.product_list_item)
+        @BindView(R.id.product_list_item)
         LinearLayout itemLayout;
-        @Bind(R.id.product_name)
+        @BindView(R.id.product_name)
         TextView productName;
-        @Bind(R.id.product_thumbnail)
+        @BindView(R.id.product_thumbnail)
         ImageView productThumbnail;
-        @Bind(R.id.product_category)
-        TextView productCategory;
-        @Bind(R.id.product_price)
+        @BindView(R.id.product_price)
         TextView productPrice;
-        @Bind(R.id.product_layout_divider)
-        View layoutDivider;
+        @BindView(R.id.mvExpirationDate)
+        TextView productExpDate;
+        @BindView(R.id.mvProductQtyRemaining)
+        TextView productQtyRemaining;
+        @BindView(R.id.mvProductStatus)
+        TextView productStatus;
+        @BindView(R.id.mvOrderPending)
+        TextView orderPending;
+        @BindView(R.id.mvOrderProcessing)
+        TextView orderProcessing;
 
-        @OnClick(R.id.product_see_details_link)
+        //TODO: Show category for buyers app
+        //Disabled category display for seller app
+//        @BindView(R.id.product_category)
+//        TextView productCategory;
+
+//        @BindView(R.id.product_layout_divider)
+//        View layoutDivider;
+
+        //@OnClick(R.id.product_see_details_link)
+        @OnClick(R.id.gridViewProductListing)
         public void onClick(View view) {
             Intent intent = new Intent(context, ProductActivity.class);
             intent.putExtra(context.getString(R.string.bundle_product_key), product);

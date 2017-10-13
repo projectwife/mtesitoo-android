@@ -27,17 +27,17 @@ public class ZoneRequest extends Request implements IZoneRequest {
     protected SharedPreferences.Editor mEditor;
     protected SharedPreferences mPrefs;
 
-    String selectedCountryId;
+    private String selectedCountryId;
+    private final String DEFAULT_COUNTRY_ID = "79";
 
     public ZoneRequest(Context context) {
         super(context);
-        mContext=context;
+        mContext = context;
         mILoginRequest = new LoginRequest(mContext);
 
         //Samuel 18/05/2016
         mPrefs = mContext.getSharedPreferences("pref", Context.MODE_PRIVATE);
         mEditor = mPrefs.edit();
-
     }
 
     @Override
@@ -45,8 +45,8 @@ public class ZoneRequest extends Request implements IZoneRequest {
 
         //get the countries id
 
-       selectedCountryId=mPrefs.getString("SelectedCountries","195");;
-       //System.out.println( "Selected countried in ZoneRequest "+ mPrefs.getString("SelectedCountries",""));
+        selectedCountryId = mPrefs.getString("SelectedCountries", DEFAULT_COUNTRY_ID);
+        //System.out.println( "Selected countried in ZoneRequest "+ mPrefs.getString("SelectedCountries",""));
 
         ICountriesCache cache = new CountriesCache(mContext);
         List<Countries> countries = cache.getCountries();
@@ -61,9 +61,9 @@ public class ZoneRequest extends Request implements IZoneRequest {
 
 
         URL url = new URL(mContext, R.string.path_common_country);
-       // System.out.println("I am testing Zone id here1 countries id"+url.toString()+"/"+selectedCountryId);
+        // System.out.println("I am testing Zone id here1 countries id"+url.toString()+"/"+selectedCountryId);
         ZoneResponse response = new ZoneResponse(callback);
-        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.GET, url.toString()+"/"+selectedCountryId, response, response);
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.GET, url.toString() + "/" + selectedCountryId, response, response);
 
         stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
         mRequestQueue.add(stringRequest);

@@ -17,7 +17,7 @@ import com.mtesitoo.backend.service.OrderRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.IOrderRequest;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
@@ -30,7 +30,7 @@ public class EditOrderFragment extends Fragment {
     private Order order;
     private OrderProduct orderProduct;
 
-    @Bind(R.id.rGroupEditStatusOptions)
+    @BindView(R.id.rGroupEditStatusOptions)
     RadioGroup editStatusOptions;
 
     public static EditOrderFragment newInstance(Context context, OrderProduct orderProductToEdit, Order order) {

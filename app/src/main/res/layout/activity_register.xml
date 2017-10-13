@@ -7,26 +7,26 @@
 
     <RelativeLayout
         android:id="@+id/registration_form"
-        android:layout_alignParentTop="true"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true">
 
         <TextView
             android:id="@+id/registration_header"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentLeft="true"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
             android:paddingBottom="16dp"
             android:text="Register New User"
-            android:textStyle="bold"
-            android:textSize="10pt"/>
+            android:textSize="10pt"
+            android:textStyle="bold" />
 
         <android.support.design.widget.TextInputLayout
-            android:layout_below="@+id/registration_header"
             android:id="@+id/il_registration_email"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/registration_header">
 
             <EditText
                 android:id="@+id/registration_email"
@@ -114,7 +114,32 @@
                 android:hint="Phone Number"
                 android:inputType="phone" />
 
+
         </android.support.design.widget.TextInputLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/il_registration_phone"
+            android:layout_marginTop="@dimen/registration_terms_margin"
+            android:orientation="horizontal">
+
+            <CheckBox
+                android:id="@+id/registration_terms"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/registration_terms" />
+
+
+            <TextView
+                android:id="@+id/registration_view_terms"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="0.2"
+                android:text="@string/registration_terms_view" />
+
+        </LinearLayout>
 
 
     </RelativeLayout>
@@ -123,15 +148,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_below="@+id/registration_form"
-        android:paddingTop="32dp"
-        >
+        android:paddingTop="32dp">
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/cancel_registration_button"
             android:layout_width="150dp"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:text="Cancel"/>
+            android:text="Cancel" />
 
         <android.support.v7.widget.AppCompatButton
             android:id="@+id/register_user_button"
@@ -139,8 +163,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:text="Register"
-            app:backgroundTint="@color/primary"
-            android:textColor="@android:color/white"/>
+            android:textColor="@android:color/white"
+            app:backgroundTint="@color/primary" />
 
 
     </RelativeLayout>

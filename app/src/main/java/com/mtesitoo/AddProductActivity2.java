@@ -17,6 +17,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.AppCompatButton;
@@ -38,13 +39,15 @@ import com.mtesitoo.backend.model.Product;
 import com.mtesitoo.backend.service.ProductRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.IProductRequest;
+import com.mtesitoo.helper.ProductPriceHelper;
 import com.mtesitoo.model.ImageFile;
 
 import java.util.Date;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.Unbinder;
 
 public class AddProductActivity2 extends AppCompatActivity {
     private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
@@ -57,19 +60,19 @@ public class AddProductActivity2 extends AppCompatActivity {
     ImageView photoDisplay;
     Drawable productPhotoDrawable;
 
-    @Bind(R.id.add_product_name)
+    @BindView(R.id.add_product_name)
     @NonNull
     EditText productName;
 
-    @Bind(R.id.add_product_description)
+    @BindView(R.id.add_product_description)
     @NonNull
     EditText productDescription;
 
-    @Bind(R.id.add_new_product_ppu)
+    @BindView(R.id.add_new_product_ppu)
     @NonNull
     EditText pricePerUnit;
 
-    @Bind(R.id.add_new_product_qty)
+    @BindView(R.id.add_new_product_qty)
     @NonNull
     EditText productQty;
 
@@ -78,11 +81,12 @@ public class AddProductActivity2 extends AppCompatActivity {
     private ImageFile mProductImageFile;
     private Context mContext;
 
+    private Unbinder unbinder;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_product2);
-        ButterKnife.bind(this);
+        unbinder = ButterKnife.bind(this);
 
         mContext =  this;
 
@@ -289,7 +293,7 @@ public class AddProductActivity2 extends AppCompatActivity {
 
                 if (image != null) {
                     Uri imgUri = FileProvider.getUriForFile(this,
-                            "com.mtesitoo.fileprovider",
+                            Constants.FILE_PROVIDER,
                             image);
                     mProductImageFile = image;
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
@@ -349,7 +353,10 @@ public class AddProductActivity2 extends AppCompatActivity {
         }
 
         final Product product = new Product(0, name, description, "Location", category, "SI Unit",
-                pricePerUnit, Integer.parseInt(quantity), new Date(), imageUri, null);//Uri.parse(thumbnail)
+                pricePerUnit,
+                ProductPriceHelper.getDisplayPrice(ProductPriceHelper.getDefaultCurrencyCode(), pricePerUnit),
+                ProductPriceHelper.getDefaultCurrencyCode(),
+                Integer.parseInt(quantity), new Date(), imageUri, null, 5, 0, 0);//Uri.parse(thumbnail)
 
         IProductRequest productService = new ProductRequest(this);
         productService.submitProduct(product, new ICallback<String>() {
@@ -360,15 +367,24 @@ public class AddProductActivity2 extends AppCompatActivity {
                     @Override
                     public void onResult(String result) {
                         Log.d("image thumb upload","Success");
-                        finish();
+                        Toast.makeText(mContext, "Product thumbnail uploaded.", Toast.LENGTH_LONG).show();
+//                        finish(); // finish will be called in the onResult for submitProduct. Shouldn't be called multiple times.
+
+                        Intent intent = new Intent("submit_product_thumbnail");
+                        intent.putExtra("result", result);
+                        LocalBroadcastManager.getInstance(AddProductActivity2.this).sendBroadcast(intent);
                     }
 
                     @Override
                     public void onError(Exception e) {
                         Log.e("image thumb upload err",e.toString());
+                        Toast.makeText(mContext, "Error occurred while uploading Product thumbnail.", Toast.LENGTH_LONG).show();
                         finish();
                     }
                 });
+
+                Toast.makeText(mContext, "New Product Added.", Toast.LENGTH_LONG).show();
+                finish();
             }
 
             @Override
@@ -382,7 +398,7 @@ public class AddProductActivity2 extends AppCompatActivity {
 
     @Override
     public void onDestroy() {
-        ButterKnife.unbind(this);
+        unbinder.unbind();
         super.onDestroy();
     }
 }

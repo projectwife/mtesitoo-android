@@ -7,34 +7,42 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Bitmap;
+import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.design.widget.FloatingActionButton;
+import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
+import android.support.v4.graphics.drawable.RoundedBitmapDrawable;
 import android.support.v7.app.AlertDialog;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.Spinner;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.mtesitoo.AbstractPermissionFragment;
+import com.mtesitoo.Constants;
 import com.mtesitoo.R;
 import com.mtesitoo.backend.cache.ZoneCache;
 import com.mtesitoo.backend.cache.logic.IZonesCache;
 import com.mtesitoo.backend.model.Countries;
+import com.mtesitoo.backend.model.ProfilePicture;
 import com.mtesitoo.backend.model.Seller;
 import com.mtesitoo.backend.model.Zone;
 import com.mtesitoo.backend.service.SellerRequest;
@@ -42,7 +50,10 @@ import com.mtesitoo.backend.service.ZoneRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.ISellerRequest;
 import com.mtesitoo.backend.service.logic.IZoneRequest;
+import com.mtesitoo.helper.ImageHelper;
+import com.mtesitoo.helper.UriAdapter;
 import com.mtesitoo.model.ImageFile;
+import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONException;
@@ -52,234 +63,244 @@ import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+
+import static android.content.Context.INPUT_METHOD_SERVICE;
 
 /**
  * Created by Nan on 12/30/2015.
  */
-public class ProfileFragment extends Fragment {
-    final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+public class ProfileFragment extends AbstractPermissionFragment {
     private static final int SELECT_PICTURE = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     private static Seller mSeller;
-    private static Context mContext;
+    private Context mContext;
     private ImageFile mProfileImageFile;
 
-    @Bind(R.id.profileImage)
+    @BindView(R.id.profileImage)
     ImageView mProfileImage;
-    @Bind(R.id.etFirstName)
+    @BindView(R.id.etFirstName)
     EditText mFirstName;
-    @Bind(R.id.etLastName)
+    @BindView(R.id.etLastName)
     EditText mLastName;
-    @Bind(R.id.etPhone)
+    @BindView(R.id.etPhone)
     EditText mProfileTelephone;
-    @Bind(R.id.etEmail)
+    @BindView(R.id.etEmail)
     EditText mProfileEmail;
-    @Bind(R.id.etBusiness)
+    @BindView(R.id.etBusiness)
     EditText mProfileCompanyName;
-    @Bind(R.id.etDescription)
+    @BindView(R.id.etDescription)
     EditText mProfileDescription;
-    @Bind(R.id.etAddress1)
+    @BindView(R.id.etAddress1)
     EditText mProfileAddress1;
-    @Bind(R.id.etAddress2)
-    EditText mProfileAddress2;
-    @Bind(R.id.etCity)
+    @BindView(R.id.etCity)
     EditText mProfileCity;
-    @Bind(R.id.spinnerState)
+    @BindView(R.id.spinnerState)
     Spinner mProfileState;
-    @Bind(R.id.spinnerCountry)
+    @BindView(R.id.spinnerCountry)
     Spinner mProfileCountry;
-    @Bind(R.id.etPostCode)
-    TextView mProfilePostcode;
 
-    //Settings FAB
-    @Bind(R.id.layoutFabSave)
-    LinearLayout layoutFabSave;
-    @Bind(R.id.layoutFabEdit)
-    LinearLayout layoutFabEdit;
-    @Bind(R.id.layoutFabPhoto)
-    LinearLayout layoutFabPhoto;
-    @Bind(R.id.fabSetting)
-    FloatingActionButton fabSettings;
-    private boolean settingsFabExpanded = false;
+    private Uri newProfileImageUri = null;
+    private int selectedStatePosition = -1;
+    private int selectedCountryPosition = -1;
 
     //Password reset flag
     private static boolean resetPasswordFlag = false;
     private static String mTempPasswordToken = null;
 
-    public static ProfileFragment newInstance(Context context, Seller seller) {
-        return newInstance(context, seller, false, null);
+    private SharedPreferences sharedPreferences;
+    private Gson gson;
+
+    private Callback profilePicassoCallback = new Callback() {
+        @Override
+        public void onSuccess() {
+            Bitmap imageBitmap = ((BitmapDrawable) mProfileImage.getDrawable()).getBitmap();
+            RoundedBitmapDrawable imageDrawable = ImageHelper.createRoundedBitmapImageDrawableWithBorder(getContext(),
+                    imageBitmap, ContextCompat.getColor(getContext(), R.color.primary_dark));
+            mProfileImage.setImageDrawable(imageDrawable);
+        }
+
+        @Override
+        public void onError() {
+            mProfileImage.setImageResource(R.drawable.ic_account_circle_black_24dp);
+        }
+    };
+
+    public static ProfileFragment newInstance() {
+        return newInstance(false, null);
     }
 
-    public static ProfileFragment newInstance(Context context, Seller seller,
-                                              boolean resetPassword, String token) {
-        mContext = context;
-        mSeller = seller;
+    public static ProfileFragment newInstance(boolean resetPassword, String token) {
         resetPasswordFlag = resetPassword;
         mTempPasswordToken = token;
-        ProfileFragment fragment = new ProfileFragment();
-        Bundle args = new Bundle();
-        args.putParcelable(context.getString(R.string.bundle_seller_key), seller);
-        fragment.setArguments(args);
-        return fragment;
+
+        return new ProfileFragment();
+    }
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+
+        mContext = getContext();
+        sharedPreferences = mContext.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
+        gson = new GsonBuilder()
+                .registerTypeAdapter(Uri.class, new UriAdapter())
+                .create();
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.frag_profile, container, false);
+        View view = inflater.inflate(R.layout.fragment_profile, container, false);
         ButterKnife.bind(this, view);
 
         if (resetPasswordFlag && mTempPasswordToken != null) {
             showPasswordPrompt();
         }
 
-        fabSettings.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (settingsFabExpanded == true){
-                    closeSettings();
-                } else {
-                    openSettings();
-                }
-            }
-        });
-
-        //Only main FAB is visible in the beginning
-        closeSettings();
-
         return view;
-    }
-
-    private void closeSettings(){
-        layoutFabSave.setVisibility(View.INVISIBLE);
-        layoutFabEdit.setVisibility(View.INVISIBLE);
-        layoutFabPhoto.setVisibility(View.INVISIBLE);
-        fabSettings.setImageResource(R.drawable.ic_settings_black_24dp);
-        settingsFabExpanded = false;
-    }
-
-    private void openSettings(){
-        layoutFabSave.setVisibility(View.VISIBLE);
-        layoutFabEdit.setVisibility(View.VISIBLE);
-        layoutFabPhoto.setVisibility(View.VISIBLE);
-        //Change settings icon to 'X' icon
-        fabSettings.setImageResource(R.drawable.ic_close_black_24dp);
-        settingsFabExpanded = true;
     }
 
     @Override
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        Bundle args = this.getArguments();
-        mSeller = args.getParcelable(getString(R.string.bundle_seller_key));
-        if (mSeller.getmThumbnail() != null && !mSeller.getmThumbnail().toString().equals("null")) {
-            Picasso.with(getContext()).load(mSeller.getmThumbnail().toString()).into(mProfileImage);
-        }
+        if (sharedPreferences.contains(Constants.LOGGED_IN_USER_DATA)) {
+            mSeller = gson.fromJson(sharedPreferences.getString(Constants.LOGGED_IN_USER_DATA, ""), Seller.class);
 
-        if (mSeller.getmBusiness() != null && !mSeller.getmBusiness().isEmpty()) {
-            mProfileCompanyName.setText(mSeller.getmBusiness());
-        } else {
-            mProfileCompanyName.setText(mSeller.getmFirstName() + " " + mSeller.getmLastName());
-        }
-
-        mFirstName.setText(mSeller.getmFirstName());
-        mLastName.setText(mSeller.getmLastName());
-        mProfileAddress1.setText(mSeller.getmAddress1());
-        mProfileAddress2.setText(mSeller.getmAddress2());
-        mProfileTelephone.setText(mSeller.getmPhoneNumber());
-        mProfileEmail.setText(mSeller.getmEmail());
-        mProfileDescription.setText(mSeller.getmDescription());
-        mProfileCity.setText(mSeller.getmCity());
-        mProfilePostcode.setText(mSeller.getmPostcode());
-
-        final SharedPreferences.Editor mEditor;
-        final SharedPreferences mPrefs;
-        mPrefs = mContext.getSharedPreferences("pref", Context.MODE_PRIVATE);
-        mEditor = mPrefs.edit();
-
-        //ICountriesCache countriesCache = new CountriesCache(mContext);
-        ArrayList<Countries> countriesArrayList = new ArrayList<Countries>();
-        //Note: hard-coding to Gambia.
-        countriesArrayList.add(new Countries(79, "Gambia"));
-        mEditor.putString("SelectedCountries", "79");
-        mEditor.apply();
-
-        mProfileCountry.setAdapter(new ArrayAdapter<Countries>(mContext,
-                android.R.layout.simple_spinner_item,
-                countriesArrayList));
-        mProfileCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                mProfileCountry.setSelection(i);
+            if (mSeller.getmThumbnail() != null && !mSeller.getmThumbnail().toString().equals("null")) {
+                Picasso.with(getContext()).load(mSeller.getmThumbnail().toString()).into(mProfileImage, profilePicassoCallback);
+            } else {
+                mProfileImage.setImageURI(null);
+                mProfileImage.setImageResource(R.drawable.ic_account_circle_black_24dp);
             }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
-        });
-        mProfileCountry.setSelection(getSpinnerIndex(mProfileCountry, mSeller.getmCountry()));
 
-        ArrayList<Zone> zoneArrayList = new ArrayList<Zone>();
-        final ArrayAdapter[] zoneAdapter = {null};
-        IZonesCache zoneCache = new ZoneCache(mContext);
-        zoneArrayList = (ArrayList<Zone>) zoneCache.GetZones();
-        if (zoneArrayList.isEmpty()) {
-            IZoneRequest zoneService = new ZoneRequest(mContext);
-            final String[][] zonesNames = {null};
-            final ArrayList<Zone> finalZoneArrayList = zoneArrayList;
-            zoneService.getZones(new ICallback<List<Zone>>() {
+            if (mSeller.getmBusiness() != null && !mSeller.getmBusiness().isEmpty()) {
+                mProfileCompanyName.setText(mSeller.getmBusiness());
+            }
+
+            mFirstName.setText(mSeller.getmFirstName());
+            mLastName.setText(mSeller.getmLastName());
+            mProfileAddress1.setText(mSeller.getmAddress1());
+            mProfileTelephone.setText(mSeller.getmPhoneNumber());
+            mProfileEmail.setText(mSeller.getmEmail());
+            mProfileDescription.setText(mSeller.getmDescription());
+            mProfileCity.setText(mSeller.getmCity());
+
+            final SharedPreferences.Editor mEditor = sharedPreferences.edit();
+
+            //ICountriesCache countriesCache = new CountriesCache(mContext);
+            ArrayList<Countries> countriesArrayList = new ArrayList<>();
+            //Note: hard-coding to Gambia.
+            countriesArrayList.add(new Countries(79, "Gambia"));
+            mEditor.putString("SelectedCountries", "79");
+            mEditor.apply();
+
+            mProfileCountry.setAdapter(new ArrayAdapter<>(mContext,
+                    android.R.layout.simple_spinner_item,
+                    countriesArrayList));
+            /*mProfileCountry.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                 @Override
-                public void onResult(List<Zone> zones) {
-                    IZonesCache zonesCache = new ZoneCache(mContext);
-                    zonesCache.storeZones(zones);
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    mProfileCountry.setSelection(i);
+                }
 
-                    List<Zone> zones1 = zones;
-                    zonesNames[0] = new String[zones1.size()];
+                @Override
+                public void onNothingSelected(AdapterView<?> adapterView) {
+                }
+            });*/
+            selectedCountryPosition = getSpinnerIndex(mProfileCountry, mSeller.getmCountry());
+            mProfileCountry.setSelection(selectedCountryPosition);
+            mProfileCountry.setEnabled(false);
 
-                    for (int i = 0; i < zones1.size(); i++) {
-                        zonesNames[0][i] = zones1.get(i).getName();
-                        Zone zone = zones1.get(i);
-                        finalZoneArrayList.add(new Zone(zone.getId(), zone.getName(), zone.getName()));
+            ArrayList<Zone> zoneArrayList;
+            final ArrayAdapter[] zoneAdapter = {null};
+            IZonesCache zoneCache = new ZoneCache(mContext);
+            zoneArrayList = (ArrayList<Zone>) zoneCache.GetZones();
+            if (zoneArrayList.isEmpty()) {
+                IZoneRequest zoneService = new ZoneRequest(mContext);
+                final String[][] zonesNames = {null};
+                final ArrayList<Zone> finalZoneArrayList = zoneArrayList;
+                zoneService.getZones(new ICallback<List<Zone>>() {
+                    @Override
+                    public void onResult(List<Zone> zones) {
+                        IZonesCache zonesCache = new ZoneCache(mContext);
+                        zonesCache.storeZones(zones);
+
+                        zonesNames[0] = new String[zones.size()];
+
+                        for (int i = 0; i < zones.size(); i++) {
+                            zonesNames[0][i] = zones.get(i).getName();
+                            Zone zone = zones.get(i);
+                            finalZoneArrayList.add(new Zone(zone.getId(), zone.getName(), zone.getName()));
+                        }
+
+                        zoneAdapter[0] = new ArrayAdapter<>(mContext,
+                                android.R.layout.simple_spinner_item,
+                                finalZoneArrayList);
+                        zoneAdapter[0].setDropDownViewResource(R.layout.item_spinner_profile);
+                        mProfileState.setAdapter(zoneAdapter[0]);
+                        selectedStatePosition = getSpinnerIndex(mProfileState, mSeller.getmState());
+                        mProfileState.setSelection(selectedStatePosition);
                     }
 
-                    zoneAdapter[0] = new ArrayAdapter<Zone>(mContext,
-                            android.R.layout.simple_spinner_item,
-                            finalZoneArrayList);
-                    mProfileState.setAdapter(zoneAdapter[0]);
-                    mProfileState.setSelection(getSpinnerIndex(mProfileState, mSeller.getmState()));
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("Zones", e.toString());
+                    }
+                });
+
+            } else {
+                zoneAdapter[0] = new ArrayAdapter<>(mContext,
+                        android.R.layout.simple_spinner_item,
+                        zoneArrayList);
+                zoneAdapter[0].setDropDownViewResource(R.layout.item_spinner_profile);
+
+                mProfileState.setAdapter(zoneAdapter[0]);
+                selectedStatePosition = getSpinnerIndex(mProfileState, mSeller.getmState());
+                mProfileState.setSelection(selectedStatePosition);
+            }
+
+            mProfileState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
+                    mProfileState.setSelection(i);
+                    selectedStatePosition = i;
                 }
 
                 @Override
-                public void onError(Exception e) {
-                    Log.e("Zones", e.toString());
+                public void onNothingSelected(AdapterView<?> adapterView) {
                 }
             });
-
-        } else {
-            zoneAdapter[0] = new ArrayAdapter<Zone>(mContext,
-                    android.R.layout.simple_spinner_item,
-                    zoneArrayList);
-            mProfileState.setAdapter(zoneAdapter[0]);
-            mProfileState.setSelection(getSpinnerIndex(mProfileState, mSeller.getmState()));
         }
 
+    }
 
-        mProfileState.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                mProfileState.setSelection(i);
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {}
-        });
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_profile, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.action_update_profile:
+                updateProfile();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
     private int getSpinnerIndex(Spinner spinner, String myString) {
         int index = 0;
 
-        for (int i=0;i<spinner.getCount();i++){
-            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)){
+        for (int i = 0; i < spinner.getCount(); i++) {
+            if (spinner.getItemAtPosition(i).toString().equalsIgnoreCase(myString)) {
                 index = i;
                 break;
             }
@@ -291,95 +312,72 @@ public class ProfileFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (requestCode == SELECT_PICTURE && resultCode == Activity.RESULT_OK
                 && data != null && data.getData() != null) {
-            final Uri selectedImageURI = data.getData();
 
-            ISellerRequest sellerRequest = new SellerRequest(this.getContext());
-            sellerRequest.submitProfileImage(selectedImageURI, new ICallback<String>() {
-                @Override
-                public void onResult(String result) {
-                    mProfileImage.setImageURI(selectedImageURI);
-                    Snackbar.make(getView(), "Profile Image Uploaded Successfully",
-                            Snackbar.LENGTH_SHORT).show();
-                }
+            newProfileImageUri = data.getData();
+            Picasso.with(getContext()).load(newProfileImageUri).into(mProfileImage, profilePicassoCallback);
 
-                @Override
-                public void onError(Exception e) {
-                    Snackbar.make(getView(), "Failed to upload profile Image",
-                            Snackbar.LENGTH_SHORT).show();
-                    Log.e("UploadImage", e.toString());
-                }
-            });
         } else if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_CAPTURE) {
 
-            ISellerRequest sellerRequest = new SellerRequest(this.getContext());
-            sellerRequest.submitProfileImage(mProfileImageFile.getUri(), new ICallback<String>() {
-                @Override
-                public void onResult(String result) {
-                    mProfileImage.setImageURI(mProfileImageFile.getUri());
-                    Snackbar.make(getView(), "Profile Image Uploaded Successfully",
-                            Snackbar.LENGTH_SHORT).show();
-                }
-
-                @Override
-                public void onError(Exception e) {
-                    Log.e("UploadImage", e.toString());
-                    Snackbar.make(getView(), "Failed to upload profile Image",
-                            Snackbar.LENGTH_SHORT).show();
-                }
-            });
+            newProfileImageUri = mProfileImageFile.getUri();
+            Picasso.with(getContext()).load(newProfileImageUri).into(mProfileImage, profilePicassoCallback);
         }
     }
 
-    private void requestPhotoPermissions() {
-        if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
-            if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-                Snackbar.make(getView(), "Please grant permissions to change profile photo", Snackbar.LENGTH_LONG).show();
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
+    //// Run time Permissions Handling ////
 
-            } else {
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                        MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE);
-            }
-        } else if (ContextCompat.checkSelfPermission(getActivity(),
-                Manifest.permission.READ_EXTERNAL_STORAGE)
-                == PackageManager.PERMISSION_GRANTED) {
+    @Override
+    protected String[] getDesiredPermissions() {
+        //Note: Add permissions here if permissions must be granted at the load of screen.
+        // Otherwise go for granular approach to grant permissions as needed.
+
+        //return(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE});
+        return null;
+    }
+
+    @Override
+    protected void onPermissionDenied() {
+        Toast.makeText(getActivity(), R.string.msg_permission_sorry, Toast.LENGTH_LONG)
+                .show();
+    }
+
+    @Override
+    protected void onReady(Bundle state) {
+    }
+
+    @OnClick({R.id.change_picture_button, R.id.profileImage})
+    public void onUpdateProfileImage() {
+        if (super.isReady()) {
             photoOps();
+        } else {
+            if (super.hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                photoOps();
+                return;
+            }
+
+            //Don't have permissions at this point, so go ahead and request permissions
+            Toast.makeText(getActivity(), R.string.msg_permission_sorry, Toast.LENGTH_LONG)
+                    .show();
+            super.requestPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode,
-                                           String permissions[], int[] grantResults) {
-        switch (requestCode) {
-            case MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE: {
-                if (grantResults.length > 0
-                        && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                    // permission was granted, yay!
-                    photoOps();
-                } else {
-                    // permission denied, boo! Disable the
-                    // functionality that depends on this permission.
-                    Snackbar.make(getView(), "Permissions Denied to access Photos", Snackbar.LENGTH_LONG).show();
-                }
-                return;
+                                           String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == REQUEST_PERMISSION) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                photoOps();
+            } else {
+                onPermissionDenied();
             }
         }
     }
 
-    @OnClick(R.id.fabPhoto)
-    public void onUpdateProfileImage(View view) {
-       requestPhotoPermissions();
-    }
-
     //If user has given needed permissions, then go ahead with accessing photos
     private void photoOps() {
-        CharSequence options[] = new CharSequence[] {"Pick from Gallery", "Add an Image"};
+        CharSequence options[] = new CharSequence[]{"Pick from Gallery", "Add an Image"};
         new AlertDialog.Builder(getActivity())
                 .setTitle(getString(R.string.EditImages))
                 .setItems(options, new DialogInterface.OnClickListener() {
@@ -402,12 +400,12 @@ public class ProfileFragment extends Fragment {
                                     try {
                                         image = new ImageFile(getActivity());
                                     } catch (Exception e) {
-                                        Log.d("IMAGE_CAPTURE","Issue creating image file");
+                                        Log.d("IMAGE_CAPTURE", "Issue creating image file");
                                     }
 
                                     if (image != null) {
                                         Uri imgUri = FileProvider.getUriForFile(getActivity(),
-                                                "com.mtesitoo.fileprovider",
+                                                Constants.FILE_PROVIDER,
                                                 image);
                                         mProfileImageFile = image;
                                         intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
@@ -426,14 +424,18 @@ public class ProfileFragment extends Fragment {
                         sellerRequest.deleteProfileImage(new ICallback<String>() {
                             @Override
                             public void onResult(String result) {
-                                Toast.makeText(getActivity(),"Deleted Image Successfully",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "Deleted Image Successfully", Toast.LENGTH_SHORT).show();
+
+                                mSeller.setmThumbnail("null");
+                                updateProfileInPreferences();
+
                                 mProfileImage.setImageURI(null);
                                 mProfileImage.setImageResource(R.drawable.ic_account_circle_black_24dp);
                             }
 
                             @Override
                             public void onError(Exception e) {
-                                Toast.makeText(getActivity(),"Error Deleting Image",Toast.LENGTH_SHORT).show();
+                                Toast.makeText(getActivity(), "Error Deleting Image", Toast.LENGTH_SHORT).show();
                             }
                         });
                     }
@@ -446,8 +448,67 @@ public class ProfileFragment extends Fragment {
                 .show();
 
     }
-    @OnClick(R.id.fabSave)
-    public void onUpdateProfileClick(View view) {
+
+    private void updateProfile() {
+
+        if (checkProfileChanges() || newProfileImageUri != null) {
+
+            if (checkProfileChanges()) {
+                onUpdateProfileClick();
+            }
+            if (newProfileImageUri != null) {
+                onUpdatePicture(newProfileImageUri);
+            }
+            return;
+        }
+
+        Snackbar.make(getView(), getString(R.string.profile_no_changes_message),
+                Snackbar.LENGTH_LONG).show();
+    }
+
+    private void updateProfileInPreferences() {
+        sharedPreferences.edit().putString(Constants.LOGGED_IN_USER_DATA, gson.toJson(mSeller)).apply();
+    }
+
+    private boolean checkProfileChanges() {
+
+        return (mSeller.getmBusiness() != null && !mSeller.getmBusiness().equals(mProfileCompanyName.getText().toString()))
+                || !mSeller.getmFirstName().equals(mFirstName.getText().toString())
+                || !mSeller.getmLastName().equals(mLastName.getText().toString())
+                || !mSeller.getmAddress1().equals(mProfileAddress1.getText().toString())
+                || !mSeller.getmPhoneNumber().equals(mProfileTelephone.getText().toString())
+                || !mSeller.getmEmail().equals(mProfileEmail.getText().toString())
+                || !mSeller.getmDescription().equals(mProfileDescription.getText().toString())
+                || !mSeller.getmCity().equals(mProfileCity.getText().toString())
+                || getSpinnerIndex(mProfileState, mSeller.getmState()) != selectedStatePosition;
+
+    }
+
+    private void onUpdatePicture(final Uri selectedImageURI) {
+        ISellerRequest sellerRequest = new SellerRequest(this.getContext());
+        sellerRequest.submitProfileImage(selectedImageURI, new ICallback<String>() {
+            @Override
+            public void onResult(String result) {
+                if (result != null && !result.isEmpty()) {
+                    ProfilePicture profilePicture = gson.fromJson(result, ProfilePicture.class);
+                    mSeller.setmThumbnail(profilePicture.getThumbnailPath());
+                    updateProfileInPreferences();
+                }
+                newProfileImageUri = null;
+                Snackbar.make(getView(), "Profile Image Uploaded Successfully",
+                        Snackbar.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Snackbar.make(getView(), "Failed to upload profile Image",
+                        Snackbar.LENGTH_SHORT).show();
+                Log.e("UploadImage", e.toString());
+            }
+        });
+    }
+
+    private void onUpdateProfileClick() {
         String businessName = mProfileCompanyName.getText().toString();
         String description = mProfileDescription.getText().toString();
         String firstName = mFirstName.getText().toString();
@@ -456,19 +517,15 @@ public class ProfileFragment extends Fragment {
         String email = mProfileEmail.getText().toString();
 
         String address1 = mProfileAddress1.getText().toString();
-        String address2 = mProfileAddress2.getText().toString();
         String city = mProfileCity.getText().toString();
-        String postCode = mProfilePostcode.getText().toString();
         Countries country = (Countries) mProfileCountry.getSelectedItem();
-        Zone zone = (Zone)mProfileState.getSelectedItem();
+        Zone zone = (Zone) mProfileState.getSelectedItem();
 
         mSeller.setmFirstName(firstName);
         mSeller.setmLastName(lastName);
         mSeller.setmPhoneNumber(phoneNumber);
         mSeller.setmEmail(email);
         mSeller.setmAddress1(address1);
-        mSeller.setmAddress2(address2);
-        mSeller.setmPostcode(postCode);
         mSeller.setmCity(city);
         mSeller.setmZoneId(String.valueOf(zone.getId()));
         mSeller.setmCountry(String.valueOf(country.getId()));
@@ -486,6 +543,7 @@ public class ProfileFragment extends Fragment {
                         if (result == null) {
                             Snackbar.make(getView(), getString(R.string.profile_updated),
                                     Snackbar.LENGTH_LONG).show();
+                            updateProfileInPreferences();
                         }
                     }
 
@@ -497,20 +555,20 @@ public class ProfileFragment extends Fragment {
                             errorMsg = "Error updating profile: " + e.getMessage();
                         } else {
                             VolleyError err = (VolleyError) e;
-                            if(err.networkResponse.data!=null) {
+                            if (err.networkResponse.data != null) {
                                 try {
-                                    String body = new String(err.networkResponse.data,"UTF-8");
-                                    Log.e("REG_ERR",body);
+                                    String body = new String(err.networkResponse.data, "UTF-8");
+                                    Log.e("REG_ERR", body);
                                     JSONObject jsonErrors = new JSONObject(body);
                                     JSONObject error = jsonErrors.getJSONArray("errors").getJSONObject(0);
                                     errorMsg = error.getString("message");
                                 } catch (UnsupportedEncodingException encErr) {
                                     encErr.printStackTrace();
                                 } catch (JSONException jErr) {
-                                    errorMsg = "Error updating profile: " +jErr.getMessage();
+                                    errorMsg = "Error updating profile: " + jErr.getMessage();
                                     jErr.printStackTrace();
                                 } finally {
-                                    if(errorMsg.equals("")){
+                                    if (errorMsg.equals("")) {
                                         errorMsg = "Error updating profile";
                                     }
                                 }
@@ -524,22 +582,20 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onError(Exception e) {
-                VolleyError err = (VolleyError)e;
+                VolleyError err = (VolleyError) e;
 
                 String errorMsg = "";
-                if(err.networkResponse.data!=null) {
+                if (err.networkResponse.data != null) {
                     try {
-                        String body = new String(err.networkResponse.data,"UTF-8");
-                        Log.e("REG_ERR",body);
+                        String body = new String(err.networkResponse.data, "UTF-8");
+                        Log.e("REG_ERR", body);
                         JSONObject jsonErrors = new JSONObject(body);
                         JSONObject error = jsonErrors.getJSONArray("errors").getJSONObject(0);
                         errorMsg = error.getString("message");
-                    } catch (UnsupportedEncodingException encErr) {
+                    } catch (UnsupportedEncodingException | JSONException encErr) {
                         encErr.printStackTrace();
-                    } catch (JSONException jErr) {
-                        jErr.printStackTrace();
                     } finally {
-                        if(errorMsg.equals("")){
+                        if (errorMsg.equals("")) {
                             errorMsg = "Error updating profile";
                         }
                     }
@@ -570,20 +626,20 @@ public class ProfileFragment extends Fragment {
                             errorMsg = "Error updating password: " + e.getMessage();
                         } else {
                             VolleyError err = (VolleyError) e;
-                            if(err.networkResponse.data!=null) {
+                            if (err.networkResponse.data != null) {
                                 try {
-                                    String body = new String(err.networkResponse.data,"UTF-8");
-                                    Log.e("REG_ERR",body);
+                                    String body = new String(err.networkResponse.data, "UTF-8");
+                                    Log.e("REG_ERR", body);
                                     JSONObject jsonErrors = new JSONObject(body);
                                     JSONObject error = jsonErrors.getJSONArray("errors").getJSONObject(0);
                                     errorMsg = error.getString("message");
                                 } catch (UnsupportedEncodingException encErr) {
                                     encErr.printStackTrace();
                                 } catch (JSONException jErr) {
-                                    errorMsg = "Error updating password: " +jErr.getMessage();
+                                    errorMsg = "Error updating password: " + jErr.getMessage();
                                     jErr.printStackTrace();
                                 } finally {
-                                    if(errorMsg.equals("")){
+                                    if (errorMsg.equals("")) {
                                         errorMsg = "Error updating password";
                                     }
                                 }
@@ -597,22 +653,20 @@ public class ProfileFragment extends Fragment {
 
             @Override
             public void onError(Exception e) {
-                VolleyError err = (VolleyError)e;
+                VolleyError err = (VolleyError) e;
 
                 String errorMsg = "";
-                if(err.networkResponse.data!=null) {
+                if (err.networkResponse.data != null) {
                     try {
-                        String body = new String(err.networkResponse.data,"UTF-8");
-                        Log.e("REG_ERR",body);
+                        String body = new String(err.networkResponse.data, "UTF-8");
+                        Log.e("REG_ERR", body);
                         JSONObject jsonErrors = new JSONObject(body);
                         JSONObject error = jsonErrors.getJSONArray("errors").getJSONObject(0);
                         errorMsg = error.getString("message");
-                    } catch (UnsupportedEncodingException encErr) {
+                    } catch (UnsupportedEncodingException | JSONException encErr) {
                         encErr.printStackTrace();
-                    } catch (JSONException jErr) {
-                        jErr.printStackTrace();
                     } finally {
-                        if(errorMsg.equals("")){
+                        if (errorMsg.equals("")) {
                             errorMsg = "Error updating password";
                         }
                     }
@@ -623,7 +677,7 @@ public class ProfileFragment extends Fragment {
         });
     }
 
-    @OnClick(R.id.fabPasswordEdit)
+    @OnClick(R.id.change_password_button)
     public void showPasswordPrompt() {
 
         LayoutInflater layoutInflater = LayoutInflater.from(mContext);
@@ -643,7 +697,7 @@ public class ProfileFragment extends Fragment {
                 .setCancelable(false)
                 .setNegativeButton("Update",
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
+                            public void onClick(DialogInterface dialog, int id) {
                                 String oldPass = (oldPassword != null) ? oldPassword.getText().toString() : "";
                                 String newPass1 = (newPassword1 != null) ? newPassword1.getText().toString() : "";
                                 String newPass2 = (newPassword2 != null) ? newPassword2.getText().toString() : "";
@@ -697,5 +751,13 @@ public class ProfileFragment extends Fragment {
         // show it
         alertDialog.show();
 
+    }
+
+    @OnClick(R.id.profile_relative_layout)
+    void dismissKeyboard() {
+        InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
+        View currentFocusView = getActivity().getCurrentFocus();
+        if (currentFocusView != null)
+            imm.hideSoftInputFromWindow(currentFocusView.getWindowToken(), 0);
     }
 }

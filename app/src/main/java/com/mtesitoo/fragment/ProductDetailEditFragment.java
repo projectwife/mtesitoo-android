@@ -1,15 +1,18 @@
 package com.mtesitoo.fragment;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AlertDialog;
 import android.util.DisplayMetrics;
@@ -28,22 +31,26 @@ import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
-import com.daimajia.slider.library.Indicators.PagerIndicator;
 import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
+import com.mtesitoo.AbstractPermissionFragment;
+import com.mtesitoo.Constants;
 import com.mtesitoo.R;
 import com.mtesitoo.backend.cache.CategoryCache;
 import com.mtesitoo.backend.cache.logic.ICategoryCache;
+import com.mtesitoo.backend.helper.ContentUriHelper;
 import com.mtesitoo.backend.model.Category;
 import com.mtesitoo.backend.model.Product;
 import com.mtesitoo.backend.service.ProductRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.IProductRequest;
 import com.mtesitoo.helper.FormatHelper;
+import com.mtesitoo.helper.ProductPriceHelper;
 import com.mtesitoo.model.ImageFile;
 
+import java.io.IOException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -51,47 +58,56 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import butterknife.Bind;
+import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Created by Nan on 12/31/2015.
  */
-public class ProductDetailEditFragment extends Fragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener, View.OnClickListener{
-    private static final int REQUEST_IMAGE_CAPTURE = 1;
+public class ProductDetailEditFragment extends AbstractPermissionFragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener, View.OnClickListener{
+    private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
+    static final int REQUEST_IMAGE_CAPTURE = 2;
+    static final int REQUEST_LOAD_IMAGE = 3;
+    static int REQUEST_IMAGE_TYPE = 0;
+
     private static final int IMAGE_SLIDER_DURATION = 8000;
     private static final int MAX_IMAGES = Product.MAX_AUX_IMAGES;
 
     private Product mProduct;
-    private ArrayList<ImageFile> mImages;
+    //private ArrayList<ImageFile> mImages;
+    private ArrayList<Uri> mImageUris;
     private ImageFile currentImage;
     private RadioGroup categoryButtonGroup;
 
-    @Bind(R.id.product_image_slider_edit)
+    @BindView(R.id.product_image_slider_edit)
     SliderLayout mImageSlider;
-    @Bind(R.id.product_detail_info_border)
+    @BindView(R.id.product_detail_info_border)
     RelativeLayout mInfoBorder;
-    @Bind(R.id.product_detail_price_border)
+    @BindView(R.id.product_detail_price_border)
     RelativeLayout mPriceBorder;
 //    @Bind(R.id.product_detail_date_border)
 //    RelativeLayout mDateBorder;
-    @Bind(R.id.product_detail_name_edit)
+    @BindView(R.id.product_detail_name_edit)
     EditText mProductName;
-    @Bind(R.id.product_detail_description_edit)
+    @BindView(R.id.product_detail_description_edit)
     EditText mProductDescription;
-    @Bind(R.id.product_detail_location_edit)
+    @BindView(R.id.product_detail_location_edit)
     EditText mProductLocation;
-    @Bind(R.id.product_detail_category_container)
+    @BindView(R.id.product_detail_category_container)
     LinearLayout mProductCategoryContainer;
-    @Bind(R.id.product_detail_expiration_edit)
+    @BindView(R.id.product_detail_expiration_edit)
     EditText mProductExpiration;
 
-    @Bind(R.id.product_detail_unit_edit)
+    @BindView(R.id.product_detail_unit_edit)
     EditText mProductUnit;
-    @Bind(R.id.product_detail_quantity_edit)
+    @BindView(R.id.product_detail_quantity_edit)
     EditText mProductQuantity;
-    @Bind(R.id.product_detail_price_edit)
+    @BindView(R.id.product_detail_price_edit)
     EditText mProductPrice;
+
+    private Activity mActivity;
 
     public static ProductDetailEditFragment newInstance(Context context, Product product) {
         ProductDetailEditFragment fragment = new ProductDetailEditFragment();
@@ -105,7 +121,8 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
-        mImages = new ArrayList<>(MAX_IMAGES);
+        mActivity = getActivity();
+        mImageUris = new ArrayList<>(MAX_IMAGES);
     }
 
     @Override
@@ -130,8 +147,15 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         mProductLocation.setText(mProduct.getLocation());
         mProductUnit.setText(mProduct.getSIUnit());
         mProductQuantity.setText(mProduct.getQuantity().toString());
-        mProductPrice.setText(mProduct.getPricePerUnit());
-        mProductExpiration.setText(mProduct.getExpirationFormattedForApp());
+        mProductPrice.setText(mProduct.getDisplayPrice());
+
+        String expDate = mProduct.getExpirationFormattedForApp();
+        if (mProduct.isProductExpired()) {
+            mProductExpiration.setText(expDate);
+            mProductExpiration.setTextColor(Color.RED);
+        } else {
+            mProductExpiration.setText(expDate);
+        }
 
         updateEditTextLengths();
         updateBorderPaddings();
@@ -182,6 +206,10 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
                 expiryDate = mProduct.getExpiration();
             }
 
+            //remove currency symbol from display price
+            String pricePerUnit =
+                    mProductPrice.getText().toString().replace(
+                            ProductPriceHelper.getCurrencySymbol(ProductPriceHelper.getDefaultCurrencyCode()), "");
             // Save product here
             final Product updatedProduct = new Product(
                     mProduct.getId(),
@@ -190,11 +218,14 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
                     mProduct.getLocation(),
                     category,
                     mProductUnit.getText().toString(),
-                    mProductPrice.getText().toString(),
+                    pricePerUnit,
+                    ProductPriceHelper.getDisplayPrice(ProductPriceHelper.getDefaultCurrencyCode(), pricePerUnit),
+                    ProductPriceHelper.getDefaultCurrencyCode(),
                     Integer.parseInt(mProductQuantity.getText().toString()),
                     expiryDate,
                     mProduct.getmThumbnail(),
-                    mProduct.getAuxImages()
+                    mProduct.getAuxImages(), mProduct.getStatus(), mProduct.getPendingOrders(),
+                    mProduct.getProcessingOrders()
             );
 
             IProductRequest productService = new ProductRequest(ProductDetailEditFragment.this.getContext());
@@ -224,65 +255,244 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         return super.onOptionsItemSelected(item);
     }
 
+    private void refreshProduct(int productId) {
+        IProductRequest productService = new ProductRequest(getContext());
+
+        productService.getProduct(productId, new ICallback<Product>() {
+            @Override
+            public void onResult(Product result) {
+                mProduct = result;
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(getActivity(), "Error getting product images", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
     @Override
     public void onSliderClick(final BaseSliderView slider) {
 
-        if (mProduct.getAuxImages().size() >= MAX_IMAGES) {
-            Snackbar.make(getView(), "Can't upload more than " + MAX_IMAGES + " pictures. Pick your best pictures !", Snackbar.LENGTH_LONG).show();
+        //refreshProduct();
+        Uri thumbnail = mProduct.getmThumbnail();
+
+        if ((thumbnail!= null && !thumbnail.toString().isEmpty() &&
+                mProduct.getAuxImages().size() >= MAX_IMAGES) ||
+                mImageUris.size() >= 4) {
+            Snackbar.make(getView(), "Can't upload more than 4 pictures. Pick your best pictures !", Snackbar.LENGTH_LONG).show();
+            //Image limit reached to maximum. Only show option to delete images.
+            displayOnlyDeletePhotoOption(slider);
             return;
         }
 
-        new AlertDialog.Builder(getActivity())
-                .setTitle(getString(R.string.EditImages))
-                .setPositiveButton("Add an image", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
-                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-                        if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-                            ImageFile image = null;
+        if (mProduct.getmThumbnail().toString().isEmpty() && mProduct.getAuxImages().size() < 1) {
+            //No Image available. Only show option to add image. No option to delete image
+            displayOnlyAddPhotoOption();
+            return;
+        }
 
-                            try {
-                                image = new ImageFile(getActivity());
-                            } catch (Exception e) {
-                                Log.d("IMAGE_CAPTURE","Issue creating image file");
-                            }
+        displayDefaulPhotoOptions(slider);
+    }
 
-                            if (image != null) {
-                                Uri imgUri = FileProvider.getUriForFile(getActivity(),
-                                        "com.mtesitoo.fileprovider",
-                                        image);
-                                currentImage = image;
-                                intent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
-                                startActivityForResult(intent, REQUEST_IMAGE_CAPTURE);
-                            }
-                        }
-                    }
-                })
-                .setNegativeButton("Delete this image", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int which) {
+    private void displayDefaulPhotoOptions(final BaseSliderView slider) {
+        final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int choice) {
+                switch (choice) {
+                    case 0:
+                        dispatchTakePictureIntent();
+                        break;
+                    case 1:
+                        dispatchGalleryPictureIntent();
+                        break;
+                    case 2:
+                        Log.d("PHOTO", "Cancel clicked...");
+                        dialog.dismiss();
+                        break;
+                    case 3:
+                        deleteImage(slider.getUrl());
+                        break;
+                }
+            }
+        };
 
-                        final String imageFilename = slider.getUrl().substring( slider.getUrl().lastIndexOf('/')+1, slider.getUrl().length() );
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Manage Photo");
 
-                        // Delete image request
-                        IProductRequest productService = new ProductRequest(ProductDetailEditFragment.this.getContext());
-                        productService.deleteProductImage(mProduct, imageFilename, new ICallback<Product>() {
-                            @Override
-                            public void onResult(Product result) {
-                                mImageSlider.removeSliderAt(mImageSlider.getCurrentPosition());
-                                Toast.makeText(getActivity(),"Deleted Image Successfully",Toast.LENGTH_SHORT).show();
-                            }
+        builder.setItems(new CharSequence[]{"Camera", "Gallery", "Cancel", "Delete"},
+                dialogClickListener);
+        builder.create().show();
+    }
 
-                            @Override
-                            public void onError(Exception e) {
-                                Toast.makeText(getActivity(),"Error Deleting Image",Toast.LENGTH_SHORT).show();
-                            }
-                        });
+    private void displayOnlyDeletePhotoOption(final BaseSliderView slider) {
+        final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int choice) {
+                switch (choice) {
+                    case 0:
+                        Log.d("PHOTO", "Cancel clicked...");
+                        dialog.dismiss();
+                        break;
+                    case 1:
+                        deleteImage(slider.getUrl());
+                        break;
+                }
+            }
+        };
 
-                            // Remove image from list if successful
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Manage Photo");
 
-                        //Toast.makeText(getActivity(),"delete " + slider.getUrl(),Toast.LENGTH_SHORT).show();
-                    }
-                })
+        builder.setItems(new CharSequence[]{"Cancel", "Delete"},
+                dialogClickListener);
+        builder.create().show();
+    }
+
+    private void displayOnlyAddPhotoOption() {
+        final DialogInterface.OnClickListener dialogClickListener = new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int choice) {
+                switch (choice) {
+                    case 0:
+                        dispatchTakePictureIntent();
+                        break;
+                    case 1:
+                        dispatchGalleryPictureIntent();
+                        break;
+                    case 2:
+                        Log.d("PHOTO", "Cancel clicked...");
+                        dialog.dismiss();
+                        break;
+                }
+            }
+        };
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("Manage Photo");
+//        builder.setMessage("Would you like to take a new product " +
+//                "picture with the camera or pick from the photo gallery?");
+
+        builder.setItems(new CharSequence[]{"Camera", "Gallery", "Cancel"},
+                dialogClickListener);
+        builder.create().show();
+    }
+
+    private void dispatchTakePictureIntent() {
+        REQUEST_IMAGE_TYPE = REQUEST_IMAGE_CAPTURE;
+        requestPhotoPermissions();
+    }
+
+    private void dispatchGalleryPictureIntent() {
+        REQUEST_IMAGE_TYPE = REQUEST_LOAD_IMAGE;
+        requestPhotoPermissions();
+    }
+
+    //// Run time Permissions Handling ////
+
+    @Override
+    protected String[] getDesiredPermissions() {
+        //Note: Add permissions here if permissions must be granted at the load of screen.
+        // Otherwise go for granular approach to grant permissions as needed.
+
+        //return(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE});
+        return null;
+    }
+
+    @Override
+    protected void onPermissionDenied() {
+        Toast.makeText(getActivity(), R.string.msg_permission_sorry, Toast.LENGTH_LONG)
                 .show();
+    }
+
+    @Override
+    protected void onReady(Bundle state) {}
+
+
+    public void requestPhotoPermissions() {
+        if (super.isReady()) {
+            addImage();
+        } else {
+            if (super.hasPermission(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+                addImage();
+                return;
+            }
+
+            //Don't have permissions at this point, so go ahead and request permissions
+            Toast.makeText(getActivity(), R.string.msg_permission_sorry, Toast.LENGTH_LONG)
+                    .show();
+            super.requestPermission(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE});
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode,
+                                           String[] permissions,
+                                           int[] grantResults) {
+        if (requestCode == REQUEST_PERMISSION) {
+            if (grantResults.length > 0
+                    && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                addImage();
+            }
+            else {
+                onPermissionDenied();
+            }
+        }
+    }
+    private void addImage() {
+        if (REQUEST_IMAGE_TYPE == REQUEST_IMAGE_CAPTURE) {
+            Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+            if (takePictureIntent.resolveActivity(mActivity.getPackageManager()) != null) {
+                ImageFile image = null;
+
+                try {
+                    image = new ImageFile(mActivity);
+                } catch (Exception e) {
+                    Log.d("IMAGE_CAPTURE","Issue creating image file");
+                }
+
+                if (image != null) {
+                    Uri imgUri = FileProvider.getUriForFile(mActivity,
+                            Constants.FILE_PROVIDER,
+                            image);
+                    currentImage = image;
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, imgUri);
+                    startActivityForResult(takePictureIntent, REQUEST_IMAGE_CAPTURE);
+                }
+            }
+        } else if (REQUEST_IMAGE_TYPE == REQUEST_LOAD_IMAGE) {
+            Intent galleryPictureIntent = new Intent(Intent.ACTION_PICK,
+                    MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+            galleryPictureIntent.setType("image/*");
+            galleryPictureIntent.setAction(Intent.ACTION_GET_CONTENT);
+            startActivityForResult(Intent.createChooser(galleryPictureIntent, "Select Picture"), REQUEST_LOAD_IMAGE);
+        }
+    }
+
+    private void deleteImage(final String imageUrl) {
+        final String imageFilename = imageUrl.substring(imageUrl.lastIndexOf('/')+1, imageUrl.length() );
+
+        // Delete image request
+        IProductRequest productService = new ProductRequest(ProductDetailEditFragment.this.getContext());
+        productService.deleteProductImage(mProduct, imageFilename, new ICallback<Product>() {
+            @Override
+            public void onResult(Product result) {
+                mImageSlider.removeSliderAt(mImageSlider.getCurrentPosition());
+                mImageUris.remove(Uri.parse(imageUrl));
+                updateImageSlider();
+                refreshProduct(mProduct.getId());
+                Toast.makeText(getActivity(),"Deleted Image Successfully",Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Toast.makeText(getActivity(),"Error Deleting Image",Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Remove image from list if successful
+
+        //Toast.makeText(getActivity()," delete " + slider.getUrl(),Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -300,42 +510,94 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == Activity.RESULT_OK && requestCode == REQUEST_IMAGE_CAPTURE) {
-            boolean isImageAdded = mProduct.addImage(currentImage.getUri());
-            if (isImageAdded) {
-                mImages.add(0, currentImage);
-                updateImageSlider();
+        if (resultCode == RESULT_OK && requestCode == REQUEST_IMAGE_CAPTURE) {
+            submitProductImage(currentImage.getUri());
+        } else if (requestCode == REQUEST_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
+            Uri selectedImageUri = data.getData();
+            String[] filePathColumn = { MediaStore.Images.Media.DATA };
+            Cursor cursor = mActivity.getContentResolver().query(selectedImageUri,filePathColumn, null, null, null);
+            cursor.moveToFirst();
+            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+            String picturePath = cursor.getString(columnIndex);
+            cursor.close();
 
-                IProductRequest productService = new ProductRequest(this.getContext());
-                productService.submitProductImage(mProduct, new ICallback<String>() {
-                    @Override
-                    public void onResult(String result) {
-                        Toast.makeText(getContext(), "Product Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        Log.e("UploadImage", e.toString());
-                    }
-                });
-            } else {
-                Snackbar.make(getView(), "Can't upload more than " + MAX_IMAGES + " pictures. Pick your best pictures !", Snackbar.LENGTH_LONG).show();
+            if (picturePath == null) {
+                picturePath = ContentUriHelper.getRealPathFromURI(getActivity(), selectedImageUri);
             }
+
+            try {
+                currentImage = new ImageFile(picturePath);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            submitProductImage(selectedImageUri);
+        } else {
+                Snackbar.make(getView(), "Failed to load picture. Try again !", Snackbar.LENGTH_LONG).show();
         }
+    }
+
+    private void submitProductImage(Uri imageUri) {
+        Uri thumbnail = mProduct.getmThumbnail();
+
+        //If thumbnail is not assigned yet, then add first picture as thumbnail
+        if (thumbnail == null || (thumbnail instanceof Uri && thumbnail.toString().isEmpty())) {
+            submitProductThumbnail(imageUri);
+        } else {
+            //thumbnail already exists, carry on adding aux images
+            submitAuxProductImage(imageUri);
+        }
+    }
+
+    private void submitAuxProductImage(Uri imageUri) {
+        boolean isImageAdded = mProduct.addImage(imageUri);
+        if (isImageAdded) {
+            mImageUris.add(imageUri);
+            updateImageSlider();
+            //mImageSlider.setCurrentPosition(0);
+
+            IProductRequest productService = new ProductRequest(this.getContext());
+            productService.submitProductImage(mProduct, new ICallback<String>() {
+                @Override
+                public void onResult(String result) {
+                    Toast.makeText(getContext(), "Product Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
+                    refreshProduct(mProduct.getId());
+                }
+
+                @Override
+                public void onError(Exception e) {
+                    Log.e("UploadImage", e.toString());
+                }
+            });
+        }
+    }
+
+    private void submitProductThumbnail(Uri imageUri) {
+        mImageUris.add(imageUri);
+        updateImageSlider();
+        //mImageSlider.setCurrentPosition(0);
+
+        mProduct.setThumbnail(imageUri);
+
+        IProductRequest productService = new ProductRequest(this.getContext());
+        productService.submitProductThumbnail(mProduct.getId(), mProduct.getmThumbnail(), new ICallback<String>() {
+            @Override
+            public void onResult(String result) {
+                Log.d("image thumb upload","Success");
+                Toast.makeText(getContext(), "Product thumbnail uploaded.", Toast.LENGTH_LONG).show();
+                refreshProduct(mProduct.getId());
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e("image thumb upload err",e.toString());
+                Toast.makeText(getContext(), "Error occurred while uploading Product thumbnail.", Toast.LENGTH_LONG).show();
+            }
+        });
     }
 
     public ImageFile getCurrentImage(){
         return currentImage;
     }
-
-//    private DatePickerDialog.OnDateSetListener datePickerListener = new DatePickerDialog.OnDateSetListener() {
-//        public void onDateSet(DatePicker view, int selectedYear,
-//                              int selectedMonth, int selectedDay) {
-//            mProductExpirationDate.setText(new StringBuilder().append(selectedMonth + 1)
-//                            .append("-").append(selectedDay).append("-").append(selectedYear)
-//            );
-//        }
-//    };
 
     private void buildProductCategories() {
         ICategoryCache cache = new CategoryCache(getActivity());
@@ -361,51 +623,46 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         mProductCategoryContainer.addView(categoryButtonGroup);
     }
 
-//    private void buildProductDatePicker() {
-//        mProductExpirationDate.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//                if (hasFocus == true) {
-//                    new DatePickerDialog(getActivity(), datePickerListener, 2015, 11, 1).show();
-//                }
-//            }
-//        });
-//    }
-
     private void buildImageSlider() {
-
-        ArrayList<String> urls = new ArrayList<>();
-
-        urls.add(mProduct.getmThumbnail().toString());
-
-        for(Uri image : mProduct.getAuxImages()){
-            urls.add(image.toString());
+        Uri thumbnail = mProduct.getmThumbnail();
+        if (thumbnail instanceof Uri && !thumbnail.toString().isEmpty()) {
+            mImageUris.add(thumbnail);
         }
 
-        for (String url : urls) {
-            if(!url.equals("") && !url.equals(" ")){
+        for(Uri image : mProduct.getAuxImages()){
+            mImageUris.add(image);
+        }
+
+        updateImageSlider();
+    }
+
+    private void updateImageSlider() {
+        mImageSlider.removeAllSliders();
+
+        for (Uri uri : mImageUris) {
+            String url = uri.toString();
+            url = url.trim();
+            if(!url.isEmpty()){
                 DefaultSliderView sliderView = new DefaultSliderView(getActivity());
                 sliderView
                         .image(url)
                         .setScaleType(BaseSliderView.ScaleType.CenterCrop)
                         .setOnSliderClickListener(this);
                 mImageSlider.addSlider(sliderView);
-            }else{
-                DefaultSliderView sliderView = new DefaultSliderView(getActivity());
-                sliderView
-                        .image("http://tesitoo.com/image/cache/no_image-100x100.png")
-                        .setScaleType(BaseSliderView.ScaleType.CenterCrop)
-                        .setOnSliderClickListener(this);
-                mImageSlider.addSlider(sliderView);
             }
         }
 
-        mImageSlider.setDuration(IMAGE_SLIDER_DURATION);
-
-        if(urls.size() <= 1){
-            mImageSlider.stopAutoCycle();
-            mImageSlider.setIndicatorVisibility(PagerIndicator.IndicatorVisibility.Invisible);
+        //If there's no picture available for product, then show a no_image picture
+        if (mImageUris.size() < 1) {
+            DefaultSliderView sliderView = new DefaultSliderView(getActivity());
+            sliderView
+                    .image("http://tesitoo.com/image/cache/no_image-100x100.png")
+                    .setScaleType(BaseSliderView.ScaleType.CenterCrop)
+                    .setOnSliderClickListener(this);
+            mImageSlider.addSlider(sliderView);
         }
+
+        mImageSlider.stopAutoCycle();
     }
 
     private void updateEditTextLengths() {
@@ -444,27 +701,6 @@ public class ProductDetailEditFragment extends Fragment implements BaseSliderVie
         mInfoBorder.setPadding(padding, padding, padding, padding / 2);
         mPriceBorder.setPadding(padding, padding / 2, padding, padding / 2);
         //mDateBorder.setPadding(padding, padding / 2, padding, padding);
-    }
-
-    private void updateImageSlider() {
-        mImageSlider.removeAllSliders();
-
-        for (ImageFile image : mImages) {
-
-            DefaultSliderView sliderView = new DefaultSliderView(getActivity());
-            sliderView
-                    .image(image)
-                    .setScaleType(BaseSliderView.ScaleType.Fit)
-                    .setOnSliderClickListener(this);
-            mImageSlider.addSlider(sliderView);
-        }
-
-        mImageSlider.setDuration(IMAGE_SLIDER_DURATION);
-
-        if(mImages.size() <= 1){
-            mImageSlider.stopAutoCycle();
-            mImageSlider.setIndicatorVisibility(PagerIndicator.IndicatorVisibility.Invisible);
-        }
     }
 
     public void onClick(View view){

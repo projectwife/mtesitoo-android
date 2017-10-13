@@ -59,4 +59,30 @@
     <style name="TextTitleBoldTheme" parent="@style/TextTitleTheme">
         <item name="android:textStyle">bold</item>
     </style>
+
+    <style name="ProfileEditTextTheme" parent="@style/TextAppearance.AppCompat.Medium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:ellipsize">end</item>
+        <item name="android:textColor">@color/profile_text_colour</item>
+        <item name="android:background">@drawable/edittext_border_bg</item>
+    </style>
+
+    <style name="ProfileEditTextSingleLine" parent="@style/ProfileEditTextTheme">
+        <item name="android:lines">1</item>
+    </style>
+
+    <style name="ProfileFirstTextTitleTheme" parent="@style/TextAppearance.AppCompat.Small">
+        <item name="android:textStyle">bold</item>
+        <item name="android:textSize">@dimen/profile_labels_size</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">@dimen/profile_labels_margin_bottom</item>
+    </style>
+
+    <style name="ProfileTextTitleTheme" parent="@style/ProfileFirstTextTitleTheme">
+        <item name="android:layout_marginTop">@dimen/profile_labels_margin</item>
+    </style>
+
+
 </resources>

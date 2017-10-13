@@ -11,6 +11,8 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -35,6 +37,9 @@ public class ProductResponse implements Response.Listener<String>, Response.Erro
         } catch (JSONException e) {
             if (mCallback != null)
                 mCallback.onError(e);
+        } catch (ParseException e) {
+            if (mCallback != null)
+                mCallback.onError(e);
         }
     }
 
@@ -43,17 +48,55 @@ public class ProductResponse implements Response.Listener<String>, Response.Erro
         mCallback.onError(error);
     }
 
-    public List<Product> parseResponse(String response) throws JSONException {
+    public List<Product> parseResponse(String response) throws JSONException, ParseException {
         //handling empty response from server
         if (response.isEmpty()) {
             return new ArrayList<>();
         }
-
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
         JSONArray jsonProducts = new JSONArray(response);
 
         List<Product> result = new ArrayList<>(jsonProducts.length());
         for (int i = 0; i < jsonProducts.length(); ++i) {
             JSONObject jsonProduct = jsonProducts.getJSONObject(i);
+
+            String expirationStr = null;
+            Date expirationDate = null;
+
+            if (jsonProduct.has("expiration_date")) {
+                expirationStr = jsonProduct.getString("expiration_date");
+            }
+
+            if (expirationStr == null || expirationStr.equals("null")
+                    || expirationStr.equals("0000-00-00 00:00:00")) {
+                expirationDate = null;
+            } else {
+                expirationDate = formatter.parse(expirationStr);
+            }
+
+            String displayPrice = "";
+            String currencyCode = "";
+            if (jsonProduct.has("display_price")) {
+                displayPrice = jsonProduct.getString("display_price");
+            }
+
+            if (jsonProduct.has("currency_code")) {
+                currencyCode = jsonProduct.getString("currency_code");
+            }
+
+            int numPendingOrders = 0, numProcessingOrders = 0;
+            if (jsonProduct.has("order_counts") &&
+                    jsonProduct.get("order_counts") instanceof JSONObject) {
+                JSONObject jsonObject = jsonProduct.getJSONObject("order_counts");
+                if (jsonObject.has("Pending")) {
+                    numPendingOrders = jsonObject.getInt("Pending");
+                }
+
+                if (jsonObject.has("Processing")) {
+                    numProcessingOrders = jsonObject.getInt("Processing");
+                }
+            }
+
             Product product =
                     new Product(
                             Integer.parseInt(jsonProduct.getString("product_id")),
@@ -62,10 +105,14 @@ public class ProductResponse implements Response.Listener<String>, Response.Erro
                             jsonProduct.getString("location"),
                             resolveCategories(jsonProduct.getJSONArray("categories")),
                             "SI Unit",
-                            jsonProduct.getString("price"), 100,
-                            new Date(),
+                            jsonProduct.getString("price"),
+                            displayPrice,
+                            currencyCode,
+                            jsonProduct.getInt("quantity"),
+                            expirationDate,
                             Uri.parse(jsonProduct.getString("thumb_image")),
-                            parseAuxImages()
+                            parseAuxImages(),
+                            jsonProduct.getInt("status"), numPendingOrders, numProcessingOrders
                     );
             result.add(product);
         }

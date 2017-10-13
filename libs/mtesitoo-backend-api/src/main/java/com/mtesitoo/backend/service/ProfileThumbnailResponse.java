@@ -1,8 +1,5 @@
 package com.mtesitoo.backend.service;
 
-import android.util.Log;
-
-import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.mtesitoo.backend.service.logic.ICallback;
@@ -11,10 +8,10 @@ import com.mtesitoo.backend.service.logic.ICallback;
 /**
  * Created by Priyanka on 1/24/2017
  */
-public class ProfileThumbnailResponse implements Response.Listener, Response.ErrorListener {
+class ProfileThumbnailResponse implements Response.Listener<String>, Response.ErrorListener {
     private ICallback<String> mCallback;
 
-    public ProfileThumbnailResponse(ICallback<String> callback) {
+    ProfileThumbnailResponse(ICallback<String> callback) {
         mCallback = callback;
     }
 
@@ -24,19 +21,12 @@ public class ProfileThumbnailResponse implements Response.Listener, Response.Err
     }
 
     @Override
-    public void onResponse(Object response) {
-
-        if(response instanceof String){
+    public void onResponse(String response) {
+        if (response != null && !response.isEmpty()) {
             if (mCallback != null)
-                mCallback.onResult(response.toString());
-        } else if(response instanceof NetworkResponse){
-            NetworkResponse networkResponse = (NetworkResponse)response;
-            if(networkResponse.statusCode==200)
-                mCallback.onResult(null);
-            else
-                mCallback.onError(new Exception(networkResponse.toString()));
-        } else{
-            Log.d("PROFILE_IMAGE_UPDATE",response.toString());
+                mCallback.onResult(response);
+        } else {
+            mCallback.onError(new Exception("Empty or null response"));
         }
     }
 }

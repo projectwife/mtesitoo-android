@@ -14,9 +14,27 @@ repositories {
     maven { url 'https://maven.fabric.io/public' }
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('build.properties').newDataInputStream())
+
+//TODO: Get these props from build.properties
+def ANDROID_BUILD_SDK_VERSION = properties.get('ANDROID_BUILD_SDK_VERSION')
+def ANDROID_BUILD_TOOLS_VERSION = properties.get('ANDROID_BUILD_TOOLS_VERSION')
+
+def RELEASE_KEYSTORE_FILE = properties.getProperty('RELEASE_KEYSTORE_FILE')
+def RELEASE_KEYSTORE_PASSWORD = properties.getProperty('RELEASE_KEYSTORE_PASSWORD')
+def RELEASE_KEYSTORE_ALIAS = properties.getProperty('RELEASE_KEYSTORE_ALIAS')
+
+def DEBUG_KEYSTORE_FILE = properties.getProperty('DEBUG_KEYSTORE_FILE')
+def DEBUG_KEYSTORE_PASSWORD = properties.getProperty('DEBUG_KEYSTORE_PASSWORD')
+def DEBUG_KEYSTORE_ALIAS = properties.getProperty('DEBUG_KEYSTORE_ALIAS')
+
+if (project.hasProperty("signPass")) {
+    RELEASE_KEYSTORE_PASSWORD = project.getProperties().get("signPass")
+}
 
 android {
-    compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
+    compileSdkVersion  Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
     buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
 
     defaultConfig {
@@ -24,19 +42,50 @@ android {
         minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
         targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
         versionName project.ANDROID_VERSION_NAME
-        versionCode Integer.parseInt(project.ANDROID_VERSION_CODE)
+        //TODO: Fix bug in reading version code from properties file
+        versionCode 9 //Integer.parseInt(project.ANDROID_VERSION_CODE)
 
         multiDexEnabled true
+    }
+
+    lintOptions {
+        abortOnError false
     }
 
     dexOptions {
         javaMaxHeapSize "4g"
     }
 
-    buildTypes {
+    signingConfigs {
+        debug {
+            storeFile file(new File("../" + DEBUG_KEYSTORE_FILE))
+            storePassword DEBUG_KEYSTORE_PASSWORD
+            keyAlias DEBUG_KEYSTORE_ALIAS
+            keyPassword DEBUG_KEYSTORE_PASSWORD
+        }
+
         release {
+            storeFile file(new File("../" + RELEASE_KEYSTORE_FILE))
+            storePassword RELEASE_KEYSTORE_PASSWORD
+            keyAlias RELEASE_KEYSTORE_ALIAS
+            keyPassword RELEASE_KEYSTORE_PASSWORD
+        }
+    }
+
+    buildTypes {
+        debug {
+            signingConfig signingConfigs.debug
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+
+        release {
+            signingConfig signingConfigs.release
+
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            zipAlignEnabled true
         }
     }
 
@@ -47,6 +96,12 @@ android {
 }
 
 dependencies {
+    //noinspection AndroidLintGradleCompatible
+    compile 'com.android.support:multidex:1.0.1'
+    compile 'com.jakewharton:butterknife:8.6.0'
+    annotationProcessor 'com.jakewharton:butterknife-compiler:8.6.0'
+    compile 'org.apache.httpcomponents:httpclient-android:4.3.5.1'
+    compile 'com.google.code.gson:gson:2.3.1'
     compile project(':wizardpager')
     compile project(':mtesitoo-backend-api')
     compile('com.mikepenz:google-material-typeface:1.2.0.1') {

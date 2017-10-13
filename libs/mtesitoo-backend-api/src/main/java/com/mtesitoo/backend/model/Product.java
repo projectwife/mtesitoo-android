@@ -29,11 +29,17 @@ public class Product implements Parcelable {
     private ArrayList<String> mCategories = new ArrayList<>();
     private final String mSIUnit;
     private final String mPricePerUnit;
+    private final String mDisplayPrice;
+    private final String mCurrencyCode;
     private final Integer mQuantity;
     private final Date mExpiration;
-    private final Uri mThumbnail;
+    private Uri mThumbnail;
     private final ArrayList<Uri> mAuxImages;
     private Uri lastImage;
+    //0-disabled, 1-enabled, 5-pending approval
+    private int mStatus;
+    private int mPendingOrders;
+    private int mProcessingOrders;
 
     private Product(Parcel in) {
         this.mId = in.readInt();
@@ -43,10 +49,15 @@ public class Product implements Parcelable {
         in.readStringList(mCategories);
         this.mSIUnit = in.readString();
         this.mPricePerUnit = in.readString();
+        this.mDisplayPrice = in.readString();
+        this.mCurrencyCode = in.readString();
         this.mQuantity = in.readInt();
         this.mExpiration = new Date(in.readLong());
         this.mThumbnail = null;
         this.mAuxImages = new ArrayList<>();
+        this.mStatus = in.readInt();
+        this.mPendingOrders = in.readInt();
+        this.mProcessingOrders = in.readInt();
     }
 
     public static final Parcelable.Creator<Product> CREATOR = new Parcelable.Creator<Product>() {
@@ -75,8 +86,11 @@ public class Product implements Parcelable {
      * @param expiration   product post expiration (e.g. YYYY-MM-DD)
      * @param thumbnail    url of the product's thumbnail
      */
-    public Product(int id, String name, String description, String location, ArrayList<String> categories, String siUnit,
-                   String pricePerUnit, Integer quantity, Date expiration, Uri thumbnail, ArrayList<Uri> auxImages) {
+    public Product(int id, String name, String description, String location,
+                   ArrayList<String> categories, String siUnit,
+                   String pricePerUnit, String displayPrice, String currencyCode,
+                   Integer quantity, Date expiration, Uri thumbnail, ArrayList<Uri> auxImages,
+                   int status, int numPendingOrders, int numProcessingOrders) {
         mId = id;
         mName = name;
         mDescription = description;
@@ -84,10 +98,23 @@ public class Product implements Parcelable {
         mCategories = categories;
         mSIUnit = siUnit;
         mPricePerUnit = pricePerUnit;
+        mDisplayPrice = displayPrice;
+        mCurrencyCode = currencyCode;
         mQuantity = quantity;
         mExpiration = expiration;
         mThumbnail = thumbnail;
         mAuxImages = auxImages;
+        mStatus = status;
+        mPendingOrders = numPendingOrders;
+        mProcessingOrders = numProcessingOrders;
+    }
+
+    public int getStatus() {
+        return mStatus;
+    }
+
+    public void setStatus(int mStatus) {
+        this.mStatus = mStatus;
     }
 
     /**
@@ -102,7 +129,9 @@ public class Product implements Parcelable {
      * @param thumbnail    url of the product's thumbnail
      */
     public Product(int id, String name, String description, String location, String category, String siUnit,
-                   String pricePerUnit, Integer quantity, Date expiration, Uri thumbnail, ArrayList<Uri> auxImages) {
+                   String pricePerUnit, String displayPrice, String currencyCode,
+                   Integer quantity, Date expiration, Uri thumbnail, ArrayList<Uri> auxImages,
+                   int status, int numPendingOrders, int numProcessingOrders) {
 
         ArrayList<String> categoryList = new ArrayList<>();
         categoryList.add(category);
@@ -114,11 +143,15 @@ public class Product implements Parcelable {
         mCategories = categoryList;
         mSIUnit = siUnit;
         mPricePerUnit = pricePerUnit;
+        mDisplayPrice = displayPrice;
+        mCurrencyCode = currencyCode;
         mQuantity = quantity;
         mExpiration = expiration;
         mThumbnail = thumbnail;
         mAuxImages = auxImages;
-
+        mStatus = status;
+        mPendingOrders = numPendingOrders;
+        mProcessingOrders = numProcessingOrders;
     }
 
     /**
@@ -139,6 +172,10 @@ public class Product implements Parcelable {
         return success;
     }
 
+    public void setThumbnail(Uri imageUri) {
+        mThumbnail = imageUri;
+    }
+
     public int getId() {
         return mId;
     }
@@ -157,6 +194,14 @@ public class Product implements Parcelable {
 
     public ArrayList<String> getCategories() {
         return mCategories;
+    }
+
+    public int getPendingOrders() {
+        return mPendingOrders;
+    }
+
+    public int getProcessingOrders() {
+        return mProcessingOrders;
     }
 
     public String getCategoriesJSON() {
@@ -232,6 +277,14 @@ public class Product implements Parcelable {
         return mPricePerUnit;
     }
 
+    public String getDisplayPrice() {
+        return mDisplayPrice;
+    }
+
+    public String getCurrencyCode() {
+        return mCurrencyCode;
+    }
+
     public Integer getQuantity() {
         return mQuantity;
     }
@@ -240,10 +293,41 @@ public class Product implements Parcelable {
         return mExpiration;
     }
 
+    public boolean isProductExpired() {
+        boolean expired = false;
+
+        Date today = new Date();
+        if (mExpiration != null && !expiringToday() && mExpiration.before(today)) {
+            //check if its today
+            expired = true;
+        }
+
+        return  expired;
+    }
+
+    public boolean expiringToday() {
+        boolean expiringToday = false;
+        SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
+        String formattedTodayDate = dateFormatter.format(new Date());
+
+        String formattedProductExpDate = "";
+        if (mExpiration != null) {
+            formattedProductExpDate = (dateFormatter).format(mExpiration);
+        }
+
+        if (formattedTodayDate.equals(formattedProductExpDate)) {
+            expiringToday = true;
+        }
+
+        return expiringToday;
+    }
     public String getExpirationFormattedForApp() {
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
-        String formattedDate = (dateFormatter).format(mExpiration);
+        String formattedDate = "";
+        if (mExpiration != null) {
+            formattedDate = (dateFormatter).format(mExpiration);
+        }
 
         return formattedDate;
     }
@@ -251,7 +335,11 @@ public class Product implements Parcelable {
     public String getExpirationFormattedForAPI() {
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
-        String formattedDate = (dateFormatter).format(mExpiration);
+        String formattedDate = "0000-00-00 00:00:00";
+
+        if (mExpiration != null) {
+            formattedDate = (dateFormatter).format(mExpiration);
+        }
 
         return formattedDate;
     }
@@ -306,7 +394,16 @@ public class Product implements Parcelable {
         dest.writeStringList(mCategories);
         dest.writeString(mSIUnit);
         dest.writeString(mPricePerUnit);
+        dest.writeString(mDisplayPrice);
+        dest.writeString(mCurrencyCode);
         dest.writeInt(mQuantity);
-        dest.writeLong(mExpiration.getTime());
+        dest.writeInt(mStatus);
+        dest.writeInt(mPendingOrders);
+        dest.writeInt(mProcessingOrders);
+        if (mExpiration != null) {
+            dest.writeLong(mExpiration.getTime());
+        } else {
+            dest.writeLong(0);
+        }
     }
 }
