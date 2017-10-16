@@ -75,7 +75,7 @@ public class HomeActivity extends AppCompatActivity {
 
         }
 
-        if (!isProfileCompleted()) {
+        if (needsCompleteProfileReminder()) {
             showCompleteProfileDialog();
         }
     }
@@ -301,12 +301,14 @@ public class HomeActivity extends AppCompatActivity {
         finish();
     }
 
-    private boolean isProfileCompleted() {
-        return !mSeller.getmAddress1().isEmpty()
-                && !mSeller.getmBusiness().isEmpty()
-                && !mSeller.getmCity().isEmpty()
-                && !mSeller.getmCountry().isEmpty()
-                && !mSeller.getmZoneId().isEmpty();
+    private boolean needsCompleteProfileReminder() {
+        final SharedPreferences sharedPreferences = mContext.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
+        return (mSeller.getmAddress1().isEmpty()
+                || mSeller.getmBusiness().isEmpty()
+                || mSeller.getmCity().isEmpty()
+                || mSeller.getmCountry().isEmpty()
+                || mSeller.getmZoneId().isEmpty())
+                && sharedPreferences.getBoolean(Constants.INCOMPLETE_PROFILE_REMINDER, true);
     }
 
     private void showCompleteProfileDialog() {
@@ -320,7 +322,8 @@ public class HomeActivity extends AppCompatActivity {
 
         alertDialogBuilder.setPositiveButton(R.string.profile_incomplete_alert_complete, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-
+                Fragment f = ProfileFragment.newInstance();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).addToBackStack(null).commit();
                 dialog.cancel();
             }
         });
@@ -332,6 +335,8 @@ public class HomeActivity extends AppCompatActivity {
         alertDialogBuilder.setNeutralButton(R.string.profile_incomplete_alert_no_repeat, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
 
+                final SharedPreferences sharedPreferences = mContext.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
+                sharedPreferences.edit().putBoolean(Constants.INCOMPLETE_PROFILE_REMINDER, false).apply();
                 dialog.cancel();
             }
         });
