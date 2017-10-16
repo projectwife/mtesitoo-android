@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -188,9 +187,13 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     }
 
     private void logInUser(final Intent intent, final String user, final String pass, final boolean resetPassword) {
+
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
         final ILoginRequest loginService = new LoginRequest(this);
-        String username = null;
-        String password = null;
+        String username;
+        String password;
 
         if (user == null || pass == null) {
             username = mUsername.getText().toString().trim();

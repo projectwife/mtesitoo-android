@@ -3,12 +3,15 @@ package com.mtesitoo;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
+import android.view.View;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -16,6 +19,8 @@ import android.widget.Toast;
 
 import com.android.volley.VolleyError;
 import com.crashlytics.android.Crashlytics;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.mtesitoo.backend.cache.CategoryCache;
 import com.mtesitoo.backend.cache.UnitCache;
 import com.mtesitoo.backend.cache.logic.ICategoryCache;
@@ -36,6 +41,7 @@ import com.mtesitoo.backend.service.logic.ILoginRequest;
 import com.mtesitoo.backend.service.logic.IRegistrationRequest;
 import com.mtesitoo.backend.service.logic.ISellerRequest;
 import com.mtesitoo.backend.service.logic.IVendorTerms;
+import com.mtesitoo.helper.UriAdapter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -63,6 +69,8 @@ public class RegisterActivity extends AppCompatActivity {
 
     boolean termsAccepted = false;
 
+    @BindView(R.id.loading_progress_container)
+    View loadingViewContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +83,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     @OnClick(R.id.register_user_button)
     void registrationAttempt() {
+
+        loadingViewContainer.setVisibility(View.VISIBLE);
+
         password = ((EditText) findViewById(R.id.registration_password)).getText().toString();
         confirmPassword = ((EditText) findViewById(R.id.registration_confirm_password)).getText().toString();
         email = ((EditText) findViewById(R.id.registration_email)).getText().toString();
@@ -85,6 +96,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (verifyInput()) {
             registerUser();
+        } else {
+            loadingViewContainer.setVisibility(View.GONE);
         }
     }
 
@@ -165,11 +178,11 @@ public class RegisterActivity extends AppCompatActivity {
             public void onResult(Seller result) {
                 Toast.makeText(TesitooApplication.getInstance().getContext(), R.string.register_successful, Toast.LENGTH_LONG).show();
                 startNewLogin(seller, RegisterActivity.this);
-                finish();
             }
 
             @Override
             public void onError(Exception e) {
+                loadingViewContainer.setVisibility(View.GONE);
 
                 VolleyError err = (VolleyError) e;
 
@@ -253,8 +266,11 @@ public class RegisterActivity extends AppCompatActivity {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
     }
 
-    public void startNewLogin(Seller seller, final Context mContext) {
+    public void startNewLogin(final Seller seller, final Context mContext) {
         final Intent intent = new Intent(this, HomeActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
         final ILoginRequest loginService = new LoginRequest(this);
 
         loginService.authenticateUser(seller.getUsername(), seller.getmPassword(), new ICallback<String>() {
@@ -306,14 +322,33 @@ public class RegisterActivity extends AppCompatActivity {
                     public void onResult(Seller result) {
                         Log.d("getSellerInfo", result.toString());
                         logUser(result);
+
+                        SharedPreferences.Editor preferenceEditor = getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE).edit();
+
+                        //Cache login state in sharedprefs
+                        preferenceEditor.putBoolean(Constants.IS_USER_LOGGED_IN_KEY, true);
+                        preferenceEditor.putString(Constants.LOGGED_IN_USER_ID_KEY, String.valueOf(result.getId()));
+                        preferenceEditor.putString(Constants.LOGGED_IN_USER_PASS_KEY, seller.getmPassword());
+
+                        Gson gson = new GsonBuilder()
+                                .registerTypeAdapter(Uri.class, new UriAdapter())
+                                .create();
+                        preferenceEditor.putString(Constants.LOGGED_IN_USER_DATA, gson.toJson(result));
+
+                        preferenceEditor.apply();
+
                         intent.putExtra(mContext.getString(R.string.bundle_seller_key), result);
                         mContext.startActivity(intent);
+
+                        loadingViewContainer.setVisibility(View.GONE);
                         finish();
                     }
 
                     @Override
                     public void onError(Exception e) {
                         Log.e("getSellerInfo", e.toString());
+                        loadingViewContainer.setVisibility(View.GONE);
+                        Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
                     }
                 });
             }
@@ -322,6 +357,7 @@ public class RegisterActivity extends AppCompatActivity {
             public void onError(Exception e) {
                 Log.e("authenticateUser", e.toString());
                 Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                loadingViewContainer.setVisibility(View.GONE);
             }
         });
 
