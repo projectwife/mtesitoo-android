@@ -156,7 +156,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void registerUser() {
 
         final Seller seller = new Seller(0, email, firstName, lastName,
-                phoneNumber, email, firstName + " " + lastName, "", "", "",
+                phoneNumber, email, " ", "", "", "",
                 "", "", "", password, "", "1", "", "");
 
         IRegistrationRequest registrationService = new RegistrationRequest(this);
