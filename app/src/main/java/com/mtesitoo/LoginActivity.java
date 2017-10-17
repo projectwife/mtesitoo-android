@@ -13,7 +13,6 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -138,8 +137,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onError(Exception e) {
                 VolleyError err = (VolleyError)e;
 
-                String errorMsg = "";
-                if(err.networkResponse.data!=null) {
+                String errorMsg = e.getMessage();
+                if(err.networkResponse != null &&
+                        err.networkResponse.data!=null) {
                     try {
                         String body = new String(err.networkResponse.data,"UTF-8");
                         Log.e("REG_ERR",body);
@@ -267,13 +267,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         mEditor.putBoolean(Constants.IS_USER_LOGGED_IN_KEY, true);
                         mEditor.putString(Constants.LOGGED_IN_USER_ID_KEY, userId);
                         mEditor.putString(Constants.LOGGED_IN_USER_PASS_KEY, userPass);
-
-                        Gson gson = new GsonBuilder()
-                                .registerTypeAdapter(Uri.class, new UriAdapter())
-                                .create();
-                        mEditor.putString(Constants.LOGGED_IN_USER_DATA, gson.toJson(result));
-
                         mEditor.commit();
+                        cacheLoggedInUesrData(result);
 
                         intent.putExtra(mContext.getString(R.string.bundle_seller_key), result);
                         intent.putExtra(mContext.getString(R.string.automatic_login_key), resetPassword);
@@ -306,6 +301,17 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 Toast.makeText(mContext, errorMessage, Toast.LENGTH_LONG).show();
             }
         });
+    }
+
+    private void cacheLoggedInUesrData(Seller seller) {
+        Gson gson = new GsonBuilder()
+                .registerTypeAdapter(Uri.class, new UriAdapter())
+                .create();
+
+        if (mEditor != null) {
+            mEditor.putString(Constants.LOGGED_IN_USER_DATA, gson.toJson(seller));
+            mEditor.commit();
+        }
     }
 
     private void logInByCode(final Intent intent, final String code, final boolean resetPassword) {
@@ -365,6 +371,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                         logUser(result);
                         logSuccessLogin(result);
+                        cacheLoggedInUesrData(result);
+
                         intent.putExtra(mContext.getString(R.string.bundle_seller_key), result);
                         intent.putExtra(mContext.getString(R.string.automatic_login_key), resetPassword);
                         if (resetPassword) {
@@ -385,7 +393,11 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             public void onError(Exception e) {
                 Log.e("AuthenticateUser", e.toString());
                 logFailLogin(mUsername.getText().toString(),e);
-                Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
+                String errorMessage = e.getMessage();
+                if (errorMessage == null) {
+                    errorMessage = "Authentication Failed.";
+                }
+                Toast.makeText(mContext, errorMessage, Toast.LENGTH_LONG).show();
             }
         });
     }
@@ -403,6 +415,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         Button forgotPassword = (Button) findViewById(R.id.forgotPassword);
         forgotPassword.setOnClickListener(this);
         mContext = this;
+        mPrefs = this.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
+        mEditor = mPrefs.edit();
 
         //Handling password reset request
         Intent passwordResetIntent = getIntent();
@@ -419,9 +433,6 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
             }
         }
         //ends here
-
-        mPrefs = this.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
-        mEditor = mPrefs.edit();
 
         ICountriesRequest countriesService = new CountriesRequest(mContext);
 
