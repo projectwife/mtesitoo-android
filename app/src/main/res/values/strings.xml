@@ -76,7 +76,7 @@
     <string name="registration_terms_error">You have to accept terms and condition</string>
     <string name="profile_incomplete_alert_title">Tesitoo</string>
     <string name="profile_incomplete_alert_message">Please, complete your profile. We\'ll need your profile to validate your user account.</string>
-    <string name="profile_incomplete_alert_complete">Take me to profile</string>
+    <string name="profile_incomplete_alert_complete">Go to profile</string>
     <string name="profile_incomplete_alert_cancel">Not now</string>
     <string name="profile_incomplete_alert_no_repeat">Do not ask again</string>
 
