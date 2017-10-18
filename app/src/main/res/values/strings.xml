@@ -75,4 +75,26 @@
     <string name="registration_terms_view">View</string>
     <string name="registration_terms_error">You have to accept terms and condition</string>
 
+    <!--New product strings-->
+    <string name="title_activity_add_product">New Product</string>
+
+    <string name="menu_action_cancel">Cancel</string>
+
+    <string name="action_preview">Preview</string>
+    <string name="action_next">Next</string>
+    <string name="action_prev">Previous</string>
+    <string name="action_submit">Submit</string>
+
+    <string name="product_details_name">Product Name</string>
+    <string name="product_details_description">Description</string>
+    <string name="product_details_location">Location</string>
+    <string name="product_details_expiration">Expiration Date</string>
+
+    <string name="product_details_category">Category</string>
+    <string name="product_details_price_per_unit">Price per Unit</string>
+    <string name="product_details_quantity">Quantity</string>
+    <string name="product_details_si_unit">Units</string>
+
+    <string name="product_details_photo">Pictures</string>
+
 </resources>
