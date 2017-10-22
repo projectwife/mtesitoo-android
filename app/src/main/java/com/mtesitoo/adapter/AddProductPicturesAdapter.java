@@ -9,13 +9,15 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.mtesitoo.R;
+import com.mtesitoo.helper.AddProductHelper;
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+
+import static com.mtesitoo.helper.AddProductHelper.MAX_PICTURES;
 
 /**
  * Created by eduardodiaz on 20/10/2017.
@@ -27,14 +29,11 @@ public class AddProductPicturesAdapter extends RecyclerView.Adapter<AddProductPi
     private Callback callback;
     private Context context;
 
-    private final int MAX_PICTURES = 4;
-
     public AddProductPicturesAdapter(Context context, Callback callback) {
 
-        this.pictures = new ArrayList<>(MAX_PICTURES);
+        this.pictures = AddProductHelper.getInstance().getProductPictureListData();
         this.callback = callback;
         this.context = context;
-        Picasso.with(context).setLoggingEnabled(true);
     }
 
     @Override
@@ -64,22 +63,26 @@ public class AddProductPicturesAdapter extends RecyclerView.Adapter<AddProductPi
     public void insertPicture(int position, Uri url) {
         if (pictures.size() == MAX_PICTURES - 1 && position == MAX_PICTURES - 1) {
             pictures.add(position, url);
+            AddProductHelper.getInstance().setProductPictures(pictures);
             notifyDataSetChanged();
             return;
         }
 
         pictures.add(position, url);
+        AddProductHelper.getInstance().setProductPictures(pictures);
         notifyDataSetChanged();
         //notifyItemInserted(position);
     }
 
     public void updatePicture(int position, Uri url) {
         pictures.set(position, url);
+        AddProductHelper.getInstance().setProductPictures(pictures);
         notifyItemChanged(position);
     }
 
     public void removePicture(int position) {
         pictures.remove(position);
+        AddProductHelper.getInstance().setProductPictures(pictures);
         notifyItemRemoved(position);
     }
 

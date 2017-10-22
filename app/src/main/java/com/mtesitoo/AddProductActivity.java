@@ -7,11 +7,15 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 
 import com.mtesitoo.adapter.AddProductPagerAdapter;
+import com.mtesitoo.helper.AddProductHelper;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 
 import static com.mtesitoo.R.id.dots;
 
@@ -25,6 +29,12 @@ public class AddProductActivity extends AppCompatActivity {
 
     @BindView(dots)
     TabLayout pagerIndicator;
+
+    @BindView(R.id.controls_previous)
+    Button prevButton;
+
+    @BindView(R.id.controls_forward)
+    Button nextButton;
 
     AddProductPagerAdapter pagerAdapter;
 
@@ -41,6 +51,39 @@ public class AddProductActivity extends AppCompatActivity {
         viewPager.setAdapter(pagerAdapter);
 
         pagerIndicator.setupWithViewPager(viewPager);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                if (position == 0) {
+                    prevButton.setVisibility(View.GONE);
+                    return;
+                }
+
+                prevButton.setVisibility(View.VISIBLE);
+
+                if (position == pagerAdapter.getCount() - 2) {
+                    nextButton.setText(getString(R.string.action_preview));
+                    return;
+                }
+
+                if (position == pagerAdapter.getCount() - 1) {
+                    nextButton.setText(getString(R.string.action_submit));
+                    return;
+                }
+                nextButton.setText(getString(R.string.action_next));
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+
+            }
+        });
     }
 
 
@@ -53,9 +96,26 @@ public class AddProductActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == R.id.action_cancel) {
+            AddProductHelper.getInstance().clearFields();
             finish();
             return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        AddProductHelper.getInstance().clearFields();
+    }
+
+    @OnClick(R.id.controls_previous)
+    void goBack() {
+        viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
+    }
+
+    @OnClick(R.id.controls_forward)
+    void goForward() {
+        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
     }
 }
