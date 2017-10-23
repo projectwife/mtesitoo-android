@@ -18,15 +18,15 @@ public class AddProductHelper {
 
 
     private static AddProductHelper instance;
-    private String productName = "";
-    private String productDescription = "";
-    private String productLocation = "";
-    private String productExpirationDate = "";
+    private String productName;
+    private String productDescription;
+    private String productLocation;
+    private String productExpirationDate;
 
-    private String productCategory = "";
-    private String productQuantity = "";
-    private String productPricePerUnit = "";
-    private String productUnits = "";
+    private Integer productCategory;
+    private Integer productQuantity;
+    private Integer productPricePerUnit;
+    private Integer productUnits;
 
 
     private List<Uri> productPictures;
@@ -34,7 +34,10 @@ public class AddProductHelper {
     public final static int MAX_PICTURES = 4;
 
     public static AddProductHelper getInstance() {
-        if (instance == null) instance = new AddProductHelper();
+        if (instance == null) {
+            instance = new AddProductHelper();
+            instance.clearFields();
+        }
         return instance;
     }
 
@@ -53,9 +56,9 @@ public class AddProductHelper {
         return h;
     }
 
-    public HashMap<String, String> getProductQuantityData() {
+    public HashMap<String, Integer> getProductQuantityData() {
 
-        HashMap<String, String> h = new HashMap<>();
+        HashMap<String, Integer> h = new HashMap<>();
 
         h.put(Constants.PRODUCT_CATEGORY_KEY, productCategory);
         h.put(Constants.PRODUCT_PRICE_KEY, productPricePerUnit);
@@ -89,19 +92,19 @@ public class AddProductHelper {
         this.productExpirationDate = productExpirationDate;
     }
 
-    public void setProductCategory(String productCategory) {
+    public void setProductCategory(Integer productCategory) {
         this.productCategory = productCategory;
     }
 
-    public void setProductQuantity(String productQuantity) {
+    public void setProductQuantity(Integer productQuantity) {
         this.productQuantity = productQuantity;
     }
 
-    public void setProductPricePerUnit(String productPricePerUnit) {
+    public void setProductPricePerUnit(Integer productPricePerUnit) {
         this.productPricePerUnit = productPricePerUnit;
     }
 
-    public void setProductUnits(String productUnits) {
+    public void setProductUnits(Integer productUnits) {
         this.productUnits = productUnits;
     }
 
@@ -111,14 +114,16 @@ public class AddProductHelper {
 
     public void clearFields() {
 
-        this.productName = null;
-        this.productDescription = null;
-        this.productCategory = null;
-        this.productQuantity = null;
-        this.productPricePerUnit = null;
-        this.productExpirationDate = null;
-        this.productUnits = null;
-        this.productLocation = null;
+        this.productName = "";
+        this.productDescription = "";
+        this.productLocation = "";
+        this.productExpirationDate = "";
+
+        this.productCategory = -1;
+        this.productQuantity = 0;
+        this.productPricePerUnit = 0;
+        this.productUnits = -1;
+
         this.productPictures = null;
     }
 

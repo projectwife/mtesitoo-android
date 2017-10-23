@@ -30,6 +30,7 @@ import java.util.Map;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
+import butterknife.OnItemSelected;
 
 /**
  * Created by eduardodiaz on 18/10/2017.
@@ -63,10 +64,10 @@ public class AddProductQuantityFragment extends Fragment {
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             if (charSequence.toString().hashCode() == productPriceEditText.getText().toString().hashCode()) {
-                AddProductHelper.getInstance().setProductPricePerUnit(charSequence.toString());
+                AddProductHelper.getInstance().setProductPricePerUnit(Integer.parseInt(charSequence.toString()));
                 return;
             }
-            AddProductHelper.getInstance().setProductQuantity(charSequence.toString());
+            AddProductHelper.getInstance().setProductQuantity(Integer.parseInt(charSequence.toString()));
         }
 
         @Override
@@ -93,6 +94,8 @@ public class AddProductQuantityFragment extends Fragment {
 
     private void populateScreen() {
 
+        Map<String, Integer> h = AddProductHelper.getInstance().getProductQuantityData();
+
         ICategoryCache cache = new CategoryCache(getContext());
         final List<Category> categories = cache.getCategories();
         List<String> categoryNames = new ArrayList<>(categories.size());
@@ -100,7 +103,18 @@ public class AddProductQuantityFragment extends Fragment {
         for (int i = 0; i < categories.size(); i++) {
             categoryNames.add(categories.get(i).getName());
         }
+        categoryNames.add(0, getString(R.string.product_details_select));
         productCategorySpinner.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, categoryNames));
+
+        if (h.get(Constants.PRODUCT_CATEGORY_KEY) != -1) {
+            for (int i = 0; i < categories.size(); i++) {
+                Category category = categories.get(i);
+                if (category.getId() == h.get(Constants.PRODUCT_CATEGORY_KEY)) {
+                    productCategorySpinner.setSelection(i);
+                    break;
+                }
+            }
+        }
 
         IUnitCache unitCache = new UnitCache(getContext());
         final List<Unit> units = unitCache.getWeightUnits();
@@ -108,12 +122,21 @@ public class AddProductQuantityFragment extends Fragment {
         for (int i = 0; i < units.size(); i++) {
             unitNames.add(units.get(i).getName());
         }
+        unitNames.add(0, getString(R.string.product_details_select));
         productUnitsSpinner.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, unitNames));
 
-        Map<String, String> h = AddProductHelper.getInstance().getProductDetailsData();
+        if (h.get(Constants.PRODUCT_UNITS_KEY) != -1) {
+            for (int i = 0; i < units.size(); i++) {
+                Unit unit = units.get(i);
+                if (unit.getId() == h.get(Constants.PRODUCT_CATEGORY_KEY)) {
+                    productUnitsSpinner.setSelection(i);
+                    break;
+                }
+            }
+        }
 
-        productPriceEditText.setText(h.get(Constants.PRODUCT_PRICE_KEY));
-        productQuantityEditText.setText(h.get(Constants.PRODUCT_QUANTITY_KEY));
+        productPriceEditText.setText(String.valueOf(h.get(Constants.PRODUCT_PRICE_KEY)));
+        productQuantityEditText.setText(String.valueOf(h.get(Constants.PRODUCT_QUANTITY_KEY)));
 
         productPriceEditText.addTextChangedListener(textWatcher);
         productQuantityEditText.addTextChangedListener(textWatcher);
@@ -131,6 +154,31 @@ public class AddProductQuantityFragment extends Fragment {
             if (currentValue > 0) productPriceEditText.setText(String.valueOf(currentValue - 1));
         } else {
             productPriceEditText.setText(String.valueOf(currentValue + 1));
+        }
+    }
+
+    @OnItemSelected({R.id.spinnerProductUnits, R.id.spinnerProductCategory})
+    void handleSpinnerSelection(Spinner view) {
+        if (view.getSelectedItemPosition() == 0) return;
+        if (view.getId() == R.id.spinnerProductCategory) {
+            ICategoryCache cache = new CategoryCache(getContext());
+            List<Category> categories = cache.getCategories();
+
+            for (Category c : categories) {
+                if (c.getName().equals(view.getSelectedItem())) {
+                    AddProductHelper.getInstance().setProductCategory(c.getId());
+                    break;
+                }
+            }
+            return;
+        }
+        IUnitCache unitCache = new UnitCache(getContext());
+        final List<Unit> units = unitCache.getWeightUnits();
+        for (Unit u : units) {
+            if (u.getName().equals(view.getSelectedItem())) {
+                AddProductHelper.getInstance().setProductUnits(u.getId());
+                break;
+            }
         }
     }
 

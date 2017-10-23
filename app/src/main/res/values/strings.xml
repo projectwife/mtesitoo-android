@@ -94,6 +94,7 @@
     <string name="product_details_price_per_unit">Price per Unit</string>
     <string name="product_details_quantity">Quantity</string>
     <string name="product_details_si_unit">Units</string>
+    <string name="product_details_select">Please select</string>
 
     <string name="product_details_photo">Pictures</string>
 
