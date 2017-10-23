@@ -22,6 +22,7 @@
             android:id="@+id/pictures_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
             tools:listitem="@layout/add_product_list_item" />
 
     </LinearLayout>

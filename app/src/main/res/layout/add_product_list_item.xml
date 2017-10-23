@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="80dp"
-    android:layout_height="80dp"
-    android:layout_margin="5dp"
+    android:layout_width="@dimen/new_product_page_picture_size"
+    android:layout_height="@dimen/new_product_page_picture_size"
+    android:layout_margin="@dimen/new_product_page_picture_margin"
     android:background="@drawable/border">
 
     <TextView
@@ -10,12 +10,13 @@
         android:layout_height="match_parent"
         android:gravity="center_vertical|center_horizontal"
         android:text="+"
-        android:textSize="50sp" />
+        android:textSize="@dimen/new_product_page_plus_size" />
 
     <ImageView
         android:id="@+id/product_image"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:contentDescription="@null"
         android:scaleType="fitXY"
         android:visibility="visible" />
 

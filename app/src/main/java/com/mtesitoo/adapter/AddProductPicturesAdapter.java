@@ -49,10 +49,10 @@ public class AddProductPicturesAdapter extends RecyclerView.Adapter<AddProductPi
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         if (getItemCount() == 1 || (pictures.size() != MAX_PICTURES && position == pictures.size())) {
-            holder.bind(context, position, Uri.EMPTY);
+            holder.bind(context, Uri.EMPTY);
             return;
         }
-        holder.bind(context, position, pictures.get(position));
+        holder.bind(context, pictures.get(position));
     }
 
     @Override
@@ -68,21 +68,23 @@ public class AddProductPicturesAdapter extends RecyclerView.Adapter<AddProductPi
             return;
         }
 
-        pictures.add(position, url);
+        pictures.add(url);
         AddProductHelper.getInstance().setProductPictures(pictures);
-        notifyDataSetChanged();
-        //notifyItemInserted(position);
+        //notifyDataSetChanged();
+        notifyItemInserted(position);
     }
 
     public void updatePicture(int position, Uri url) {
         pictures.set(position, url);
         AddProductHelper.getInstance().setProductPictures(pictures);
+        //notifyDataSetChanged();
         notifyItemChanged(position);
     }
 
     public void removePicture(int position) {
         pictures.remove(position);
         AddProductHelper.getInstance().setProductPictures(pictures);
+        //notifyDataSetChanged();
         notifyItemRemoved(position);
     }
 
@@ -99,19 +101,22 @@ public class AddProductPicturesAdapter extends RecyclerView.Adapter<AddProductPi
             this.callback = callback;
         }
 
-        void bind(Context context, final int position, final Uri picture) {
+        void bind(Context context, final Uri picture) {
 
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     if (callback != null) {
-                        callback.onItemClick(picture.toString(), position);
+                        callback.onItemClick(picture.toString(), getLayoutPosition());
                     }
                 }
             });
 
-            if (picture.toString().isEmpty()) return;
+            if (picture.toString().isEmpty()) {
+                productPicture.setVisibility(View.INVISIBLE);
+                return;
+            }
             productPicture.setVisibility(View.VISIBLE);
             Picasso.with(context)
                     .load(picture)
