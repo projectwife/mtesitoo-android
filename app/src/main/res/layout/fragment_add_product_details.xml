@@ -43,8 +43,8 @@
             style="@style/ProfileTextTitleTheme"
             android:text="@string/product_details_expiration" />
 
-        <EditText
-            android:id="@+id/etProductExpiration"
+        <TextView
+            android:id="@+id/tvProductExpiration"
             style="@style/ProfileEditTextSingleLine"
             android:inputType="date" />
     </LinearLayout>
