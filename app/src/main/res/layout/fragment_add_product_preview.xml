@@ -1,51 +1,130 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:background="@color/gray_background"
     android:orientation="vertical">
 
-    <LinearLayout
+    <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
-        android:layout_height="@dimen/new_product_page_height"
-        android:background="@color/md_white_1000"
-        android:orientation="vertical"
-        android:padding="@dimen/new_product_page_padding">
+        android:layout_height="wrap_content">
 
-        <TextView
-            style="@style/ProfileTextTitleTheme"
-            android:text="@string/product_details_name" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/md_white_1000"
+            android:orientation="vertical"
+            android:padding="@dimen/new_product_page_padding">
 
-        <EditText
-            android:id="@+id/etProductName"
-            style="@style/ProfileEditTextSingleLine"
-            android:inputType="textAutoCorrect" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="200dp"
+                android:background="@color/gray_background"
+                android:gravity="center"
+                android:orientation="vertical">
 
-        <TextView
-            style="@style/ProfileTextTitleTheme"
-            android:text="@string/product_details_description" />
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/iv_preview_product_pictures"
+                    android:layout_width="170dp"
+                    android:layout_height="170dp"/>
 
-        <EditText
-            android:id="@+id/etProductDescription"
-            style="@style/ProfileEditTextTheme"
-            android:inputType="textMultiLine" />
 
-        <TextView
-            style="@style/ProfileTextTitleTheme"
-            android:text="@string/product_details_location" />
+                <android.support.design.widget.TabLayout
+                    android:id="@+id/dots"
+                    android:layout_width="wrap_content"
+                    android:layout_height="20dp"
+                    app:tabBackground="@drawable/dot_selector"
+                    app:tabGravity="center"
+                    app:tabIndicatorHeight="0dp"
+                    app:tabPaddingEnd="10dp"
+                    app:tabPaddingStart="10dp" />
 
-        <EditText
-            android:id="@+id/etProductLocation"
-            style="@style/ProfileEditTextSingleLine"
-            android:inputType="textAutoCorrect" />
+            </LinearLayout>
 
-        <TextView
-            style="@style/ProfileTextTitleTheme"
-            android:text="@string/product_details_expiration" />
+            <TextView
+                style="@style/ProfileTextTitleTheme"
+                android:text="@string/product_details_name" />
 
-        <EditText
-            android:id="@+id/tvProductExpiration"
-            style="@style/ProfileEditTextSingleLine"
-            android:inputType="date" />
-    </LinearLayout>
+            <TextView
+                android:id="@+id/tv_preview_product_name"
+                style="@style/ProfileEditTextSingleLine" />
+
+            <TextView
+                style="@style/ProfileTextTitleTheme"
+                android:text="@string/product_details_description" />
+
+            <TextView
+                android:id="@+id/tv_preview_product_description"
+                style="@style/ProfileEditTextTheme" />
+
+            <TextView
+                style="@style/ProfileTextTitleTheme"
+                android:text="@string/product_details_location" />
+
+            <TextView
+                android:id="@+id/tv_preview_product_location"
+                style="@style/ProfileEditTextSingleLine" />
+
+            <TextView
+                style="@style/ProfileTextTitleTheme"
+                android:text="@string/product_details_expiration" />
+
+            <TextView
+                android:id="@+id/tv_preview_product_expiration"
+                style="@style/ProfileEditTextSingleLine" />
+
+            <TextView
+                style="@style/ProfileTextTitleTheme"
+                android:text="@string/product_details_category" />
+
+            <TextView
+                android:id="@+id/tv_preview_product_category"
+                style="@style/ProfileEditTextSingleLine" />
+
+            <TextView
+                style="@style/ProfileTextTitleTheme"
+                android:text="@string/product_details_price_per_unit" />
+
+            <TextView
+                android:id="@+id/tv_preview_product_price"
+                style="@style/ProfileEditTextSingleLine" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:baselineAligned="false">
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/ProfileTextTitleTheme"
+                        android:text="@string/product_details_quantity" />
+
+                    <TextView
+                        android:id="@+id/tv_preview_product_quantity"
+                        style="@style/ProfileEditTextSingleLine" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/ProfileTextTitleTheme"
+                        android:text="@string/product_details_si_unit" />
+
+                    <TextView
+                        android:id="@+id/tv_preview_product_units"
+                        style="@style/ProfileEditTextSingleLine" />
+                </LinearLayout>
+            </LinearLayout>
+        </LinearLayout>
+    </android.support.v4.widget.NestedScrollView>
 </LinearLayout>
