@@ -12,6 +12,7 @@
     <color name="material_drawer_selected_text">#536EEA</color>
     <color name="material_drawer_dark_selected_text">#536EEA</color>
 
-    <color name="gray_background">#CCCCCC</color>
+    <color name="gray_background">#E6E6E6</color>
+    <color name="gray_product_bar">#F5F5F5</color>
     <color name="profile_text_colour">#212121</color>
 </resources>

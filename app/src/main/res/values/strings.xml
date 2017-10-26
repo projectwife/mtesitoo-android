@@ -82,7 +82,7 @@
 
     <string name="action_preview">Preview</string>
     <string name="action_next">Next</string>
-    <string name="action_prev">Previous</string>
+    <string name="action_prev">Back</string>
     <string name="action_submit">Submit</string>
 
     <string name="product_details_name">Product Name</string>

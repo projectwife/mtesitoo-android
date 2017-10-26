@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,6 +8,7 @@
     tools:context="com.mtesitoo.AddProductActivity">
 
     <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:theme="@style/AppTheme.AppBarOverlay">
@@ -21,54 +22,48 @@
 
     </android.support.design.widget.AppBarLayout>
 
+    <android.support.v4.view.ViewPager
+        android:id="@+id/pager"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/new_product_page_height"
+        android:layout_below="@+id/app_bar_layout"
+        android:layout_marginTop="@dimen/new_product_page_top_margin" />
+
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/new_product_page_top_margin"
-        android:orientation="vertical">
+        android:layout_height="@dimen/new_product_page_bottom_bar_height"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray_product_bar">
 
-        <android.support.v4.view.ViewPager
-            android:id="@+id/pager"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+        <TextView
+            android:id="@+id/controls_previous"
+            style="@style/AddProductToolbarTheme"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:drawableLeft="@drawable/ic_arrow_back"
+            android:drawableStart="@drawable/ic_arrow_back"
+            android:text="@string/action_prev"
+            android:visibility="gone" />
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:orientation="horizontal">
+        <android.support.design.widget.TabLayout
+            android:id="@+id/dots"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            app:tabBackground="@drawable/dot_selector"
+            app:tabGravity="center"
+            app:tabIndicatorHeight="0dp"
+            app:tabPaddingEnd="10dp"
+            app:tabPaddingStart="10dp" />
 
-            <Button
-                android:id="@+id/controls_previous"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentStart="true"
-                android:text="@string/action_prev"
-                android:visibility="gone" />
-
-            <android.support.design.widget.TabLayout
-                android:id="@+id/dots"
-                android:layout_width="wrap_content"
-                android:layout_height="26dp"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                app:tabBackground="@drawable/dot_selector"
-                app:tabGravity="center"
-                app:tabIndicatorHeight="0dp"
-                app:tabPaddingEnd="10dp"
-                app:tabPaddingStart="10dp" />
-
-            <Button
-                android:id="@+id/controls_forward"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentEnd="true"
-                android:layout_alignParentRight="true"
-                android:text="@string/action_next" />
-        </RelativeLayout>
-
+        <TextView
+            android:id="@+id/controls_forward"
+            style="@style/AddProductToolbarTheme"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:drawableEnd="@drawable/ic_arrow_next"
+            android:drawableRight="@drawable/ic_arrow_next"
+            android:text="@string/action_next" />
     </RelativeLayout>
-
-
-</android.support.design.widget.CoordinatorLayout>
+</RelativeLayout>

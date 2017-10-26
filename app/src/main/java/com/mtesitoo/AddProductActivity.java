@@ -8,7 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.TextView;
 
 import com.mtesitoo.adapter.AddProductPagerAdapter;
 import com.mtesitoo.helper.AddProductHelper;
@@ -31,10 +31,10 @@ public class AddProductActivity extends AppCompatActivity {
     TabLayout pagerIndicator;
 
     @BindView(R.id.controls_previous)
-    Button prevButton;
+    TextView prevButton;
 
     @BindView(R.id.controls_forward)
-    Button nextButton;
+    TextView nextButton;
 
     AddProductPagerAdapter pagerAdapter;
 

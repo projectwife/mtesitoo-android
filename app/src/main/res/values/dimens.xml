@@ -22,8 +22,9 @@
     <dimen name="profile_spinner_text_size">17sp</dimen>
 
     <dimen name="new_product_page_height">325dp</dimen>
+    <dimen name="new_product_page_bottom_bar_height">60dp</dimen>
     <dimen name="new_product_page_padding">16dp</dimen>
-    <dimen name="new_product_page_top_margin">70dp</dimen>
+    <dimen name="new_product_page_top_margin">10dp</dimen>
     <dimen name="new_product_page_input_mini_width">40dp</dimen>
     <dimen name="new_product_page_button_dimens">40dp</dimen>
     <dimen name="new_product_page_picture_size">105dp</dimen>
