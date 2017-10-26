@@ -113,6 +113,10 @@ public class AddProductPreviewFragment extends Fragment {
 
         productPicturesViewPager.setAdapter(new AddProductPreviewAdapter(getContext(),
                 AddProductHelper.getInstance().getProductPictureListData()));
+
+        productPicturesViewPager.setPageMargin(getContext().getResources()
+                .getDimensionPixelOffset(R.dimen.new_product_page_preview_spacing));
+
         pagerIndicator.setupWithViewPager(productPicturesViewPager);
     }
 }

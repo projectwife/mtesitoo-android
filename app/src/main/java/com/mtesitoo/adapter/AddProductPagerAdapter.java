@@ -6,7 +6,6 @@ import android.support.v4.app.FragmentStatePagerAdapter;
 
 import com.mtesitoo.fragment.AddProductDetailsFragment;
 import com.mtesitoo.fragment.AddProductPictureFragment;
-import com.mtesitoo.fragment.AddProductPreviewFragment;
 import com.mtesitoo.fragment.AddProductQuantityFragment;
 
 /**
@@ -28,17 +27,14 @@ public class AddProductPagerAdapter extends FragmentStatePagerAdapter {
                 return new AddProductQuantityFragment();
             case 2:
                 return new AddProductPictureFragment();
-            case 3:
-                return new AddProductPreviewFragment();
             default:
                 return new AddProductDetailsFragment();
         }
-
     }
 
     @Override
     public int getCount() {
-        return 4;
+        return 3;
     }
 }
 

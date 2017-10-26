@@ -30,4 +30,5 @@
     <dimen name="new_product_page_picture_size">105dp</dimen>
     <dimen name="new_product_page_picture_margin">5dp</dimen>
     <dimen name="new_product_page_plus_size">50sp</dimen>
+    <dimen name="new_product_page_preview_spacing">5dp</dimen>
 </resources>

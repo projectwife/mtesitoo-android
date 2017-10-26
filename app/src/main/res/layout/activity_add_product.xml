@@ -29,6 +29,14 @@
         android:layout_below="@+id/app_bar_layout"
         android:layout_marginTop="@dimen/new_product_page_top_margin" />
 
+    <FrameLayout
+        android:id="@+id/add_product_preview_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/app_bar_layout"
+        android:layout_marginBottom="@dimen/new_product_page_bottom_bar_height"
+        android:layout_marginTop="@dimen/new_product_page_top_margin" />
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/new_product_page_bottom_bar_height"
@@ -51,6 +59,7 @@
             android:layout_height="26dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:animateLayoutChanges="true"
             app:tabBackground="@drawable/dot_selector"
             app:tabGravity="center"
             app:tabIndicatorHeight="0dp"

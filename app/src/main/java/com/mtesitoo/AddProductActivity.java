@@ -9,8 +9,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mtesitoo.adapter.AddProductPagerAdapter;
+import com.mtesitoo.fragment.AddProductPreviewFragment;
 import com.mtesitoo.helper.AddProductHelper;
 
 import butterknife.BindView;
@@ -21,6 +23,7 @@ import static com.mtesitoo.R.id.dots;
 
 public class AddProductActivity extends AppCompatActivity {
 
+    private static final String PREVIEW_FRAGMENT_TAG = "PREVIEW_FRAGMENT";
     @BindView(R.id.toolbar)
     Toolbar toolbar;
 
@@ -37,6 +40,8 @@ public class AddProductActivity extends AppCompatActivity {
     TextView nextButton;
 
     AddProductPagerAdapter pagerAdapter;
+
+    boolean isPreviewShown = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,15 +72,11 @@ public class AddProductActivity extends AppCompatActivity {
 
                 prevButton.setVisibility(View.VISIBLE);
 
-                if (position == pagerAdapter.getCount() - 2) {
+                if (position == pagerAdapter.getCount() - 1) {
                     nextButton.setText(getString(R.string.action_preview));
                     return;
                 }
 
-                if (position == pagerAdapter.getCount() - 1) {
-                    nextButton.setText(getString(R.string.action_submit));
-                    return;
-                }
                 nextButton.setText(getString(R.string.action_next));
             }
 
@@ -111,11 +112,39 @@ public class AddProductActivity extends AppCompatActivity {
 
     @OnClick(R.id.controls_previous)
     void goBack() {
+        if (isPreviewShown) {
+            isPreviewShown = false;
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.enter_right_corner, R.anim.exit_right)
+                    .remove(getSupportFragmentManager().findFragmentByTag(PREVIEW_FRAGMENT_TAG)).commit();
+            nextButton.setText(getString(R.string.action_preview));
+            pagerIndicator.setVisibility(View.VISIBLE);
+            return;
+        }
         viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
     }
 
     @OnClick(R.id.controls_forward)
     void goForward() {
-        viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
+        if (viewPager.getCurrentItem() < pagerAdapter.getCount() - 1) {
+            viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
+            return;
+        }
+
+        if (!isPreviewShown) {
+            isPreviewShown = true;
+            pagerIndicator.setVisibility(View.INVISIBLE);
+            getSupportFragmentManager().beginTransaction()
+                    .setCustomAnimations(R.anim.enter_right_corner, R.anim.exit_right)
+                    .add(R.id.add_product_preview_fragment, new AddProductPreviewFragment(), PREVIEW_FRAGMENT_TAG).commit();
+            nextButton.setText(getString(R.string.action_submit));
+            return;
+        }
+
+        submitNewProduct();
+    }
+
+    private void submitNewProduct() {
+        Toast.makeText(this, "Submitting new product", Toast.LENGTH_SHORT).show();
     }
 }
