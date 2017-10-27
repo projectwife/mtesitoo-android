@@ -104,7 +104,9 @@ public class AddProductQuantityFragment extends Fragment {
             categoryNames.add(categories.get(i).getName());
         }
         categoryNames.add(0, getString(R.string.product_details_select));
-        productCategorySpinner.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, categoryNames));
+        ArrayAdapter<String> categoryAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, categoryNames);
+        categoryAdapter.setDropDownViewResource(R.layout.item_spinner);
+        productCategorySpinner.setAdapter(categoryAdapter);
 
         if (h.get(Constants.PRODUCT_CATEGORY_KEY) != -1) {
             for (int i = 0; i < categories.size(); i++) {
@@ -123,7 +125,9 @@ public class AddProductQuantityFragment extends Fragment {
             unitNames.add(units.get(i).getName());
         }
         unitNames.add(0, getString(R.string.product_details_select));
-        productUnitsSpinner.setAdapter(new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, unitNames));
+        ArrayAdapter<String> unitsAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, unitNames);
+        unitsAdapter.setDropDownViewResource(R.layout.item_spinner);
+        productUnitsSpinner.setAdapter(unitsAdapter);
 
         if (h.get(Constants.PRODUCT_UNITS_KEY) != -1) {
             for (int i = 0; i < units.size(); i++) {
