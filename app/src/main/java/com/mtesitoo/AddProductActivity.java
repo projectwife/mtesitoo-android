@@ -90,16 +90,12 @@ public class AddProductActivity extends AppCompatActivity {
                 if (position == pagerAdapter.getCount() - 1) {
                     nextButton.setText(getString(R.string.action_preview));
                     nextButton.setCompoundDrawables(null, null, null, null);
-                    nextButton.setPadding(0, 0,
-                            getResources().getDimensionPixelOffset(R.dimen.new_product_page_bottom_bar_padding), 0);
                     return;
                 }
                 nextButton.setText(getString(R.string.action_next));
 
                 nextButton.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.ic_arrow_next),
                         null);
-
-                nextButton.setPadding(0, 0, 0, 0);
             }
 
             @Override

@@ -40,9 +40,12 @@
             style="@style/AddProductToolbarTheme"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
             android:drawableLeft="@drawable/ic_arrow_back"
             android:drawableStart="@drawable/ic_arrow_back"
+            android:padding="@dimen/new_product_page_bottom_bar_padding"
             android:text="@string/action_prev"
+            android:textColor="@drawable/tv_link_selector"
             android:visibility="gone" />
 
         <android.support.design.widget.TabLayout
@@ -63,10 +66,13 @@
             style="@style/AddProductToolbarTheme"
             android:layout_alignParentEnd="true"
             android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
             android:animateLayoutChanges="true"
             android:drawableEnd="@drawable/ic_arrow_next"
             android:drawableRight="@drawable/ic_arrow_next"
-            android:text="@string/action_next" />
+            android:padding="@dimen/new_product_page_bottom_bar_padding_right"
+            android:text="@string/action_next"
+            android:textColor="@drawable/tv_link_selector" />
 
         <ProgressBar
             android:id="@+id/controls_progress"
