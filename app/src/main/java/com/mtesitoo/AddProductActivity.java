@@ -65,6 +65,7 @@ public class AddProductActivity extends AppCompatActivity {
 
             @Override
             public void onPageSelected(int position) {
+
                 if (position == 0) {
                     prevButton.setVisibility(View.GONE);
                     return;
@@ -74,10 +75,17 @@ public class AddProductActivity extends AppCompatActivity {
 
                 if (position == pagerAdapter.getCount() - 1) {
                     nextButton.setText(getString(R.string.action_preview));
+                    nextButton.setCompoundDrawables(null, null, null, null);
+                    nextButton.setPadding(0, 0,
+                            getResources().getDimensionPixelOffset(R.dimen.new_product_page_bottom_bar_padding), 0);
                     return;
                 }
-
                 nextButton.setText(getString(R.string.action_next));
+
+                nextButton.setCompoundDrawablesWithIntrinsicBounds(null, null, getResources().getDrawable(R.drawable.ic_arrow_next),
+                        null);
+
+                nextButton.setPadding(0, 0, 0, 0);
             }
 
             @Override
@@ -118,6 +126,7 @@ public class AddProductActivity extends AppCompatActivity {
                     .setCustomAnimations(R.anim.enter_right_corner, R.anim.exit_right)
                     .remove(getSupportFragmentManager().findFragmentByTag(PREVIEW_FRAGMENT_TAG)).commit();
             nextButton.setText(getString(R.string.action_preview));
+
             pagerIndicator.setVisibility(View.VISIBLE);
             return;
         }
@@ -137,6 +146,7 @@ public class AddProductActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .setCustomAnimations(R.anim.enter_right_corner, R.anim.exit_right)
                     .add(R.id.add_product_preview_fragment, new AddProductPreviewFragment(), PREVIEW_FRAGMENT_TAG).commit();
+
             nextButton.setText(getString(R.string.action_submit));
             return;
         }
