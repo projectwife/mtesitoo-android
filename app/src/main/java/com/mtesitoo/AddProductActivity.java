@@ -1,5 +1,6 @@
 package com.mtesitoo;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
@@ -11,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -46,9 +48,14 @@ public class AddProductActivity extends AppCompatActivity {
     @BindView(R.id.controls_forward)
     TextView nextButton;
 
+    @BindView(R.id.controls_progress)
+    ProgressBar progressBar;
+
     AddProductPagerAdapter pagerAdapter;
 
     boolean isPreviewShown = false;
+
+    boolean loading = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +113,9 @@ public class AddProductActivity extends AppCompatActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.menu_add_product, menu);
+
+        menu.findItem(R.id.action_cancel).setEnabled(!loading);
+
         return super.onCreateOptionsMenu(menu);
     }
 
@@ -121,6 +131,7 @@ public class AddProductActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
+        if (loading) return;
         super.onBackPressed();
         AddProductHelper.getInstance().clearFields();
     }
@@ -130,7 +141,7 @@ public class AddProductActivity extends AppCompatActivity {
         if (isPreviewShown) {
             isPreviewShown = false;
             getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.enter_right_corner, R.anim.exit_right)
+                    .setCustomAnimations(R.anim.enter_bottom, R.anim.exit_right)
                     .remove(getSupportFragmentManager().findFragmentByTag(PREVIEW_FRAGMENT_TAG)).commit();
             nextButton.setText(getString(R.string.action_preview));
 
@@ -151,7 +162,7 @@ public class AddProductActivity extends AppCompatActivity {
             isPreviewShown = true;
             pagerIndicator.setVisibility(View.INVISIBLE);
             getSupportFragmentManager().beginTransaction()
-                    .setCustomAnimations(R.anim.enter_right_corner, R.anim.exit_right)
+                    .setCustomAnimations(R.anim.enter_bottom, R.anim.exit_right)
                     .add(R.id.add_product_preview_fragment, new AddProductPreviewFragment(), PREVIEW_FRAGMENT_TAG).commit();
 
             nextButton.setText(getString(R.string.action_submit));
@@ -163,10 +174,13 @@ public class AddProductActivity extends AppCompatActivity {
 
     private void submitNewProduct() {
 
+        setBottombarLoading(true);
+
         final Product product = AddProductHelper.getInstance().getProduct();
 
         if (!product.isCompleted()) {
             Toast.makeText(this, getString(R.string.product_add_incomplete_product), Toast.LENGTH_LONG).show();
+            setBottombarLoading(false);
             return;
         }
         Toast.makeText(this, "Submitting new product", Toast.LENGTH_SHORT).show();
@@ -202,9 +216,25 @@ public class AddProductActivity extends AppCompatActivity {
 
             @Override
             public void onError(Exception e) {
+                setBottombarLoading(false);
                 Log.e("product add error", e.toString());
                 Toast.makeText(AddProductActivity.this, getString(R.string.product_add_error), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    @SuppressLint("RestrictedApi")
+    private void setBottombarLoading(boolean loading) {
+        prevButton.setEnabled(!loading);
+        nextButton.setEnabled(!loading);
+        this.loading = loading;
+        invalidateOptionsMenu();
+        if (loading) {
+            nextButton.setVisibility(View.INVISIBLE);
+            progressBar.setVisibility(View.VISIBLE);
+        } else {
+            progressBar.setVisibility(View.INVISIBLE);
+            nextButton.setVisibility(View.VISIBLE);
+        }
     }
 }
