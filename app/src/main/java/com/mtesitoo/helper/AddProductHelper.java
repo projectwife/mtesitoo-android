@@ -128,6 +128,19 @@ public class AddProductHelper {
     }
 
     public Product getProduct() {
-        return null;
+        List<Uri> auxImages = null;
+        Uri mainPicture = null;
+        if (productPictures.size() > 0) {
+            mainPicture = productPictures.get(0);
+            if (productPictures.size() > 1) {
+                auxImages = productPictures.subList(1, productPictures.size());
+            }
+        }
+
+        return new Product(0, productName, productDescription, productLocation, String.valueOf(productCategory),
+                String.valueOf(productUnits), String.valueOf(productPricePerUnit),
+                ProductPriceHelper.getDisplayPrice(ProductPriceHelper.getDefaultCurrencyCode(), String.valueOf(productPricePerUnit)),
+                ProductPriceHelper.getDefaultCurrencyCode(),
+                productQuantity, DateHelper.parseDate(productExpirationDate), mainPicture, auxImages, 5, 0, 0);
     }
 }

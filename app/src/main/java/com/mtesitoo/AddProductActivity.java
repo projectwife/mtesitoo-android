@@ -1,10 +1,13 @@
 package com.mtesitoo;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -12,6 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mtesitoo.adapter.AddProductPagerAdapter;
+import com.mtesitoo.backend.model.Product;
+import com.mtesitoo.backend.service.ProductRequest;
+import com.mtesitoo.backend.service.logic.ICallback;
+import com.mtesitoo.backend.service.logic.IProductRequest;
 import com.mtesitoo.fragment.AddProductPreviewFragment;
 import com.mtesitoo.helper.AddProductHelper;
 
@@ -156,5 +163,48 @@ public class AddProductActivity extends AppCompatActivity {
 
     private void submitNewProduct() {
         Toast.makeText(this, "Submitting new product", Toast.LENGTH_SHORT).show();
+
+        final Product product = AddProductHelper.getInstance().getProduct();
+
+        if (!product.isCompleted()) {
+            Toast.makeText(this, "Please provide missing product details", Toast.LENGTH_LONG).show();
+            return;
+        }
+
+        IProductRequest productService = new ProductRequest(this);
+        productService.submitProduct(product, new ICallback<String>() {
+            @Override
+            public void onResult(String result) {
+                IProductRequest productService = new ProductRequest(getApplicationContext());
+                productService.submitProductThumbnail(Integer.parseInt(result), product.getmThumbnail(), new ICallback<String>() {
+                    @Override
+                    public void onResult(String result) {
+                        Log.d("image thumb upload", "Success");
+                        Toast.makeText(getApplicationContext(), "Product thumbnail uploaded.", Toast.LENGTH_LONG).show();
+//                        finish(); // finish will be called in the onResult for submitProduct. Shouldn't be called multiple times.
+
+                        Intent intent = new Intent("submit_product_thumbnail");
+                        intent.putExtra("result", result);
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("image thumb upload err", e.toString());
+                        Toast.makeText(getApplicationContext(), "Error occurred while uploading Product thumbnail.", Toast.LENGTH_LONG).show();
+                        finish();
+                    }
+                });
+
+                Toast.makeText(getApplicationContext(), "New Product Added.", Toast.LENGTH_LONG).show();
+                finish();
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e("product add error", e.toString());
+                finish();
+            }
+        });
     }
 }
