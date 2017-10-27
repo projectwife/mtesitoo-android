@@ -103,4 +103,9 @@
     <string name="product_details_photo_message_action_remove">Remove picture</string>
     <string name="product_details_photo_message_action_cancel">Cancel</string>
 
+    <string name="product_add_submitting">Submitting new product</string>
+    <string name="product_add_incomplete_product">Please provide missing product details</string>
+    <string name="product_add_error">Error submitting product. Please try again</string>
+    <string name="product_add_done">New Product Added</string>
+
 </resources>

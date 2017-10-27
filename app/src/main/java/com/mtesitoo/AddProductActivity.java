@@ -162,14 +162,14 @@ public class AddProductActivity extends AppCompatActivity {
     }
 
     private void submitNewProduct() {
-        Toast.makeText(this, "Submitting new product", Toast.LENGTH_SHORT).show();
 
         final Product product = AddProductHelper.getInstance().getProduct();
 
         if (!product.isCompleted()) {
-            Toast.makeText(this, "Please provide missing product details", Toast.LENGTH_LONG).show();
+            Toast.makeText(this, getString(R.string.product_add_incomplete_product), Toast.LENGTH_LONG).show();
             return;
         }
+        Toast.makeText(this, "Submitting new product", Toast.LENGTH_SHORT).show();
 
         IProductRequest productService = new ProductRequest(this);
         productService.submitProduct(product, new ICallback<String>() {
@@ -192,18 +192,18 @@ public class AddProductActivity extends AppCompatActivity {
                     public void onError(Exception e) {
                         Log.e("image thumb upload err", e.toString());
                         Toast.makeText(getApplicationContext(), "Error occurred while uploading Product thumbnail.", Toast.LENGTH_LONG).show();
-                        finish();
                     }
                 });
 
-                Toast.makeText(getApplicationContext(), "New Product Added.", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), getString(R.string.product_add_done), Toast.LENGTH_LONG).show();
+                AddProductHelper.getInstance().clearFields();
                 finish();
             }
 
             @Override
             public void onError(Exception e) {
                 Log.e("product add error", e.toString());
-                finish();
+                Toast.makeText(AddProductActivity.this, getString(R.string.product_add_error), Toast.LENGTH_SHORT).show();
             }
         });
     }
