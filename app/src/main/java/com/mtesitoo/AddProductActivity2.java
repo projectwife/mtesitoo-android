@@ -363,7 +363,7 @@ public class AddProductActivity2 extends AppCompatActivity {
             @Override
             public void onResult(String result) {
                 IProductRequest productService = new ProductRequest(AddProductActivity2.this);
-                productService.submitProductThumbnail(Integer.parseInt(result), product.getmThumbnail(), new ICallback<String>() {
+                productService.submitProductPicture(Integer.parseInt(result), product.getmThumbnail(), true, new ICallback<String>() {
                     @Override
                     public void onResult(String result) {
                         Log.d("image thumb upload","Success");

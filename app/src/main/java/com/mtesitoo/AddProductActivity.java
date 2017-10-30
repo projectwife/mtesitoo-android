@@ -2,6 +2,7 @@ package com.mtesitoo;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.content.LocalBroadcastManager;
@@ -185,25 +186,13 @@ public class AddProductActivity extends AppCompatActivity {
         productService.submitProduct(product, new ICallback<String>() {
             @Override
             public void onResult(String result) {
-                IProductRequest productService = new ProductRequest(getApplicationContext());
-                productService.submitProductThumbnail(Integer.parseInt(result), product.getmThumbnail(), new ICallback<String>() {
-                    @Override
-                    public void onResult(String result) {
-                        Log.d("image thumb upload", "Success");
-                        Toast.makeText(getApplicationContext(), "Product thumbnail uploaded.", Toast.LENGTH_LONG).show();
-//                        finish(); // finish will be called in the onResult for submitProduct. Shouldn't be called multiple times.
+                submitProductPicture(Integer.parseInt(result), product.getmThumbnail(), true);
 
-                        Intent intent = new Intent("submit_product_thumbnail");
-                        intent.putExtra("result", result);
-                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+                if (product.getAuxImages().size() > 0) {
+                    for (Uri auxImage : product.getAuxImages()) {
+                        submitProductPicture(Integer.parseInt(result), auxImage, false);
                     }
-
-                    @Override
-                    public void onError(Exception e) {
-                        Log.e("image thumb upload err", e.toString());
-                        Toast.makeText(getApplicationContext(), "Error occurred while uploading Product thumbnail.", Toast.LENGTH_LONG).show();
-                    }
-                });
+                }
 
                 Toast.makeText(getApplicationContext(), getString(R.string.product_add_done), Toast.LENGTH_LONG).show();
                 AddProductHelper.getInstance().clearFields();
@@ -215,6 +204,26 @@ public class AddProductActivity extends AppCompatActivity {
                 setBottombarLoading(false);
                 Log.e("product add error", e.toString());
                 Toast.makeText(AddProductActivity.this, getString(R.string.product_add_error), Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void submitProductPicture(int productId, Uri productPicture, boolean isMainPicture) {
+        IProductRequest productService = new ProductRequest(getApplicationContext());
+        productService.submitProductPicture(productId, productPicture, isMainPicture, new ICallback<String>() {
+            @Override
+            public void onResult(String result) {
+                Log.d("image thumb upload", "Success");
+
+                Intent intent = new Intent("submit_product_thumbnail");
+                intent.putExtra("result", result);
+                LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(intent);
+            }
+
+            @Override
+            public void onError(Exception e) {
+                Log.e("image thumb upload err", e.toString());
+                Toast.makeText(getApplicationContext(), "Error occurred while uploading Product thumbnail.", Toast.LENGTH_LONG).show();
             }
         });
     }

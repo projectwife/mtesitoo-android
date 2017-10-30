@@ -2,9 +2,9 @@ package com.mtesitoo.backend.service.logic;
 
 import android.net.Uri;
 
-import java.util.List;
-
 import com.mtesitoo.backend.model.Product;
+
+import java.util.List;
 
 /**
  * Request for retrieving products (e.g. specials, search, etc.)
@@ -19,9 +19,7 @@ public interface IProductRequest {
 
     void updateProduct(Product product, ICallback<String> callback);
 
-    void submitProductThumbnail(int productId, Uri thumbnail, ICallback<String> callback);
-
-    void submitProductImage(Product product, ICallback<String> callback);
+    void submitProductPicture(int productId, Uri thumbnail, boolean isMainPicture, ICallback<String> callback);
 
     void deleteProductImage(Product product, String fileName, ICallback<Product> callback);
 }

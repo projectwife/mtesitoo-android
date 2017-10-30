@@ -66,7 +66,7 @@ import static android.app.Activity.RESULT_OK;
 /**
  * Created by Nan on 12/31/2015.
  */
-public class ProductDetailEditFragment extends AbstractPermissionFragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener, View.OnClickListener{
+public class ProductDetailEditFragment extends AbstractPermissionFragment implements BaseSliderView.OnSliderClickListener, ViewPagerEx.OnPageChangeListener, View.OnClickListener {
     private final int MY_PERMISSIONS_REQUEST_READ_EXTERNAL_STORAGE = 1;
     static final int REQUEST_IMAGE_CAPTURE = 2;
     static final int REQUEST_LOAD_IMAGE = 3;
@@ -87,7 +87,7 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
     RelativeLayout mInfoBorder;
     @BindView(R.id.product_detail_price_border)
     RelativeLayout mPriceBorder;
-//    @Bind(R.id.product_detail_date_border)
+    //    @Bind(R.id.product_detail_date_border)
 //    RelativeLayout mDateBorder;
     @BindView(R.id.product_detail_name_edit)
     EditText mProductName;
@@ -186,9 +186,9 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
         int id = item.getItemId();
         Date expiryDate;
 
-        if (id == R.id.action_done_edit_product){
+        if (id == R.id.action_done_edit_product) {
             int catID = categoryButtonGroup.indexOfChild(getActivity().findViewById(categoryButtonGroup.getCheckedRadioButtonId()));
-            RadioButton cButton = ((RadioButton)categoryButtonGroup.getChildAt(catID));
+            RadioButton cButton = ((RadioButton) categoryButtonGroup.getChildAt(catID));
             String category = cButton != null ? cButton.getText().toString() : "Category";
             ICategoryCache cache = new CategoryCache(this.getActivity());
             List<Category> categories = cache.getCategories();
@@ -232,21 +232,21 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
             productService.updateProduct(updatedProduct, new ICallback<String>() {
                 @Override
                 public void onResult(String result) {
-                    Toast.makeText(getActivity(),"Product Updated Successfully",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Product Updated Successfully", Toast.LENGTH_SHORT).show();
                     ProductDetailFragment f = ProductDetailFragment.newInstance(getActivity(), updatedProduct);
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                 }
 
                 @Override
                 public void onError(Exception e) {
-                    Toast.makeText(getActivity(),"Error Updating Product",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Error Updating Product", Toast.LENGTH_SHORT).show();
                     ProductDetailFragment f = ProductDetailFragment.newInstance(getActivity(), mProduct);
                     getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
                 }
             });
 
             return true;
-        }else if(id == R.id.action_cancel_edit_product) {
+        } else if (id == R.id.action_cancel_edit_product) {
             ProductDetailFragment f = ProductDetailFragment.newInstance(getActivity(), mProduct);
             getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).commit();
             return true;
@@ -277,7 +277,7 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
         //refreshProduct();
         Uri thumbnail = mProduct.getmThumbnail();
 
-        if ((thumbnail!= null && !thumbnail.toString().isEmpty() &&
+        if ((thumbnail != null && !thumbnail.toString().isEmpty() &&
                 mProduct.getAuxImages().size() >= MAX_IMAGES) ||
                 mImageUris.size() >= 4) {
             Snackbar.make(getView(), "Can't upload more than 4 pictures. Pick your best pictures !", Snackbar.LENGTH_LONG).show();
@@ -406,7 +406,8 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
     }
 
     @Override
-    protected void onReady(Bundle state) {}
+    protected void onReady(Bundle state) {
+    }
 
 
     public void requestPhotoPermissions() {
@@ -421,7 +422,7 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
             //Don't have permissions at this point, so go ahead and request permissions
             Toast.makeText(getActivity(), R.string.msg_permission_sorry, Toast.LENGTH_LONG)
                     .show();
-            super.requestPermission(new String[] {Manifest.permission.READ_EXTERNAL_STORAGE});
+            super.requestPermission(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE});
         }
     }
 
@@ -433,12 +434,12 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
             if (grantResults.length > 0
                     && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 addImage();
-            }
-            else {
+            } else {
                 onPermissionDenied();
             }
         }
     }
+
     private void addImage() {
         if (REQUEST_IMAGE_TYPE == REQUEST_IMAGE_CAPTURE) {
             Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -448,7 +449,7 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
                 try {
                     image = new ImageFile(mActivity);
                 } catch (Exception e) {
-                    Log.d("IMAGE_CAPTURE","Issue creating image file");
+                    Log.d("IMAGE_CAPTURE", "Issue creating image file");
                 }
 
                 if (image != null) {
@@ -470,7 +471,7 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
     }
 
     private void deleteImage(final String imageUrl) {
-        final String imageFilename = imageUrl.substring(imageUrl.lastIndexOf('/')+1, imageUrl.length() );
+        final String imageFilename = imageUrl.substring(imageUrl.lastIndexOf('/') + 1, imageUrl.length());
 
         // Delete image request
         IProductRequest productService = new ProductRequest(ProductDetailEditFragment.this.getContext());
@@ -481,12 +482,12 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
                 mImageUris.remove(Uri.parse(imageUrl));
                 updateImageSlider();
                 refreshProduct(mProduct.getId());
-                Toast.makeText(getActivity(),"Deleted Image Successfully",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Deleted Image Successfully", Toast.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(Exception e) {
-                Toast.makeText(getActivity(),"Error Deleting Image",Toast.LENGTH_SHORT).show();
+                Toast.makeText(getActivity(), "Error Deleting Image", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -514,8 +515,8 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
             submitProductImage(currentImage.getUri());
         } else if (requestCode == REQUEST_LOAD_IMAGE && resultCode == RESULT_OK && null != data) {
             Uri selectedImageUri = data.getData();
-            String[] filePathColumn = { MediaStore.Images.Media.DATA };
-            Cursor cursor = mActivity.getContentResolver().query(selectedImageUri,filePathColumn, null, null, null);
+            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+            Cursor cursor = mActivity.getContentResolver().query(selectedImageUri, filePathColumn, null, null, null);
             cursor.moveToFirst();
             int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
             String picturePath = cursor.getString(columnIndex);
@@ -532,7 +533,7 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
             }
             submitProductImage(selectedImageUri);
         } else {
-                Snackbar.make(getView(), "Failed to load picture. Try again !", Snackbar.LENGTH_LONG).show();
+            Snackbar.make(getView(), "Failed to load picture. Try again !", Snackbar.LENGTH_LONG).show();
         }
     }
 
@@ -556,7 +557,7 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
             //mImageSlider.setCurrentPosition(0);
 
             IProductRequest productService = new ProductRequest(this.getContext());
-            productService.submitProductImage(mProduct, new ICallback<String>() {
+            productService.submitProductPicture(mProduct.getId(), mProduct.getLastImage(), false, new ICallback<String>() {
                 @Override
                 public void onResult(String result) {
                     Toast.makeText(getContext(), "Product Image Uploaded Successfully", Toast.LENGTH_SHORT).show();
@@ -579,23 +580,23 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
         mProduct.setThumbnail(imageUri);
 
         IProductRequest productService = new ProductRequest(this.getContext());
-        productService.submitProductThumbnail(mProduct.getId(), mProduct.getmThumbnail(), new ICallback<String>() {
+        productService.submitProductPicture(mProduct.getId(), mProduct.getmThumbnail(), true, new ICallback<String>() {
             @Override
             public void onResult(String result) {
-                Log.d("image thumb upload","Success");
+                Log.d("image thumb upload", "Success");
                 Toast.makeText(getContext(), "Product thumbnail uploaded.", Toast.LENGTH_LONG).show();
                 refreshProduct(mProduct.getId());
             }
 
             @Override
             public void onError(Exception e) {
-                Log.e("image thumb upload err",e.toString());
+                Log.e("image thumb upload err", e.toString());
                 Toast.makeText(getContext(), "Error occurred while uploading Product thumbnail.", Toast.LENGTH_LONG).show();
             }
         });
     }
 
-    public ImageFile getCurrentImage(){
+    public ImageFile getCurrentImage() {
         return currentImage;
     }
 
@@ -612,7 +613,7 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
             categoryButton.setText(name);
             categoryButtonGroup.addView(categoryButton);
 
-            for(String catString : mProduct.getResolvedCategories(getContext())){
+            for (String catString : mProduct.getResolvedCategories(getContext())) {
                 if (catString.equalsIgnoreCase(name)) {
                     categoryButtonGroup.check(i);
                     break;
@@ -629,7 +630,7 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
             mImageUris.add(thumbnail);
         }
 
-        for(Uri image : mProduct.getAuxImages()){
+        for (Uri image : mProduct.getAuxImages()) {
             mImageUris.add(image);
         }
 
@@ -642,7 +643,7 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
         for (Uri uri : mImageUris) {
             String url = uri.toString();
             url = url.trim();
-            if(!url.isEmpty()){
+            if (!url.isEmpty()) {
                 DefaultSliderView sliderView = new DefaultSliderView(getActivity());
                 sliderView
                         .image(url)
@@ -703,7 +704,7 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
         //mDateBorder.setPadding(padding, padding / 2, padding, padding);
     }
 
-    public void onClick(View view){
+    public void onClick(View view) {
 
         if (view == mProductExpiration) {
             DatePickerDialogFragment datePickerDialog = new DatePickerDialogFragment();
@@ -726,7 +727,7 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
                 public void onDateSet(DatePicker view, int year, int month,
                                       int day) {
 
-                    mProductExpiration.setText(String.valueOf(year) + "-" + String.valueOf(month+1)
+                    mProductExpiration.setText(String.valueOf(year) + "-" + String.valueOf(month + 1)
                             + "-" + String.valueOf(day));
                 }
             };

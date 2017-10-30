@@ -10,7 +10,6 @@ import android.widget.Toast;
 import com.android.volley.AuthFailureError;
 import com.mtesitoo.backend.MultipartRequest;
 import com.mtesitoo.backend.R;
-import com.mtesitoo.backend.helper.ContentUriHelper;
 import com.mtesitoo.backend.model.AuthorizedStringRequest;
 import com.mtesitoo.backend.model.Product;
 import com.mtesitoo.backend.model.URL;
@@ -41,9 +40,9 @@ public class ProductRequest extends Request implements IProductRequest {
 
     @Override
     public void getProducts(final int sellerId, final ICallback<List<Product>> callback) {
-        Log.d("getProducts - SellerId",String.valueOf(sellerId));
+        Log.d("getProducts - SellerId", String.valueOf(sellerId));
         URL url = new VendorProductsURL(mContext, R.string.path_vendor_products);
-        Log.d("Vendor Products URL",url.toString());
+        Log.d("Vendor Products URL", url.toString());
         ProductResponse response = new ProductResponse(callback);
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.GET, url.toString(), response, response);
         stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
@@ -52,9 +51,9 @@ public class ProductRequest extends Request implements IProductRequest {
 
     @Override
     public void getProduct(int id, ICallback<Product> callback) {
-        Log.d("getProducts - ProductId",String.valueOf(id));
+        Log.d("getProducts - ProductId", String.valueOf(id));
         URL url = new ProductURL(mContext, R.string.path_product_product, id);
-        Log.d("Product URL",url.toString());
+        Log.d("Product URL", url.toString());
         ProductDetailResponse response = new ProductDetailResponse(callback);
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.GET, url.toString(), response, response);
         stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
@@ -63,23 +62,17 @@ public class ProductRequest extends Request implements IProductRequest {
 
     @Override
     public void submitProduct(final Product product, final ICallback<String> callback) {
-        Log.d("Product",product.toString());
+        Log.d("Product", product.toString());
         URL url = new URL(mContext, R.string.path_product_product);
-        Log.d("Submit Product URL",url.toString());
+        Log.d("Submit Product URL", url.toString());
         ProductThumbnailResponse response = new ProductThumbnailResponse(callback);
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString(), response, response) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put(mContext.getString(R.string.params_product_name), product.getName());
-                params.put(mContext.getString(R.string.params_product_description), product.getDescription());
-                params.put(mContext.getString(R.string.params_product_price), product.getPricePerUnit());
-                params.put(mContext.getString(R.string.params_product_quantity), Integer.toString(product.getQuantity()));
-                params.put(mContext.getString(R.string.params_product_category_ids), product.getCategoriesIDStringList());
-                params.put(mContext.getString(R.string.params_product_meta_title), "meta_title");
                 params.put(mContext.getString(R.string.params_product_status), mContext.getString(R.string.params_product_status_enabled));
-
-                return params;
+                params.put(mContext.getString(R.string.params_product_meta_title), "meta_title");
+                return includeProductFields(params, product);
             }
         };
 
@@ -89,25 +82,16 @@ public class ProductRequest extends Request implements IProductRequest {
 
     @Override
     public void updateProduct(final Product product, ICallback<String> callback) {
-        Log.d("Product",product.toString());
+        Log.d("Product", product.toString());
         URL url = new URL(mContext, R.string.path_product_product);
-        Log.d("Update Product URL",url.toString());
+        Log.d("Update Product URL", url.toString());
         ProductUpdateResponse response = new ProductUpdateResponse(callback);
-        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString()+ "/" +product.getId(), response, response) {
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.POST, url.toString() + "/" + product.getId(), response, response) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
-                params.put(mContext.getString(R.string.params_product_name), product.getName());
-                params.put(mContext.getString(R.string.params_product_description), product.getDescription());
-                params.put(mContext.getString(R.string.params_product_price), product.getPricePerUnit());
-                params.put(mContext.getString(R.string.params_product_quantity), Integer.toString(product.getQuantity()));
-                params.put(mContext.getString(R.string.params_product_category_ids), product.getCategoriesIDStringList());
-                params.put(mContext.getString(R.string.params_product_expiry), product.getExpirationFormattedForAPI());
-                //params.put(mContext.getString(R.string.params_product_location), product.getLocation());
                 //params.put(mContext.getString(R.string.params_product_meta_title), "meta_title");
-                //params.put(mContext.getString(R.string.params_product_status), mContext.getString(R.string.params_product_status_enabled));
-
-                return params;
+                return includeProductFields(params, product);
             }
         };
 
@@ -116,7 +100,7 @@ public class ProductRequest extends Request implements IProductRequest {
     }
 
     @Override
-    public void submitProductThumbnail(int productId, Uri thumbnail, ICallback<String> callback){
+    public void submitProductPicture(int productId, Uri thumbnail, final boolean isMainPicture, ICallback<String> callback) {
         URL url = new ProductImageURL(mContext, R.string.path_product_product, productId);
         final Uri image = thumbnail;
 
@@ -125,7 +109,7 @@ public class ProductRequest extends Request implements IProductRequest {
             return;
         }
 
-        InputStream inputStream = null;
+        InputStream inputStream;
         try {
             inputStream = mContext.getContentResolver().openInputStream(image);
 
@@ -144,12 +128,15 @@ public class ProductRequest extends Request implements IProductRequest {
 
             ProductThumbnailResponse response = new ProductThumbnailResponse(callback);
 
-            MultipartRequest multipartRequest = new MultipartRequest(mContext, url.toString(), response, response){
+            MultipartRequest multipartRequest = new MultipartRequest(mContext, url.toString(), response, response) {
 
                 @Override
                 protected Map<String, String> getParams() throws AuthFailureError {
-                    Map<String,String> params = new HashMap<>();
-                    params.put(mContext.getString(R.string.params_product_image_main), "true");
+                    Map<String, String> params = new HashMap<>();
+                    params.put(mContext.getString(R.string.params_product_image_main), String.valueOf(isMainPicture));
+                    if (!isMainPicture) {
+                        params.put(mContext.getString(R.string.params_product_image_sort), "1");
+                    }
                     return params;
                 }
 
@@ -173,61 +160,6 @@ public class ProductRequest extends Request implements IProductRequest {
         }
     }
 
-    private String getRealPathFromURI(Uri contentURI) {
-        return ContentUriHelper.getRealPathFromURI(mContext, contentURI);
-    }
-
-    @Override
-    public void submitProductImage(final Product product, ICallback<String> callback) {
-        URL url = new ProductImageURL(mContext, R.string.path_product_product, product.getId());
-        final Uri imageUri = product.getLastImage();
-
-        String imageFilePath = getRealPathFromURI(imageUri);
-        final String imageFileName = imageFilePath.substring(imageFilePath.lastIndexOf("/")+1);
-
-        Bitmap bm = BitmapFactory.decodeFile(imageFilePath);
-        //Bitmap bm = BitmapFactory.decodeFile(image.getPath());
-
-        int DESIREDWIDTH = 500;
-        int DESIREDHEIGHT = 500;
-
-        Bitmap resizedBitmap = Bitmap.createScaledBitmap(bm, DESIREDWIDTH, DESIREDHEIGHT, true);
-        bm.recycle();
-
-        ByteArrayOutputStream baos = new ByteArrayOutputStream();
-        resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
-
-        final byte[] imageBytes = baos.toByteArray();
-
-        ProductUpdateResponse response = new ProductUpdateResponse(callback);
-
-        MultipartRequest multipartRequest = new MultipartRequest(mContext, url.toString(), response, response){
-
-            @Override
-            protected Map<String, String> getParams() throws AuthFailureError {
-                Map<String,String> params = new HashMap<>();
-                params.put(mContext.getString(R.string.params_product_image_main), "false");
-                params.put(mContext.getString(R.string.params_product_image_sort), "1");
-                return params;
-            }
-
-            @Override
-            protected Map<String, DataPart> getByteData() throws AuthFailureError {
-                Map<String, DataPart> params = new HashMap<>();
-                // file name could found file base or direct access from real path
-                // for now just get bitmap data from ImageView
-                params.put("file", new DataPart(imageFileName, imageBytes, "image/jpeg"));
-
-                return params;
-            }
-        };
-
-        multipartRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
-        mRequestQueue.add(multipartRequest);
-
-        resizedBitmap.recycle();
-    }
-
     @Override
     public void deleteProductImage(final Product product, final String fileName, ICallback<Product> callback) {
         URL url = new ProductImageURL(mContext, R.string.path_product_product, product.getId());
@@ -237,5 +169,20 @@ public class ProductRequest extends Request implements IProductRequest {
         AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.DELETE, url.toString(), response, response);
         stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
         mRequestQueue.add(stringRequest);
+    }
+
+    private Map<String, String> includeProductFields(Map<String, String> params, Product product) {
+        params.put(mContext.getString(R.string.params_product_name), product.getName());
+        params.put(mContext.getString(R.string.params_product_description), product.getDescription());
+        params.put(mContext.getString(R.string.params_product_price), product.getPricePerUnit());
+        params.put(mContext.getString(R.string.params_product_quantity), Integer.toString(product.getQuantity()));
+        params.put(mContext.getString(R.string.params_product_category_ids), product.getCategoriesIDStringList());
+        params.put(mContext.getString(R.string.params_product_expiry), product.getExpirationFormattedForAPI());
+        params.put(mContext.getString(R.string.params_product_location), product.getLocation());
+
+        //params.put(mContext.getString(R.string.params_product_meta_title), "meta_title");
+        //params.put(mContext.getString(R.string.params_product_status), mContext.getString(R.string.params_product_status_enabled));
+
+        return params;
     }
 }
