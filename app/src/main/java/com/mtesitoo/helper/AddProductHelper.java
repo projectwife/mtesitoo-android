@@ -23,10 +23,10 @@ public class AddProductHelper {
     private String productLocation;
     private String productExpirationDate;
 
-    private Integer productCategory;
-    private Integer productQuantity;
-    private Integer productPricePerUnit;
-    private Integer productUnits;
+    private String productCategory;
+    private String productQuantity;
+    private String productPricePerUnit;
+    private String productUnits;
 
 
     private List<Uri> productPictures;
@@ -56,9 +56,9 @@ public class AddProductHelper {
         return h;
     }
 
-    public HashMap<String, Integer> getProductQuantityData() {
+    public HashMap<String, String> getProductQuantityData() {
 
-        HashMap<String, Integer> h = new HashMap<>();
+        HashMap<String, String> h = new HashMap<>();
 
         h.put(Constants.PRODUCT_CATEGORY_KEY, productCategory);
         h.put(Constants.PRODUCT_PRICE_KEY, productPricePerUnit);
@@ -92,19 +92,19 @@ public class AddProductHelper {
         this.productExpirationDate = productExpirationDate;
     }
 
-    public void setProductCategory(Integer productCategory) {
+    public void setProductCategory(String productCategory) {
         this.productCategory = productCategory;
     }
 
-    public void setProductQuantity(Integer productQuantity) {
+    public void setProductQuantity(String productQuantity) {
         this.productQuantity = productQuantity;
     }
 
-    public void setProductPricePerUnit(Integer productPricePerUnit) {
+    public void setProductPricePerUnit(String productPricePerUnit) {
         this.productPricePerUnit = productPricePerUnit;
     }
 
-    public void setProductUnits(Integer productUnits) {
+    public void setProductUnits(String productUnits) {
         this.productUnits = productUnits;
     }
 
@@ -119,10 +119,10 @@ public class AddProductHelper {
         this.productLocation = "";
         this.productExpirationDate = "";
 
-        this.productCategory = -1;
-        this.productQuantity = 0;
-        this.productPricePerUnit = 0;
-        this.productUnits = -1;
+        this.productCategory = "";
+        this.productQuantity = "";
+        this.productPricePerUnit = "";
+        this.productUnits = "";
 
         this.productPictures = null;
     }
@@ -137,10 +137,10 @@ public class AddProductHelper {
             }
         }
 
-        return new Product(0, productName, productDescription, productLocation, String.valueOf(productCategory),
-                String.valueOf(productUnits), String.valueOf(productPricePerUnit),
-                ProductPriceHelper.getDisplayPrice(ProductPriceHelper.getDefaultCurrencyCode(), String.valueOf(productPricePerUnit)),
+        return new Product(0, productName, productDescription, productLocation, productCategory,
+                productUnits, productPricePerUnit,
+                ProductPriceHelper.getDisplayPrice(ProductPriceHelper.getDefaultCurrencyCode(), productPricePerUnit),
                 ProductPriceHelper.getDefaultCurrencyCode(),
-                productQuantity, DateHelper.parseDate(productExpirationDate), mainPicture, auxImages, 5, 0, 0);
+                Integer.parseInt(productQuantity), DateHelper.parseDate(productExpirationDate), mainPicture, auxImages, 5, 0, 0);
     }
 }

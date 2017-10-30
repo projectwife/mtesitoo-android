@@ -86,24 +86,26 @@ public class AddProductPreviewFragment extends Fragment {
         productLocationTextView.setText(detailsData.get(Constants.PRODUCT_LOCATION_KEY));
         productExpirationTextView.setText(detailsData.get(Constants.PRODUCT_EXPIRATION_KEY));
 
-        Map<String, Integer> quantityData = AddProductHelper.getInstance().getProductQuantityData();
+        Map<String, String> quantityData = AddProductHelper.getInstance().getProductQuantityData();
 
-        ICategoryCache cache = new CategoryCache(getContext());
-        List<Category> categories = cache.getCategories();
-        for (Category c : categories) {
-            if (c.getId() == quantityData.get(Constants.PRODUCT_CATEGORY_KEY)) {
-                AddProductHelper.getInstance().setProductCategory(c.getId());
-                productCategoryTextView.setText(c.getName());
-                break;
+        if (!quantityData.get(Constants.PRODUCT_CATEGORY_KEY).isEmpty()) {
+            ICategoryCache cache = new CategoryCache(getContext());
+            List<Category> categories = cache.getCategories();
+            for (Category c : categories) {
+                if (c.getId() == Integer.parseInt(quantityData.get(Constants.PRODUCT_CATEGORY_KEY))) {
+                    productCategoryTextView.setText(c.getName());
+                    break;
+                }
             }
         }
-
-        IUnitCache unitCache = new UnitCache(getContext());
-        final List<Unit> units = unitCache.getWeightUnits();
-        for (Unit u : units) {
-            if (u.getId() == quantityData.get(Constants.PRODUCT_UNITS_KEY)) {
-                productUnitsTextView.setText(u.getName());
-                break;
+        if (!quantityData.get(Constants.PRODUCT_CATEGORY_KEY).isEmpty()) {
+            IUnitCache unitCache = new UnitCache(getContext());
+            final List<Unit> units = unitCache.getWeightUnits();
+            for (Unit u : units) {
+                if (u.getId() == Integer.parseInt(quantityData.get(Constants.PRODUCT_UNITS_KEY))) {
+                    productUnitsTextView.setText(u.getName());
+                    break;
+                }
             }
         }
 

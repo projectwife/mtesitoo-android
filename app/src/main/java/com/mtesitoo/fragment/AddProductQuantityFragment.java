@@ -64,10 +64,10 @@ public class AddProductQuantityFragment extends Fragment {
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
 
             if (charSequence.toString().hashCode() == productPriceEditText.getText().toString().hashCode()) {
-                AddProductHelper.getInstance().setProductPricePerUnit(Integer.parseInt(charSequence.toString()));
+                AddProductHelper.getInstance().setProductPricePerUnit(charSequence.toString());
                 return;
             }
-            AddProductHelper.getInstance().setProductQuantity(Integer.parseInt(charSequence.toString()));
+            AddProductHelper.getInstance().setProductQuantity(charSequence.toString());
         }
 
         @Override
@@ -94,7 +94,7 @@ public class AddProductQuantityFragment extends Fragment {
 
     private void populateScreen() {
 
-        Map<String, Integer> h = AddProductHelper.getInstance().getProductQuantityData();
+        Map<String, String> h = AddProductHelper.getInstance().getProductQuantityData();
 
         ICategoryCache cache = new CategoryCache(getContext());
         final List<Category> categories = cache.getCategories();
@@ -108,10 +108,10 @@ public class AddProductQuantityFragment extends Fragment {
         categoryAdapter.setDropDownViewResource(R.layout.item_spinner);
         productCategorySpinner.setAdapter(categoryAdapter);
 
-        if (h.get(Constants.PRODUCT_CATEGORY_KEY) != -1) {
+        if (!h.get(Constants.PRODUCT_CATEGORY_KEY).isEmpty()) {
             for (int i = 0; i < categories.size(); i++) {
                 Category category = categories.get(i);
-                if (category.getId() == h.get(Constants.PRODUCT_CATEGORY_KEY)) {
+                if (category.getId() == Integer.parseInt(h.get(Constants.PRODUCT_CATEGORY_KEY))) {
                     productCategorySpinner.setSelection(i);
                     break;
                 }
@@ -129,10 +129,10 @@ public class AddProductQuantityFragment extends Fragment {
         unitsAdapter.setDropDownViewResource(R.layout.item_spinner);
         productUnitsSpinner.setAdapter(unitsAdapter);
 
-        if (h.get(Constants.PRODUCT_UNITS_KEY) != -1) {
+        if (!h.get(Constants.PRODUCT_UNITS_KEY).isEmpty()) {
             for (int i = 0; i < units.size(); i++) {
                 Unit unit = units.get(i);
-                if (unit.getId() == h.get(Constants.PRODUCT_CATEGORY_KEY)) {
+                if (unit.getId() == Integer.parseInt(h.get(Constants.PRODUCT_CATEGORY_KEY))) {
                     productUnitsSpinner.setSelection(i);
                     break;
                 }
@@ -153,7 +153,7 @@ public class AddProductQuantityFragment extends Fragment {
             return;
         }
 
-        int currentValue = Integer.parseInt(productPriceEditText.getText().toString());
+        float currentValue = Float.parseFloat(productPriceEditText.getText().toString());
         if (button.getId() == R.id.button_price_minus) {
             if (currentValue > 0) productPriceEditText.setText(String.valueOf(currentValue - 1));
         } else {
@@ -170,7 +170,7 @@ public class AddProductQuantityFragment extends Fragment {
 
             for (Category c : categories) {
                 if (c.getName().equals(view.getSelectedItem())) {
-                    AddProductHelper.getInstance().setProductCategory(c.getId());
+                    AddProductHelper.getInstance().setProductCategory(String.valueOf(c.getId()));
                     break;
                 }
             }
@@ -180,7 +180,7 @@ public class AddProductQuantityFragment extends Fragment {
         final List<Unit> units = unitCache.getWeightUnits();
         for (Unit u : units) {
             if (u.getName().equals(view.getSelectedItem())) {
-                AddProductHelper.getInstance().setProductUnits(u.getId());
+                AddProductHelper.getInstance().setProductUnits(String.valueOf(u.getId()));
                 break;
             }
         }
