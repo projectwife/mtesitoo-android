@@ -1,6 +1,7 @@
 package com.mtesitoo;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -146,12 +148,15 @@ public class AddProductActivity extends AppCompatActivity {
             return;
         }
         viewPager.setCurrentItem(viewPager.getCurrentItem() - 1, true);
+        hideSoftKeyboard();
     }
 
     @OnClick(R.id.controls_forward)
     void goForward() {
+
         if (viewPager.getCurrentItem() < pagerAdapter.getCount() - 1) {
             viewPager.setCurrentItem(viewPager.getCurrentItem() + 1, true);
+            hideSoftKeyboard();
             return;
         }
 
@@ -167,6 +172,13 @@ public class AddProductActivity extends AppCompatActivity {
         }
 
         submitNewProduct();
+    }
+
+    private void hideSoftKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (inputMethodManager != null && getCurrentFocus() != null) {
+            inputMethodManager.hideSoftInputFromWindow(getCurrentFocus().getWindowToken(), 0);
+        }
     }
 
     private void submitNewProduct() {

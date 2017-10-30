@@ -1,5 +1,6 @@
 package com.mtesitoo.fragment;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -9,6 +10,7 @@ import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -123,6 +125,7 @@ public class AddProductDetailsFragment extends Fragment implements DatePickerDia
         DatePickerDialog d = new DatePickerDialog(getContext(), this, year, month, day);
         d.getDatePicker().setMinDate(Calendar.getInstance().getTimeInMillis());
         d.show();
+        hideSoftKeyboard();
     }
 
     @Override
@@ -131,5 +134,12 @@ public class AddProductDetailsFragment extends Fragment implements DatePickerDia
         calendar.set(year, month, day);
         AddProductHelper.getInstance().setProductExpirationDate(DateHelper.dateToString(calendar.getTime()));
         productExpirationTextView.setText(AddProductHelper.getInstance().getProductDetailsData().get(Constants.PRODUCT_EXPIRATION_KEY));
+    }
+
+    private void hideSoftKeyboard() {
+        InputMethodManager inputMethodManager = (InputMethodManager) getActivity().getSystemService(Activity.INPUT_METHOD_SERVICE);
+        if (inputMethodManager != null && getActivity().getCurrentFocus() != null) {
+            inputMethodManager.hideSoftInputFromWindow(getActivity().getCurrentFocus().getWindowToken(), 0);
+        }
     }
 }
