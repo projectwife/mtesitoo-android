@@ -593,23 +593,27 @@ public class ProfileFragment extends AbstractPermissionFragment {
 
             @Override
             public void onError(Exception e) {
-                VolleyError err = (VolleyError) e;
-
                 String errorMsg = "";
-                if (err.networkResponse.data != null) {
-                    try {
-                        String body = new String(err.networkResponse.data, "UTF-8");
-                        Log.e("REG_ERR", body);
-                        JSONObject jsonErrors = new JSONObject(body);
-                        JSONObject error = jsonErrors.getJSONArray("errors").getJSONObject(0);
-                        errorMsg = error.getString("message");
-                    } catch (UnsupportedEncodingException | JSONException encErr) {
-                        encErr.printStackTrace();
-                    } finally {
-                        if (errorMsg.equals("")) {
-                            errorMsg = "Error updating profile";
+                if (e != null && e instanceof VolleyError) {
+
+                    VolleyError err = (VolleyError) e;
+
+                    if (err.networkResponse != null) {
+                        if (err.networkResponse.data != null) {
+                            try {
+                                String body = new String(err.networkResponse.data, "UTF-8");
+                                Log.e("REG_ERR", body);
+                                JSONObject jsonErrors = new JSONObject(body);
+                                JSONObject error = jsonErrors.getJSONArray("errors").getJSONObject(0);
+                                errorMsg = error.getString("message");
+                            } catch (UnsupportedEncodingException | JSONException encErr) {
+                                encErr.printStackTrace();
+                            }
                         }
                     }
+                }
+                if (errorMsg.equals("")) {
+                    errorMsg = "Error updating profile";
                 }
 
                 Toast.makeText(mContext, errorMsg, Toast.LENGTH_LONG).show();
@@ -622,7 +626,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
 
         if (!(mSeller instanceof Seller)) {
             Toast.makeText(mContext, "Password can't be updated at this time. Try again later!"
-            , Toast.LENGTH_LONG).show();
+                    , Toast.LENGTH_LONG).show();
             Log.e(TAG, "Seller object is null");
             return;
         }
