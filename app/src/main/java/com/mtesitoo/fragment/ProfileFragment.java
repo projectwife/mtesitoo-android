@@ -103,6 +103,9 @@ public class ProfileFragment extends AbstractPermissionFragment {
     @BindView(R.id.spinnerCountry)
     Spinner mProfileCountry;
 
+    @BindView(R.id.profile_relative_layout)
+    View profileLayout;
+
     private Uri newProfileImageUri = null;
     private int selectedStatePosition = -1;
     private int selectedCountryPosition = -1;
@@ -168,7 +171,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (getSeller() instanceof Seller) {
+        if (getSeller() != null) {
 
             if (mSeller.getmThumbnail() != null && !mSeller.getmThumbnail().toString().equals("null")) {
                 Picasso.with(getContext()).load(mSeller.getmThumbnail().toString()).into(mProfileImage, profilePicassoCallback);
@@ -473,7 +476,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
             return;
         }
 
-        Snackbar.make(getView(), getString(R.string.profile_no_changes_message),
+        Snackbar.make(profileLayout, getString(R.string.profile_no_changes_message),
                 Snackbar.LENGTH_LONG).show();
     }
 
@@ -506,13 +509,13 @@ public class ProfileFragment extends AbstractPermissionFragment {
                     updateProfileInPreferences();
                 }
                 newProfileImageUri = null;
-                Snackbar.make(getView(), "Profile Image Uploaded Successfully",
+                Snackbar.make(profileLayout, "Profile Image Uploaded Successfully",
                         Snackbar.LENGTH_SHORT).show();
             }
 
             @Override
             public void onError(Exception e) {
-                Snackbar.make(getView(), "Failed to upload profile Image",
+                Snackbar.make(profileLayout, "Failed to upload profile Image",
                         Snackbar.LENGTH_SHORT).show();
                 Log.e("UploadImage", e.toString());
             }
@@ -552,7 +555,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
                     @Override
                     public void onResult(Seller result) {
                         if (result == null) {
-                            Snackbar.make(getView(), getString(R.string.profile_updated),
+                            Snackbar.make(profileLayout, getString(R.string.profile_updated),
                                     Snackbar.LENGTH_LONG).show();
                             updateProfileInPreferences();
                         }
@@ -586,7 +589,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
                             }
                         }
 
-                        Snackbar.make(getView(), errorMsg, Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(profileLayout, errorMsg, Snackbar.LENGTH_LONG).show();
                     }
                 });
             }
@@ -624,7 +627,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
     private void updatePassword(final String oldPassword, final String newPassword) {
         mSeller = getSeller();
 
-        if (!(mSeller instanceof Seller)) {
+        if (mSeller == null) {
             Toast.makeText(mContext, "Password can't be updated at this time. Try again later!"
                     , Toast.LENGTH_LONG).show();
             Log.e(TAG, "Seller object is null");
@@ -637,7 +640,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
                 sellerService.updatePassword(oldPassword, newPassword, new ICallback<String>() {
                     @Override
                     public void onResult(String result) {
-                        Snackbar.make(getView(), getString(R.string.password_updated),
+                        Snackbar.make(profileLayout, getString(R.string.password_updated),
                                 Snackbar.LENGTH_LONG).show();
                     }
 
@@ -669,7 +672,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
                             }
                         }
 
-                        Snackbar.make(getView(), errorMsg, Snackbar.LENGTH_LONG).show();
+                        Snackbar.make(profileLayout, errorMsg, Snackbar.LENGTH_LONG).show();
                     }
                 });
             }
@@ -780,7 +783,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
     void dismissKeyboard() {
         InputMethodManager imm = (InputMethodManager) getContext().getSystemService(INPUT_METHOD_SERVICE);
         View currentFocusView = getActivity().getCurrentFocus();
-        if (currentFocusView != null)
+        if (imm != null && currentFocusView != null)
             imm.hideSoftInputFromWindow(currentFocusView.getWindowToken(), 0);
     }
 }
