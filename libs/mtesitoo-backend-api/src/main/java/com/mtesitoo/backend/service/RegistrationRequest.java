@@ -37,7 +37,7 @@ public class RegistrationRequest extends Request implements IRegistrationRequest
             protected Map<String, String> getParams() {
                 Map<String, String> params = new HashMap<>();
                 params.put(mContext.getString(R.string.params_register_name), seller.getUsername());
-                Log.d("Registration","Username: " + seller.getUsername());
+                Log.d("Registration", "Username: " + seller.getUsername());
 
                 if (seller.getmPassword() != null)
                     params.put(mContext.getString(R.string.params_register_password), seller.getmPassword());
@@ -71,7 +71,10 @@ public class RegistrationRequest extends Request implements IRegistrationRequest
 
         };
 
-        Log.d("mAuthorizationCache",mAuthorizationCache.getAuthorization());
+        if (mAuthorizationCache.getAuthorization() != null) {
+            Log.d("mAuthorizationCache", mAuthorizationCache.getAuthorization());
+        }
+
         stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
         mRequestQueue.add(stringRequest);
     }
