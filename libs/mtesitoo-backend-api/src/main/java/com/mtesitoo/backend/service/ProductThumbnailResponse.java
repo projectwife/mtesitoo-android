@@ -1,12 +1,10 @@
 package com.mtesitoo.backend.service;
 
-import android.net.Uri;
 import android.util.Log;
 
 import com.android.volley.NetworkResponse;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.mtesitoo.backend.model.Product;
 import com.mtesitoo.backend.service.logic.ICallback;
 
 import org.json.JSONException;
@@ -30,16 +28,21 @@ public class ProductThumbnailResponse implements Response.Listener, Response.Err
 
     public String parseResponse(String response) throws JSONException {
         JSONObject jsonProduct = new JSONObject(response);
-        String result = jsonProduct.getString("product_id");
+        String result = "";
+        if (jsonProduct.has("product_id")) {
+            result = jsonProduct.getString("product_id");
+        } else if (jsonProduct.has("filename")) {
+            result = jsonProduct.getString("filename");
+        }
         return result;
     }
 
     @Override
     public void onResponse(Object response) {
 
-        if(response instanceof String){
+        if (response instanceof String) {
             try {
-                String productId = parseResponse((String)response);
+                String productId = parseResponse((String) response);
 
                 if (mCallback != null)
                     mCallback.onResult(productId);
@@ -47,14 +50,14 @@ public class ProductThumbnailResponse implements Response.Listener, Response.Err
                 if (mCallback != null)
                     mCallback.onError(e);
             }
-        }else if(response instanceof NetworkResponse){
-            NetworkResponse networkResponse = (NetworkResponse)response;
-            if(networkResponse.statusCode==200)
+        } else if (response instanceof NetworkResponse) {
+            NetworkResponse networkResponse = (NetworkResponse) response;
+            if (networkResponse.statusCode == 200)
                 mCallback.onResult(null);
             else
                 mCallback.onError(new Exception(networkResponse.toString()));
-        }else{
-            Log.d("PRODUCT_UPDATE",response.toString());
+        } else {
+            Log.d("PRODUCT_UPDATE", response.toString());
         }
     }
 }

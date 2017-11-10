@@ -1,61 +1,109 @@
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@color/gray_background"
+    tools:context="com.mtesitoo.AddProductActivity">
 
-    <com.tech.freak.wizardpager.ui.StepPagerStrip
-        android:id="@+id/strip"
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="16dp"
-        android:layout_marginRight="16dp"
-        android:gravity="left"
-        android:paddingBottom="8dp"
-        android:paddingLeft="@dimen/list_item_padding_left"
-        android:paddingRight="@dimen/list_item_padding_right"
-        android:paddingTop="16dp" />
+        android:theme="@style/AppTheme.AppBarOverlay">
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/item_pager"
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:background="?attr/colorPrimary"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+    </android.support.design.widget.AppBarLayout>
+
+    <com.mtesitoo.widget.CustomScrollView
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/app_bar_layout"
+        android:layout_marginBottom="@dimen/new_product_page_bottom_bar_height"
+        android:layout_marginTop="@dimen/new_product_page_top_margin">
 
-    <View
-        android:id="@+id/divider"
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:background="?android:attr/listDivider" />
-
-    <LinearLayout
-        style="@style/ButtonBar"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/prev_button"
-            style="@style/ButtonBarButton"
-            android:layout_width="0dp"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/selectable_item_background"
-            android:text="@string/prev" />
+            android:orientation="vertical">
 
-        <View
-            android:layout_width="1dp"
-            android:layout_height="match_parent"
-            android:background="?android:attr/listDivider" />
+            <android.support.v4.view.ViewPager
+                android:id="@+id/pager"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/new_product_page_height" />
+        </LinearLayout>
+    </com.mtesitoo.widget.CustomScrollView>
 
-        <Button
-            android:id="@+id/next_button"
-            style="@style/ButtonBarButton"
-            android:layout_width="0dp"
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/new_product_page_bottom_bar_height"
+        android:layout_alignParentBottom="true"
+        android:background="@color/gray_product_bar">
+
+        <TextView
+            android:id="@+id/controls_previous"
+            style="@style/AddProductToolbarTheme"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_centerVertical="true"
+            android:drawableLeft="@drawable/ic_arrow_back"
+            android:drawableStart="@drawable/ic_arrow_back"
+            android:padding="@dimen/new_product_page_bottom_bar_padding"
+            android:text="@string/action_prev"
+            android:textColor="@drawable/tv_link_selector"
+            android:visibility="gone" />
+
+        <android.support.design.widget.TabLayout
+            android:id="@+id/dots"
+            android:layout_width="wrap_content"
+            android:layout_height="26dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:animateLayoutChanges="true"
+            app:tabBackground="@drawable/dot_selector"
+            app:tabGravity="center"
+            app:tabIndicatorHeight="0dp"
+            app:tabPaddingEnd="10dp"
+            app:tabPaddingStart="10dp" />
+
+        <TextView
+            android:id="@+id/controls_forward"
+            style="@style/AddProductToolbarTheme"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:animateLayoutChanges="true"
+            android:drawableEnd="@drawable/ic_arrow_next"
+            android:drawableRight="@drawable/ic_arrow_next"
+            android:padding="@dimen/new_product_page_bottom_bar_padding_right"
+            android:text="@string/action_next"
+            android:textColor="@drawable/tv_link_selector" />
+
+        <ProgressBar
+            android:id="@+id/controls_progress"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:background="@drawable/selectable_item_background"
-            android:text="@string/next" />
-    </LinearLayout>
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginEnd="5dp"
+            android:layout_marginRight="5dp"
+            android:animateLayoutChanges="true"
+            android:visibility="invisible" />
+    </RelativeLayout>
 
-</LinearLayout>
+    <FrameLayout
+        android:id="@+id/add_product_preview_fragment"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/app_bar_layout"
+        android:layout_marginBottom="@dimen/new_product_page_bottom_bar_height"
+        android:layout_marginTop="@dimen/new_product_page_top_margin" />
+</RelativeLayout>

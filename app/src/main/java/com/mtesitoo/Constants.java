@@ -18,4 +18,14 @@ public class Constants {
 
     public static final String INCOMPLETE_PROFILE_REMINDER = "incompleteProfileReminder";
 
+    public static final String PRODUCT_NAME_KEY = "productName";
+    public static final String PRODUCT_DESCRIPTION_KEY = "productDescription";
+    public static final String PRODUCT_LOCATION_KEY = "productLocation";
+    public static final String PRODUCT_EXPIRATION_KEY = "productExpirationDate";
+
+    public static final String PRODUCT_CATEGORY_KEY = "productCategory";
+    public static final String PRODUCT_PRICE_KEY = "productPrice";
+    public static final String PRODUCT_QUANTITY_KEY = "productQuantity";
+    public static final String PRODUCT_UNITS_KEY = "productUnits";
+
 }

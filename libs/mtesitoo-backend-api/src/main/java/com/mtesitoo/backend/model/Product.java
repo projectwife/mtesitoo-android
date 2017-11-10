@@ -34,7 +34,7 @@ public class Product implements Parcelable {
     private final Integer mQuantity;
     private final Date mExpiration;
     private Uri mThumbnail;
-    private final ArrayList<Uri> mAuxImages;
+    private final List<Uri> mAuxImages;
     private Uri lastImage;
     //0-disabled, 1-enabled, 5-pending approval
     private int mStatus;
@@ -74,12 +74,11 @@ public class Product implements Parcelable {
     };
 
 
-
     /**
      * @param name         product name (e.g. apples)
      * @param description  product descriptions (e.g. freshly picked, sweet-sour)
      * @param location     product location (e.g. 123 fake street)
-     * @param categories     product category (e.g. fruits & nuts)
+     * @param categories   product category (e.g. fruits & nuts)
      * @param siUnit       product si unit measurement (e.g. liter, gram)
      * @param pricePerUnit product price per quantity (e.g. $2.5)
      * @param quantity     product quantity (e.g. 100)
@@ -130,7 +129,7 @@ public class Product implements Parcelable {
      */
     public Product(int id, String name, String description, String location, String category, String siUnit,
                    String pricePerUnit, String displayPrice, String currencyCode,
-                   Integer quantity, Date expiration, Uri thumbnail, ArrayList<Uri> auxImages,
+                   Integer quantity, Date expiration, Uri thumbnail, List<Uri> auxImages,
                    int status, int numPendingOrders, int numProcessingOrders) {
 
         ArrayList<String> categoryList = new ArrayList<>();
@@ -156,10 +155,11 @@ public class Product implements Parcelable {
 
     /**
      * Returns true if image is added successfully, otherwise false
+     *
      * @param imageUri
      * @return
      */
-    public boolean addImage(Uri imageUri){
+    public boolean addImage(Uri imageUri) {
         boolean success = false;
         if (mAuxImages.size() < MAX_AUX_IMAGES) {
             mAuxImages.add(imageUri);
@@ -208,21 +208,21 @@ public class Product implements Parcelable {
 
         JSONArray jsonCategories = new JSONArray();
 
-        for(String s : mCategories){
+        for (String s : mCategories) {
             jsonCategories.put(s);
         }
 
         return jsonCategories.toString();
     }
 
-    public ArrayList<String> getResolvedCategories(Context context){
+    public ArrayList<String> getResolvedCategories(Context context) {
         ICategoryCache cache = new CategoryCache(context);
         List<Category> categories = cache.getCategories();
         ArrayList<String> resolvedList = new ArrayList<>();
 
         for (String mCatId : mCategories) {
             for (Category c : categories) {
-                if(c.getId() == Integer.valueOf(mCatId)){
+                if (c.getId() == Integer.valueOf(mCatId)) {
                     resolvedList.add(c.getName());
                     break;
                 }
@@ -233,21 +233,21 @@ public class Product implements Parcelable {
 
     }
 
-    public String getCategoriesIDStringList(){
+    public String getCategoriesIDStringList() {
 
         String categoryIDStringList = "";
-        for(String cat : mCategories){
+        for (String cat : mCategories) {
             categoryIDStringList = categoryIDStringList.concat(cat).concat(",");
         }
 
-        if(categoryIDStringList.length() > 0){
-            return categoryIDStringList.substring(0,categoryIDStringList.length()-1);
-        }else{
+        if (categoryIDStringList.length() > 0) {
+            return categoryIDStringList.substring(0, categoryIDStringList.length() - 1);
+        } else {
             return "None";
         }
     }
 
-    public String getCategoriesStringList(Context context){
+    public String getCategoriesStringList(Context context) {
 
         ICategoryCache cache = new CategoryCache(context);
         List<Category> categories = cache.getCategories();
@@ -255,16 +255,16 @@ public class Product implements Parcelable {
 
         for (String mCatId : mCategories) {
             for (Category c : categories) {
-                if(c.getId() == Integer.valueOf(mCatId)){
+                if (c.getId() == Integer.valueOf(mCatId)) {
                     categoryStringList = categoryStringList.concat(c.getName()).concat(", ");
                     break;
                 }
             }
         }
 
-        if(categoryStringList.length() > 0){
-            return categoryStringList.substring(0,categoryStringList.length()-2);
-        }else{
+        if (categoryStringList.length() > 0) {
+            return categoryStringList.substring(0, categoryStringList.length() - 2);
+        } else {
             return "None";
         }
     }
@@ -302,7 +302,7 @@ public class Product implements Parcelable {
             expired = true;
         }
 
-        return  expired;
+        return expired;
     }
 
     public boolean expiringToday() {
@@ -321,6 +321,7 @@ public class Product implements Parcelable {
 
         return expiringToday;
     }
+
     public String getExpirationFormattedForApp() {
 
         SimpleDateFormat dateFormatter = new SimpleDateFormat("yyyy-MM-dd");
@@ -348,9 +349,19 @@ public class Product implements Parcelable {
         return mThumbnail;
     }
 
-    public ArrayList<Uri> getAuxImages() {return mAuxImages; }
+    public List<Uri> getAuxImages() {
+        return mAuxImages;
+    }
 
-    public Uri getLastImage() { return lastImage; }
+    public Uri getLastImage() {
+        return lastImage;
+    }
+
+    public boolean isCompleted() {
+        return !mName.isEmpty() && !mDescription.isEmpty() && !mLocation.isEmpty() && ! mCategories.isEmpty()
+                && !mSIUnit.isEmpty() && !mPricePerUnit.isEmpty() && !mDisplayPrice.isEmpty() && !mCurrencyCode.isEmpty()
+                && mExpiration != null && mThumbnail != null;
+    }
 
     @Override
     public String toString() {

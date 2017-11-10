@@ -73,6 +73,7 @@ import static android.content.Context.INPUT_METHOD_SERVICE;
  * Created by Nan on 12/30/2015.
  */
 public class ProfileFragment extends AbstractPermissionFragment {
+    private static final String TAG = "ProfileFragment";
     private static final int SELECT_PICTURE = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
     private static Seller mSeller;
@@ -167,8 +168,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (sharedPreferences.contains(Constants.LOGGED_IN_USER_DATA)) {
-            mSeller = gson.fromJson(sharedPreferences.getString(Constants.LOGGED_IN_USER_DATA, ""), Seller.class);
+        if (getSeller() instanceof Seller) {
 
             if (mSeller.getmThumbnail() != null && !mSeller.getmThumbnail().toString().equals("null")) {
                 Picasso.with(getContext()).load(mSeller.getmThumbnail().toString()).into(mProfileImage, profilePicassoCallback);
@@ -240,7 +240,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
                         zoneAdapter[0] = new ArrayAdapter<>(mContext,
                                 android.R.layout.simple_spinner_item,
                                 finalZoneArrayList);
-                        zoneAdapter[0].setDropDownViewResource(R.layout.item_spinner_profile);
+                        zoneAdapter[0].setDropDownViewResource(R.layout.item_spinner);
                         mProfileState.setAdapter(zoneAdapter[0]);
                         selectedStatePosition = getSpinnerIndex(mProfileState, mSeller.getmState());
                         mProfileState.setSelection(selectedStatePosition);
@@ -256,7 +256,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
                 zoneAdapter[0] = new ArrayAdapter<>(mContext,
                         android.R.layout.simple_spinner_item,
                         zoneArrayList);
-                zoneAdapter[0].setDropDownViewResource(R.layout.item_spinner_profile);
+                zoneAdapter[0].setDropDownViewResource(R.layout.item_spinner);
 
                 mProfileState.setAdapter(zoneAdapter[0]);
                 selectedStatePosition = getSpinnerIndex(mProfileState, mSeller.getmState());
@@ -274,8 +274,19 @@ public class ProfileFragment extends AbstractPermissionFragment {
                 public void onNothingSelected(AdapterView<?> adapterView) {
                 }
             });
+        } else {
+            Log.e(TAG, "Failed to get Seller object");
         }
 
+    }
+
+    private Seller getSeller() {
+        if (mSeller == null &&
+                sharedPreferences.contains(Constants.LOGGED_IN_USER_DATA)) {
+            mSeller = gson.fromJson(sharedPreferences.getString(Constants.LOGGED_IN_USER_DATA, ""), Seller.class);
+        }
+
+        return mSeller;
     }
 
     @Override
@@ -607,6 +618,14 @@ public class ProfileFragment extends AbstractPermissionFragment {
     }
 
     private void updatePassword(final String oldPassword, final String newPassword) {
+        mSeller = getSeller();
+
+        if (!(mSeller instanceof Seller)) {
+            Toast.makeText(mContext, "Password can't be updated at this time. Try again later!"
+            , Toast.LENGTH_LONG).show();
+            Log.e(TAG, "Seller object is null");
+            return;
+        }
         final ISellerRequest sellerService = new SellerRequest(mContext);
         sellerService.getSellerInfo(mSeller.getId(), new ICallback<Seller>() {
             @Override

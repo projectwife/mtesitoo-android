@@ -43,7 +43,7 @@ android {
         targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
         versionName project.ANDROID_VERSION_NAME
         //TODO: Fix bug in reading version code from properties file
-        versionCode 10 //Integer.parseInt(project.ANDROID_VERSION_CODE)
+        versionCode 11 //Integer.parseInt(project.ANDROID_VERSION_CODE)
 
         multiDexEnabled true
     }
@@ -111,7 +111,7 @@ dependencies {
         transitive = false
     }
     compile 'com.android.support:appcompat-v7:25.1.0'
-    compile('com.crashlytics.sdk.android:crashlytics:2.6.0@aar') {
+    compile('com.crashlytics.sdk.android:crashlytics:2.7.0@aar') {
         transitive = true;
     }
     compile 'com.android.support:multidex:1.0.1'
