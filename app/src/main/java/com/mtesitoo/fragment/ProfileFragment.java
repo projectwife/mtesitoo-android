@@ -76,7 +76,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
     private static final String TAG = "ProfileFragment";
     private static final int SELECT_PICTURE = 1;
     private static final int REQUEST_IMAGE_CAPTURE = 2;
-    private static Seller mSeller;
+    private Seller mSeller;
     private Context mContext;
     private ImageFile mProfileImageFile;
 
@@ -168,7 +168,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if (getSeller() instanceof Seller) {
+        if (getSeller() != null) {
 
             if (mSeller.getmThumbnail() != null && !mSeller.getmThumbnail().toString().equals("null")) {
                 Picasso.with(getContext()).load(mSeller.getmThumbnail().toString()).into(mProfileImage, profilePicassoCallback);
@@ -620,7 +620,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
     private void updatePassword(final String oldPassword, final String newPassword) {
         mSeller = getSeller();
 
-        if (!(mSeller instanceof Seller)) {
+        if (mSeller == null) {
             Toast.makeText(mContext, "Password can't be updated at this time. Try again later!"
             , Toast.LENGTH_LONG).show();
             Log.e(TAG, "Seller object is null");

@@ -16,6 +16,8 @@ public class Constants {
 
     public static final String LOGGED_IN_USER_DATA = "loggedInUserData";
 
+    public static final String INCOMPLETE_PROFILE_REMINDER = "incompleteProfileReminder";
+
     public static final String PRODUCT_NAME_KEY = "productName";
     public static final String PRODUCT_DESCRIPTION_KEY = "productDescription";
     public static final String PRODUCT_LOCATION_KEY = "productLocation";

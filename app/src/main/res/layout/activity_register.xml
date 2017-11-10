@@ -169,4 +169,6 @@
 
     </RelativeLayout>
 
+    <include layout="@layout/loading_progress" />
+
 </RelativeLayout>

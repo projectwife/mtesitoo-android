@@ -74,6 +74,10 @@ public class HomeActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, profileFragment).addToBackStack(null).commit();
 
         }
+
+        if (needsCompleteProfileReminder()) {
+            showCompleteProfileDialog();
+        }
     }
 
     public void buildNavigationDrawer() {
@@ -295,5 +299,48 @@ public class HomeActivity extends AppCompatActivity {
         }
         startActivity(new Intent(mContext, LoginActivity.class));
         finish();
+    }
+
+    private boolean needsCompleteProfileReminder() {
+        final SharedPreferences sharedPreferences = mContext.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
+        return (mSeller.getmAddress1().isEmpty()
+                || mSeller.getmBusiness().isEmpty()
+                || mSeller.getmCity().isEmpty()
+                || mSeller.getmCountry().isEmpty()
+                || mSeller.getmZoneId().isEmpty())
+                && sharedPreferences.getBoolean(Constants.INCOMPLETE_PROFILE_REMINDER, true);
+    }
+
+    private void showCompleteProfileDialog() {
+
+        final AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(mContext);
+        alertDialogBuilder.setCancelable(false);
+
+        alertDialogBuilder.setTitle(R.string.profile_incomplete_alert_title);
+
+        alertDialogBuilder.setMessage(R.string.profile_incomplete_alert_message);
+
+        alertDialogBuilder.setPositiveButton(R.string.profile_incomplete_alert_complete, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                Fragment f = ProfileFragment.newInstance();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_container, f).addToBackStack(null).commit();
+                dialog.cancel();
+            }
+        });
+        alertDialogBuilder.setNegativeButton(R.string.profile_incomplete_alert_cancel, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.cancel();
+            }
+        });
+        alertDialogBuilder.setNeutralButton(R.string.profile_incomplete_alert_no_repeat, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                final SharedPreferences sharedPreferences = mContext.getSharedPreferences(Constants.SHARED_PREFS, Context.MODE_PRIVATE);
+                sharedPreferences.edit().putBoolean(Constants.INCOMPLETE_PROFILE_REMINDER, false).apply();
+                dialog.cancel();
+            }
+        });
+
+        alertDialogBuilder.show();
     }
 }

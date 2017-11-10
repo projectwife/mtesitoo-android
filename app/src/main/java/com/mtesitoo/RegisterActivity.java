@@ -1,11 +1,9 @@
 package com.mtesitoo;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.text.Html;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
@@ -15,39 +13,23 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.android.volley.VolleyError;
-import com.crashlytics.android.Crashlytics;
-import com.mtesitoo.backend.cache.CategoryCache;
-import com.mtesitoo.backend.cache.UnitCache;
-import com.mtesitoo.backend.cache.logic.ICategoryCache;
-import com.mtesitoo.backend.cache.logic.IUnitCache;
-import com.mtesitoo.backend.model.Category;
 import com.mtesitoo.backend.model.Seller;
-import com.mtesitoo.backend.model.Unit;
-import com.mtesitoo.backend.service.CategoryRequest;
-import com.mtesitoo.backend.service.CommonRequest;
-import com.mtesitoo.backend.service.LoginRequest;
 import com.mtesitoo.backend.service.RegistrationRequest;
-import com.mtesitoo.backend.service.SellerRequest;
 import com.mtesitoo.backend.service.VendorTermsRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
-import com.mtesitoo.backend.service.logic.ICategoryRequest;
-import com.mtesitoo.backend.service.logic.ICommonRequest;
-import com.mtesitoo.backend.service.logic.ILoginRequest;
 import com.mtesitoo.backend.service.logic.IRegistrationRequest;
-import com.mtesitoo.backend.service.logic.ISellerRequest;
 import com.mtesitoo.backend.service.logic.IVendorTerms;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.UnsupportedEncodingException;
-import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegisterActivity extends AbstractLoginActivity {
 
     final String TAG = "RegisterActivity";
 
@@ -63,7 +45,6 @@ public class RegisterActivity extends AppCompatActivity {
 
     boolean termsAccepted = false;
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -75,6 +56,9 @@ public class RegisterActivity extends AppCompatActivity {
 
     @OnClick(R.id.register_user_button)
     void registrationAttempt() {
+
+        showLoginProgress(null);
+
         password = ((EditText) findViewById(R.id.registration_password)).getText().toString();
         confirmPassword = ((EditText) findViewById(R.id.registration_confirm_password)).getText().toString();
         email = ((EditText) findViewById(R.id.registration_email)).getText().toString();
@@ -85,6 +69,8 @@ public class RegisterActivity extends AppCompatActivity {
 
         if (verifyInput()) {
             registerUser();
+        } else {
+            dismissLoginProgress();
         }
     }
 
@@ -156,7 +142,7 @@ public class RegisterActivity extends AppCompatActivity {
     private void registerUser() {
 
         final Seller seller = new Seller(0, email, firstName, lastName,
-                phoneNumber, email, firstName + " " + lastName, "", "", "",
+                phoneNumber, email, " ", "", "", "",
                 "", "", "", password, "", "1", "", "");
 
         IRegistrationRequest registrationService = new RegistrationRequest(this);
@@ -164,12 +150,17 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onResult(Seller result) {
                 Toast.makeText(TesitooApplication.getInstance().getContext(), R.string.register_successful, Toast.LENGTH_LONG).show();
-                startNewLogin(seller, RegisterActivity.this);
-                finish();
+
+                final Intent intent = new Intent(context, HomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
+
+                logInUser(intent, seller.getUsername(), seller.getmPassword(), false);
             }
 
             @Override
             public void onError(Exception e) {
+                dismissLoginProgress();
 
                 VolleyError err = (VolleyError) e;
 
@@ -251,85 +242,5 @@ public class RegisterActivity extends AppCompatActivity {
 
     private void displayToast(String message) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show();
-    }
-
-    public void startNewLogin(Seller seller, final Context mContext) {
-        final Intent intent = new Intent(this, HomeActivity.class);
-        final ILoginRequest loginService = new LoginRequest(this);
-
-        loginService.authenticateUser(seller.getUsername(), seller.getmPassword(), new ICallback<String>() {
-            @Override
-            public void onResult(String result) {
-                Log.d("LOGIN RESULT", result);
-                ICategoryRequest categoryService = new CategoryRequest(mContext);
-                ISellerRequest sellerService = new SellerRequest(mContext);
-                ICommonRequest commonService = new CommonRequest(mContext);
-
-                commonService.getLengthUnits(new ICallback<List<Unit>>() {
-                    @Override
-                    public void onResult(List<Unit> units) {
-                        IUnitCache cache = new UnitCache(mContext);
-                        cache.storeLengthUnits(units);
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                    }
-                });
-
-                commonService.getWeightUnits(new ICallback<List<Unit>>() {
-                    @Override
-                    public void onResult(List<Unit> units) {
-                        IUnitCache cache = new UnitCache(mContext);
-                        cache.storeWeightUnits(units);
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                    }
-                });
-
-                categoryService.getCategories(new ICallback<List<Category>>() {
-                    @Override
-                    public void onResult(List<Category> categories) {
-                        ICategoryCache cache = new CategoryCache(mContext);
-                        cache.storeCategories(categories);
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                    }
-                });
-
-                sellerService.getSellerInfo(Integer.parseInt(result), new ICallback<Seller>() {
-                    @Override
-                    public void onResult(Seller result) {
-                        Log.d("getSellerInfo", result.toString());
-                        logUser(result);
-                        intent.putExtra(mContext.getString(R.string.bundle_seller_key), result);
-                        mContext.startActivity(intent);
-                        finish();
-                    }
-
-                    @Override
-                    public void onError(Exception e) {
-                        Log.e("getSellerInfo", e.toString());
-                    }
-                });
-            }
-
-            @Override
-            public void onError(Exception e) {
-                Log.e("authenticateUser", e.toString());
-                Toast.makeText(mContext, e.getMessage(), Toast.LENGTH_LONG).show();
-            }
-        });
-
-    }
-
-    private void logUser(Seller seller) {
-        Crashlytics.setUserIdentifier(String.valueOf(seller.getId()));
-        Crashlytics.setUserEmail(seller.getmEmail());
-        Crashlytics.setUserName(seller.getUsername());
     }
 }
