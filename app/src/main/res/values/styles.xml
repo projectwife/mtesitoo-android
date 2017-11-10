@@ -84,5 +84,13 @@
         <item name="android:layout_marginTop">@dimen/profile_labels_margin</item>
     </style>
 
+    <style name="AddProductToolbarTheme" parent="@style/TextAppearance.AppCompat.Small">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:textSize">18sp</item>
+    </style>
+
 
 </resources>

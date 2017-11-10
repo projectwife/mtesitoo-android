@@ -1,14 +1,13 @@
 package com.mtesitoo.fragment;
 
-import android.app.ProgressDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v4.content.LocalBroadcastManager;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -18,7 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ListView;
 
-import com.mtesitoo.AddProductActivity2;
+import com.mtesitoo.AddProductActivity;
 import com.mtesitoo.R;
 import com.mtesitoo.adapter.ProductListAdapter;
 import com.mtesitoo.backend.model.Product;
@@ -34,7 +33,8 @@ import java.util.List;
  */
 public class ProductFragment extends ListFragment implements SwipeRefreshLayout.OnRefreshListener {
     private ProductListAdapter mProductListAdapter;
-    private Integer sellerId;;
+    private Integer sellerId;
+    ;
     SwipeRefreshLayout mSwipeLayout;
 
     public static ProductFragment newInstance(Context context, Integer sellerId) {
@@ -54,10 +54,9 @@ public class ProductFragment extends ListFragment implements SwipeRefreshLayout.
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        switch(item.getItemId())
-        {
+        switch (item.getItemId()) {
             case R.id.action_add_product:
-                Intent intent = new Intent(getContext(), AddProductActivity2.class);
+                Intent intent = new Intent(getContext(), AddProductActivity.class);
                 startActivity(intent);
                 return true;
 
@@ -67,8 +66,7 @@ public class ProductFragment extends ListFragment implements SwipeRefreshLayout.
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState )
-    {
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
     }

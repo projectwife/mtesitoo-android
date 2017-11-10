@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/gray_background"
+    android:descendantFocusability="beforeDescendants"
+    android:focusableInTouchMode="true"
+    android:orientation="vertical">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/new_product_page_height"
+        android:background="@color/md_white_1000"
+        android:orientation="vertical"
+        android:padding="@dimen/new_product_page_padding">
+
+        <TextView
+            style="@style/ProfileTextTitleTheme"
+            android:text="@string/product_details_category" />
+
+        <Spinner
+            android:id="@+id/spinnerProductCategory"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:ellipsize="end"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/profile_text_colour" />
+
+        <TextView
+            style="@style/ProfileTextTitleTheme"
+            android:text="@string/product_details_price_per_unit" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button_price_minus"
+                android:layout_width="@dimen/new_product_page_button_dimens"
+                android:layout_height="@dimen/new_product_page_button_dimens"
+                android:text="-" />
+
+            <EditText
+                android:id="@+id/etProductPrice"
+                style="@style/ProfileEditTextTheme"
+                android:layout_width="@dimen/new_product_page_input_mini_width"
+                android:layout_gravity="end|center"
+                android:inputType="numberDecimal"
+                android:textAlignment="textEnd" />
+
+            <Button
+                android:id="@+id/button_price_plus"
+                android:layout_width="@dimen/new_product_page_button_dimens"
+                android:layout_height="@dimen/new_product_page_button_dimens"
+                android:text="+" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentStart="true"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/ProfileTextTitleTheme"
+                    android:text="@string/product_details_quantity" />
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal">
+
+                    <Button
+                        android:id="@+id/button_quantity_minus"
+                        android:layout_width="@dimen/new_product_page_button_dimens"
+                        android:layout_height="@dimen/new_product_page_button_dimens"
+                        android:text="-" />
+
+                    <EditText
+                        android:id="@+id/etProductQuantity"
+                        style="@style/ProfileEditTextSingleLine"
+                        android:layout_width="@dimen/new_product_page_input_mini_width"
+                        android:layout_gravity="end|center"
+                        android:inputType="number"
+                        android:textAlignment="textEnd" />
+
+                    <Button
+                        android:id="@+id/button_quantity_plus"
+                        android:layout_width="@dimen/new_product_page_button_dimens"
+                        android:layout_height="@dimen/new_product_page_button_dimens"
+                        android:text="+" />
+                </LinearLayout>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_alignParentEnd="true"
+                android:layout_alignParentRight="true"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/ProfileTextTitleTheme"
+                    android:text="@string/product_details_si_unit" />
+
+                <Spinner
+                    android:id="@+id/spinnerProductUnits"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:ellipsize="end"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                    android:textColor="@color/profile_text_colour" />
+            </LinearLayout>
+        </RelativeLayout>
+    </LinearLayout>
+</LinearLayout>

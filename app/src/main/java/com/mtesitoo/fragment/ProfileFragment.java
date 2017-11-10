@@ -240,7 +240,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
                         zoneAdapter[0] = new ArrayAdapter<>(mContext,
                                 android.R.layout.simple_spinner_item,
                                 finalZoneArrayList);
-                        zoneAdapter[0].setDropDownViewResource(R.layout.item_spinner_profile);
+                        zoneAdapter[0].setDropDownViewResource(R.layout.item_spinner);
                         mProfileState.setAdapter(zoneAdapter[0]);
                         selectedStatePosition = getSpinnerIndex(mProfileState, mSeller.getmState());
                         mProfileState.setSelection(selectedStatePosition);
@@ -256,7 +256,7 @@ public class ProfileFragment extends AbstractPermissionFragment {
                 zoneAdapter[0] = new ArrayAdapter<>(mContext,
                         android.R.layout.simple_spinner_item,
                         zoneArrayList);
-                zoneAdapter[0].setDropDownViewResource(R.layout.item_spinner_profile);
+                zoneAdapter[0].setDropDownViewResource(R.layout.item_spinner);
 
                 mProfileState.setAdapter(zoneAdapter[0]);
                 selectedStatePosition = getSpinnerIndex(mProfileState, mSeller.getmState());

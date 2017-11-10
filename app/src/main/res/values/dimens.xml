@@ -10,8 +10,8 @@
     <dimen name="cardview_vertical_padding">2dp</dimen>
 
     <dimen name="registration_terms_margin">8dp</dimen>
-  
-    <dimen name="profile_labels_size">12sp</dimen>
+
+    <dimen name="profile_labels_size">14sp</dimen>
     <dimen name="profile_labels_margin">20dp</dimen>
     <dimen name="profile_labels_margin_bottom">5dp</dimen>
     <dimen name="profile_change_picture_size">100dp</dimen>
@@ -20,4 +20,17 @@
 
     <dimen name="profile_spinner_padding">5dp</dimen>
     <dimen name="profile_spinner_text_size">17sp</dimen>
+
+    <dimen name="new_product_page_height">325dp</dimen>
+    <dimen name="new_product_page_bottom_bar_height">60dp</dimen>
+    <dimen name="new_product_page_bottom_bar_padding">5dp</dimen>
+    <dimen name="new_product_page_bottom_bar_padding_right">10dp</dimen>
+    <dimen name="new_product_page_padding">16dp</dimen>
+    <dimen name="new_product_page_top_margin">10dp</dimen>
+    <dimen name="new_product_page_input_mini_width">40dp</dimen>
+    <dimen name="new_product_page_button_dimens">40dp</dimen>
+    <dimen name="new_product_page_picture_size">105dp</dimen>
+    <dimen name="new_product_page_picture_margin">5dp</dimen>
+    <dimen name="new_product_page_plus_size">50sp</dimen>
+    <dimen name="new_product_page_preview_spacing">5dp</dimen>
 </resources>
