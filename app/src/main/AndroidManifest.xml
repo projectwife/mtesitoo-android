@@ -41,7 +41,9 @@
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <!-- Accepts URIs that begin with "https://tesitoo.com/index.php" -->
+              
+                <!-- Accepts URIs that begin with "https://tesitoo.com/admin/index.php" -->
+                <!-- Example: https://tesitoo.com/admin/index.php?route=common/reset&code=341826932726c423453462332c27dec5f820816b -->
                 <data
                     android:host="tesitoo.com"
                     android:pathPrefix="/index.php"
@@ -66,7 +68,7 @@
 
         <meta-data
             android:name="io.fabric.ApiKey"
-            android:value="bb91c88fa1fa1da1333ff238412c101be60c4f97" />
+            android:value="8f82f03459de88f58275617effd29c5232b66042" />
 
         <activity android:name=".RegisterActivity" />
 
