@@ -263,6 +263,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                         logUser(result);
                         logSuccessLogin(result);
 
+                        // Dismiss the progress overlay
+                        dismissLoginProgress();
+
                         //Cache login state in sharedprefs
                         mEditor.putBoolean(Constants.IS_USER_LOGGED_IN_KEY, true);
                         mEditor.putString(Constants.LOGGED_IN_USER_ID_KEY, userId);
@@ -281,6 +284,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
                     @Override
                     public void onError(Exception e) {
+                        // Dismiss the progress overlay
+                        dismissLoginProgress();
+
                         Log.e("getSellerInfo", e.toString());
                     }
                 });
@@ -288,6 +294,9 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
             @Override
             public void onError(Exception e) {
+                // Dismiss the progress overlay
+                dismissLoginProgress();
+
                 Log.e("AuthenticateUser", e.toString());
                 logFailLogin(mUsername.getText().toString(),e);
                 String errorMessage = "";
@@ -511,17 +520,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         }
 
         mLoadingViewContainer.setVisibility(View.VISIBLE);
-//        mLoginProgress = new ProgressDialog(this);
-//        mLoginProgress.setMessage("Logging in");
-//        mLoginProgress.show();
     }
 
     private void dismissLoginProgress() {
-//        if (mLoginProgress != null) {
-//            mLoginProgress.dismiss();
-//        }
         mLoadingViewContainer.setVisibility(View.INVISIBLE);
-
     }
 
 }
