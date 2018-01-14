@@ -200,10 +200,14 @@ public class AddProductActivity extends AppCompatActivity {
             public void onResult(String result) {
                 submitProductPicture(Integer.parseInt(result), product.getmThumbnail(), true);
 
-                if (product.getAuxImages().size() > 0) {
+                // TODO: In some cases the URI List returned is null. So need to check why that is happening.
+                if (product.getAuxImages() != null && product.getAuxImages().size() > 0) {
                     for (Uri auxImage : product.getAuxImages()) {
                         submitProductPicture(Integer.parseInt(result), auxImage, false);
                     }
+                }
+                else {
+                    Log.e("submit product error", "onResult: getAuxImages() error");
                 }
 
                 Toast.makeText(getApplicationContext(), getString(R.string.product_add_done), Toast.LENGTH_LONG).show();
