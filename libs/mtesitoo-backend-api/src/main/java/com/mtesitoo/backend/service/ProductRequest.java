@@ -3,6 +3,8 @@ package com.mtesitoo.backend.service;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
 import android.util.Log;
 import android.widget.Toast;
@@ -22,10 +24,13 @@ import com.mtesitoo.backend.service.logic.IProductRequest;
 
 import java.io.ByteArrayOutputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.mtesitoo.backend.ExifUtil;
 
 /**
  * Opencart API-based implementation of {@link IProductRequest}.
@@ -118,11 +123,45 @@ public class ProductRequest extends Request implements IProductRequest {
             int DESIREDWIDTH = 500;
             int DESIREDHEIGHT = 500;
 
+            int orientation = ExifUtil.getExifOrientation(image.getPath());
+
             Bitmap resizedBitmap = Bitmap.createScaledBitmap(bm, DESIREDWIDTH, DESIREDHEIGHT, true);
+
+            Matrix matrix = new Matrix();
+            switch (orientation) {
+                case 2:
+                    matrix.setScale(-1, 1);
+                    break;
+                case 3:
+                    matrix.setRotate(180);
+                    break;
+                case 4:
+                    matrix.setRotate(180);
+                    matrix.postScale(-1, 1);
+                    break;
+                case 5:
+                    matrix.setRotate(90);
+                    matrix.postScale(-1, 1);
+                    break;
+                case 6:
+                    matrix.setRotate(90);
+                    break;
+                case 7:
+                    matrix.setRotate(-90);
+                    matrix.postScale(-1, 1);
+                    break;
+                case 8:
+                    matrix.setRotate(-90);
+                    break;
+                default:
+                    break;
+            }
+
+            Bitmap rotatedBitmap = Bitmap.createBitmap(resizedBitmap,0,0,DESIREDWIDTH,DESIREDHEIGHT,matrix,true);
             bm.recycle();
 
             ByteArrayOutputStream baos = new ByteArrayOutputStream();
-            resizedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
+            rotatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, baos);
 
             final byte[] imageBytes = baos.toByteArray();
 
@@ -157,6 +196,8 @@ public class ProductRequest extends Request implements IProductRequest {
             resizedBitmap.recycle();
         } catch (FileNotFoundException e) {
             Toast.makeText(mContext, "Failed to upload Product photo.", Toast.LENGTH_LONG).show();
+        } catch (IOException e) {
+            e.printStackTrace();
         }
     }
 

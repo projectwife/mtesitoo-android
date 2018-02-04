@@ -2,6 +2,7 @@ package com.mtesitoo.backend;
 
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.os.Build;
 
 import java.io.IOException;
@@ -67,7 +68,7 @@ public class ExifUtil {
         return bitmap;
     }
     
-    private static int getExifOrientation(String src) throws IOException {
+    public static int getExifOrientation(String src) throws IOException {
         int orientation = 1;
         
         try {
