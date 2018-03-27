@@ -39,10 +39,13 @@ import com.mtesitoo.AbstractPermissionFragment;
 import com.mtesitoo.Constants;
 import com.mtesitoo.R;
 import com.mtesitoo.backend.cache.CategoryCache;
+import com.mtesitoo.backend.cache.UnitCache;
 import com.mtesitoo.backend.cache.logic.ICategoryCache;
+import com.mtesitoo.backend.cache.logic.IUnitCache;
 import com.mtesitoo.backend.helper.ContentUriHelper;
 import com.mtesitoo.backend.model.Category;
 import com.mtesitoo.backend.model.Product;
+import com.mtesitoo.backend.model.Unit;
 import com.mtesitoo.backend.service.ProductRequest;
 import com.mtesitoo.backend.service.logic.ICallback;
 import com.mtesitoo.backend.service.logic.IProductRequest;
@@ -145,7 +148,25 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
         mProductName.setText(mProduct.getName());
         mProductDescription.setText(FormatHelper.formatDescription(mProduct.getDescription()));
         mProductLocation.setText(mProduct.getLocation());
-        mProductUnit.setText(mProduct.getSIUnit());
+
+        IUnitCache unitCache = new UnitCache(getContext());
+        List<Unit> units = unitCache.getGenericUnits();
+        Integer unitId = Integer.parseInt(mProduct.getSIUnit());
+        for (Unit u : units) {
+            if (u.getId() == unitId) {
+                if (unitId == 1) { // Custom unit
+                    String customUnit = mProduct.getCustomUnit();
+
+                    mProductUnit.setText(u.getName() + " (" + customUnit + ")");
+                }
+                else {
+                    mProductUnit.setText(u.getName());
+                }
+
+                break;
+            }
+        }
+
         mProductQuantity.setText(mProduct.getQuantity().toString());
         mProductPrice.setText(mProduct.getDisplayPrice());
 
@@ -215,9 +236,11 @@ public class ProductDetailEditFragment extends AbstractPermissionFragment implem
                     mProduct.getId(),
                     mProductName.getText().toString(),
                     mProductDescription.getText().toString(),
-                    mProduct.getLocation(),
+                    mProductLocation.getText().toString(),
                     category,
-                    mProductUnit.getText().toString(),
+//                    mProductUnit.getText().toString(), // TODO Srik: Changing Unit is not supported yet in Edit screen
+                    mProduct.getSIUnit(), // Unit is taken from the Product object
+                    mProduct.getCustomUnit(),
                     pricePerUnit,
                     ProductPriceHelper.getDisplayPrice(ProductPriceHelper.getDefaultCurrencyCode(), pricePerUnit),
                     ProductPriceHelper.getDefaultCurrencyCode(),

@@ -27,6 +27,7 @@ public class AddProductHelper {
     private String productQuantity;
     private String productPricePerUnit;
     private String productUnits;
+    private String productCustomUnits;
 
 
     private List<Uri> productPictures;
@@ -64,6 +65,7 @@ public class AddProductHelper {
         h.put(Constants.PRODUCT_PRICE_KEY, productPricePerUnit);
         h.put(Constants.PRODUCT_QUANTITY_KEY, productQuantity);
         h.put(Constants.PRODUCT_UNITS_KEY, productUnits);
+        h.put(Constants.PRODUCT_CUSTOM_UNITS_KEY, productCustomUnits);
 
         return h;
     }
@@ -108,6 +110,10 @@ public class AddProductHelper {
         this.productUnits = productUnits;
     }
 
+    public void setProductCustomUnits(String customUnits) {
+        this.productCustomUnits = customUnits;
+    }
+
     public void setProductPictures(List<Uri> productPictures) {
         this.productPictures = productPictures;
     }
@@ -123,6 +129,7 @@ public class AddProductHelper {
         this.productQuantity = "";
         this.productPricePerUnit = "";
         this.productUnits = "";
+        this.productCustomUnits = "";
 
         this.productPictures = null;
     }
@@ -138,7 +145,7 @@ public class AddProductHelper {
         }
 
         return new Product(0, productName, productDescription, productLocation, productCategory,
-                productUnits, productPricePerUnit,
+                productUnits, productCustomUnits, productPricePerUnit,
                 ProductPriceHelper.getDisplayPrice(ProductPriceHelper.getDefaultCurrencyCode(), productPricePerUnit),
                 ProductPriceHelper.getDefaultCurrencyCode(),
                 Integer.parseInt(productQuantity), DateHelper.parseDate(productExpirationDate), mainPicture, auxImages, 5, 0, 0);

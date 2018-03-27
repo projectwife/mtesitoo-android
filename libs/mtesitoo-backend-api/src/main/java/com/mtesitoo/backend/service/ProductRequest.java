@@ -218,6 +218,10 @@ public class ProductRequest extends Request implements IProductRequest {
         params.put(mContext.getString(R.string.params_product_price), product.getPricePerUnit());
         params.put(mContext.getString(R.string.params_product_quantity), Integer.toString(product.getQuantity()));
         params.put(mContext.getString(R.string.params_product_category_ids), product.getCategoriesIDStringList());
+        params.put(mContext.getString(R.string.params_product_unit_class_id), product.getSIUnit());
+        if (product.getSIUnit().equals("1") && product.getCustomUnit() != null && product.getCustomUnit() != "") {
+            params.put(mContext.getString(R.string.params_product_custom_unit), product.getCustomUnit());
+        }
         params.put(mContext.getString(R.string.params_product_expiry), product.getExpirationFormattedForAPI());
         params.put(mContext.getString(R.string.params_product_location), product.getLocation());
 

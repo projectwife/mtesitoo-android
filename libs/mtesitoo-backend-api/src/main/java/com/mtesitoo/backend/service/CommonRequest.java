@@ -38,4 +38,13 @@ public class CommonRequest extends Request implements ICommonRequest {
         stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
         mRequestQueue.add(stringRequest);
     }
+
+    public void getUnits(ICallback<List<Unit>> callback) {
+        URL url = new URL(mContext, R.string.path_common_units);
+        CommonResponse response = new CommonResponse(callback, CommonResponse.TYPE_UNIT);
+        AuthorizedStringRequest stringRequest = new AuthorizedStringRequest(mContext, com.android.volley.Request.Method.GET, url.toString(), response, response);
+
+        stringRequest.setAuthorization(new Authorization(mContext, mAuthorizationCache.getAuthorization()).toString());
+        mRequestQueue.add(stringRequest);
+    }
 }

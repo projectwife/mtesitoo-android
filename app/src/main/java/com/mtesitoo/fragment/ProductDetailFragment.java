@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -19,11 +20,16 @@ import com.daimajia.slider.library.SliderLayout;
 import com.daimajia.slider.library.SliderTypes.BaseSliderView;
 import com.daimajia.slider.library.SliderTypes.DefaultSliderView;
 import com.daimajia.slider.library.Tricks.ViewPagerEx;
+import com.mtesitoo.Constants;
 import com.mtesitoo.R;
+import com.mtesitoo.backend.cache.UnitCache;
+import com.mtesitoo.backend.cache.logic.IUnitCache;
 import com.mtesitoo.backend.model.Product;
+import com.mtesitoo.backend.model.Unit;
 import com.mtesitoo.helper.FormatHelper;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
@@ -128,7 +134,24 @@ public class ProductDetailFragment extends Fragment implements BaseSliderView.On
         mProductLocation.setText(mProduct.getLocation());
         mProductCategory.setText(mProduct.getCategoriesStringList(this.getContext()));
 
-        mProductUnit.setText(mProduct.getSIUnit());
+        IUnitCache unitCache = new UnitCache(getContext());
+        List<Unit> units = unitCache.getGenericUnits();
+        Integer unitId = Integer.parseInt(mProduct.getSIUnit());
+        for (Unit u : units) {
+            if (u.getId() == unitId) {
+                if (unitId == 1) { // Custom unit
+                    String customUnit = mProduct.getCustomUnit();
+
+                    mProductUnit.setText(u.getName() + " (" + customUnit + ")");
+                }
+                else {
+                    mProductUnit.setText(u.getName());
+                }
+
+                break;
+            }
+        }
+
         mProductQuantity.setText(mProduct.getQuantity().toString());
         mProductPrice.setText(mProduct.getDisplayPrice());
 

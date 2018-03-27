@@ -12,7 +12,11 @@ public interface IUnitCache {
 
     void storeWeightUnits(List<Unit> units);
 
+    void storeGenericUnits(List<Unit> units);
+
     List<Unit> getLengthUnits();
 
     List<Unit> getWeightUnits();
+
+    List<Unit> getGenericUnits();
 }
