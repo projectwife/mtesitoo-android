@@ -5,6 +5,7 @@ import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -24,6 +25,8 @@ import com.mtesitoo.backend.model.Unit;
 import com.mtesitoo.helper.AddProductHelper;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +49,9 @@ public class AddProductQuantityFragment extends Fragment {
     @NonNull
     EditText productQuantityEditText;
 
+    @BindView(R.id.customUnit)
+    EditText productCustomUnitEditText;
+
     @BindView(R.id.spinnerProductCategory)
     @NonNull
     Spinner productCategorySpinner;
@@ -67,7 +73,16 @@ public class AddProductQuantityFragment extends Fragment {
                 AddProductHelper.getInstance().setProductPricePerUnit(charSequence.toString());
                 return;
             }
-            AddProductHelper.getInstance().setProductQuantity(charSequence.toString());
+
+            if (charSequence.toString().hashCode() == productQuantityEditText.getText().toString().hashCode()) {
+                AddProductHelper.getInstance().setProductQuantity(charSequence.toString());
+                return;
+            }
+
+            if (charSequence.toString().hashCode() == productCustomUnitEditText.getText().toString().hashCode()) {
+                AddProductHelper.getInstance().setProductCustomUnits(charSequence.toString());
+                return;
+            }
         }
 
         @Override
@@ -119,7 +134,16 @@ public class AddProductQuantityFragment extends Fragment {
         }
 
         IUnitCache unitCache = new UnitCache(getContext());
-        final List<Unit> units = unitCache.getWeightUnits();
+        List<Unit> sortedUnits = unitCache.getGenericUnits();
+        Collections.sort(sortedUnits, new Comparator<Unit>() {
+            @Override
+            public int compare(Unit unit, Unit t1) {
+                return unit.getSortOrder() - t1.getSortOrder();
+            }
+        });
+
+        final List<Unit> units = sortedUnits;
+
         List<String> unitNames = new ArrayList<>(units.size());
         for (int i = 0; i < units.size(); i++) {
             unitNames.add(units.get(i).getName());
@@ -144,6 +168,7 @@ public class AddProductQuantityFragment extends Fragment {
 
         productPriceEditText.addTextChangedListener(textWatcher);
         productQuantityEditText.addTextChangedListener(textWatcher);
+        productCustomUnitEditText.addTextChangedListener(textWatcher);
     }
 
     @OnClick({R.id.button_price_minus, R.id.button_price_plus})
@@ -177,10 +202,16 @@ public class AddProductQuantityFragment extends Fragment {
             return;
         }
         IUnitCache unitCache = new UnitCache(getContext());
-        final List<Unit> units = unitCache.getWeightUnits();
+        final List<Unit> units = unitCache.getGenericUnits();
         for (Unit u : units) {
             if (u.getName().equals(view.getSelectedItem())) {
+                productCustomUnitEditText.setVisibility(View.GONE);
                 AddProductHelper.getInstance().setProductUnits(String.valueOf(u.getId()));
+                if (u.getId() == 1) { // ID = 1 is for Custom unit type
+                    productCustomUnitEditText.setVisibility(View.VISIBLE);
+                } else {
+                    productCustomUnitEditText.setVisibility(View.GONE);
+                }
                 break;
             }
         }

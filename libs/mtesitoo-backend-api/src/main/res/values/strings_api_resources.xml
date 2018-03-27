@@ -13,6 +13,8 @@
     <string name="params_product_location">location</string>
     <string name="params_product_length_class_id">length_class_id</string>
     <string name="params_product_weight_class_id">weight_class_id</string>
+    <string name="params_product_unit_class_id">unit_class_id</string>
+    <string name="params_product_custom_unit">custom_unit</string>
     <string name="params_product_minimum">minimum</string>
     <string name="params_product_image_main">main_product_image</string>
     <string name="params_product_image_sort">sort_order</string>
@@ -53,6 +55,7 @@
     <string name="path_common_country">/common/country</string>
     <string name="path_common_length">/common/length</string>
     <string name="path_common_weight">/common/weight</string>
+    <string name="path_common_units">/common/units</string>
 
     <string name="path_order_vendor">/vendor/order</string>
     <string name="path_order_vendor_filterBy">filter_order_status</string>

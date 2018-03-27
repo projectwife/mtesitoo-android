@@ -25,5 +25,6 @@ public class Constants {
     public static final String PRODUCT_PRICE_KEY = "productPrice";
     public static final String PRODUCT_QUANTITY_KEY = "productQuantity";
     public static final String PRODUCT_UNITS_KEY = "productUnits";
+    public static final String PRODUCT_CUSTOM_UNITS_KEY = "productCustomUnits";
 
 }

@@ -21,6 +21,7 @@ public class CommonResponse implements Response.Listener<String>, Response.Error
 
     public final static String TYPE_LENGTH = "length";
     public final static String TYPE_WEIGHT = "weight";
+    public final static String TYPE_UNIT = "unit";
 
     public CommonResponse(ICallback<List<Unit>> callback, String type) {
         mType = type;
@@ -38,6 +39,10 @@ public class CommonResponse implements Response.Listener<String>, Response.Error
 
             if (mType == TYPE_WEIGHT) {
                 result = parseWeightUnits(response);
+            }
+
+            if (mType == TYPE_UNIT) {
+                result = parseUnits(response);
             }
 
             if (result == null) {
@@ -87,6 +92,25 @@ public class CommonResponse implements Response.Listener<String>, Response.Error
                     jsonUnit.getString("weight_class_id")),
                     jsonUnit.getString("title"),
                     jsonUnit.getString("unit"));
+
+            result.add(unit);
+        }
+
+        return result;
+    }
+
+    private List<Unit> parseUnits(String response) throws JSONException {
+        JSONObject jsonResponse = new JSONObject(response);
+        JSONArray jsonUnits = jsonResponse.getJSONArray("units");
+        List<Unit> result = new ArrayList<>(jsonUnits.length());
+
+        for (int i = 0; i < jsonUnits.length(); ++i) {
+            JSONObject jsonUnit = jsonUnits.getJSONObject(i);
+            Unit unit = new Unit(Integer.parseInt(
+                    jsonUnit.getString("unit_class_id")),
+                    jsonUnit.getString("title"),
+                    jsonUnit.getString("abbreviation"),
+                    Integer.parseInt(jsonUnit.getString("sort_order")));
 
             result.add(unit);
         }

@@ -8,10 +8,20 @@ public class Unit {
     private String mName;
     private String mUnit;
 
+    private String mAbbr;
+    private Integer mSortOrder;
+
     public Unit(Integer id, String name, String unit) {
         mId = id;
         mName = name;
         mUnit = unit;
+    }
+
+    public Unit(Integer id, String name, String abbr, Integer sortOrder) {
+        mId = id;
+        mName = name;
+        mAbbr = abbr;
+        mSortOrder = sortOrder;
     }
 
     public int getId() {
@@ -24,5 +34,13 @@ public class Unit {
 
     public String getUnit() {
         return mUnit;
+    }
+
+    public String getAbbr() {
+        return mAbbr;
+    }
+
+    public int getSortOrder() {
+        return mSortOrder;
     }
 }

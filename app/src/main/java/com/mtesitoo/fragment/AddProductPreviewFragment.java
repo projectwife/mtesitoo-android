@@ -100,10 +100,19 @@ public class AddProductPreviewFragment extends Fragment {
         }
         if (!quantityData.get(Constants.PRODUCT_CATEGORY_KEY).isEmpty()) {
             IUnitCache unitCache = new UnitCache(getContext());
-            final List<Unit> units = unitCache.getWeightUnits();
+            final List<Unit> units = unitCache.getGenericUnits();
+            Integer unitId = Integer.parseInt(quantityData.get(Constants.PRODUCT_UNITS_KEY));
             for (Unit u : units) {
-                if (u.getId() == Integer.parseInt(quantityData.get(Constants.PRODUCT_UNITS_KEY))) {
-                    productUnitsTextView.setText(u.getName());
+                if (u.getId() == unitId) {
+                    if (unitId == 1) { // Custom unit
+                        String customUnit = quantityData.get(Constants.PRODUCT_CUSTOM_UNITS_KEY);
+
+                        productUnitsTextView.setText(u.getName() + " (" + customUnit + ")");
+                    }
+                    else {
+                        productUnitsTextView.setText(u.getName());
+                    }
+
                     break;
                 }
             }

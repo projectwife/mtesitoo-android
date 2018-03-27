@@ -216,6 +216,19 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                 ISellerRequest sellerService = new SellerRequest(mContext);
                 ICommonRequest commonService = new CommonRequest(mContext);
 
+                commonService.getUnits(new ICallback<List<Unit>>() {
+                    @Override
+                    public void onResult(List<Unit> units) {
+                        IUnitCache cache = new UnitCache(mContext);
+                        cache.storeGenericUnits(units);
+                    }
+
+                    @Override
+                    public void onError(Exception e) {
+                        Log.e("Units", e.toString());
+                    }
+                });
+
                 commonService.getLengthUnits(new ICallback<List<Unit>>() {
                     @Override
                     public void onResult(List<Unit> units) {

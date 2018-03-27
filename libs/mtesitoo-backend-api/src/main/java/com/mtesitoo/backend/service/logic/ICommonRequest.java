@@ -11,4 +11,6 @@ public interface ICommonRequest {
     void getLengthUnits(ICallback<List<Unit>> callback);
 
     void getWeightUnits(ICallback<List<Unit>> callback);
+
+    void getUnits(ICallback<List<Unit>> callback);
 }

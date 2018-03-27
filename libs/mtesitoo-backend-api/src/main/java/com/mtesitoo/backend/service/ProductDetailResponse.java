@@ -1,6 +1,7 @@
 package com.mtesitoo.backend.service;
 
 import android.net.Uri;
+import android.util.Log;
 
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -94,7 +95,8 @@ public class ProductDetailResponse implements Response.Listener<String>, Respons
                     jsonProduct.getString("description"),
                     jsonProduct.getString("location"),
                     resolveCategories(jsonProduct.getJSONArray("categories")),
-                    "SI Unit",
+                    jsonProduct.getString("unit_class_id"),
+                    jsonProduct.getString("custom_unit"),
                     jsonProduct.getString("price"),
                     displayPrice,
                     currencyCode,

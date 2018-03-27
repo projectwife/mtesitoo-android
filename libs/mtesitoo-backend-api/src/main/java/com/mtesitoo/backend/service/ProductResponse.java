@@ -104,7 +104,7 @@ public class ProductResponse implements Response.Listener<String>, Response.Erro
                             jsonProduct.getString("description"),
                             jsonProduct.getString("location"),
                             resolveCategories(jsonProduct.getJSONArray("categories")),
-                            "SI Unit",
+                            "SI Unit", // Unit value is not available in this response. So set it to a dummy value
                             jsonProduct.getString("price"),
                             displayPrice,
                             currencyCode,

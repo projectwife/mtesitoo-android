@@ -28,6 +28,7 @@ public class Product implements Parcelable {
     private final String mLocation;
     private ArrayList<String> mCategories = new ArrayList<>();
     private final String mSIUnit;
+    private final String mCustomUnit;
     private final String mPricePerUnit;
     private final String mDisplayPrice;
     private final String mCurrencyCode;
@@ -48,6 +49,7 @@ public class Product implements Parcelable {
         this.mLocation = in.readString();
         in.readStringList(mCategories);
         this.mSIUnit = in.readString();
+        this.mCustomUnit = in.readString();
         this.mPricePerUnit = in.readString();
         this.mDisplayPrice = in.readString();
         this.mCurrencyCode = in.readString();
@@ -106,6 +108,45 @@ public class Product implements Parcelable {
         mStatus = status;
         mPendingOrders = numPendingOrders;
         mProcessingOrders = numProcessingOrders;
+        mCustomUnit = null;
+    }
+
+    /**
+     * Create product with Custom Unit
+     *
+     * @param name         product name (e.g. apples)
+     * @param description  product descriptions (e.g. freshly picked, sweet-sour)
+     * @param location     product location (e.g. 123 fake street)
+     * @param categories   product category (e.g. fruits & nuts)
+     * @param siUnit       product si unit measurement (e.g. liter, gram)
+     * @param customUnit   product custom unit not covered in pre-defined units (e.g. cart)
+     * @param pricePerUnit product price per quantity (e.g. $2.5)
+     * @param quantity     product quantity (e.g. 100)
+     * @param expiration   product post expiration (e.g. YYYY-MM-DD)
+     * @param thumbnail    url of the product's thumbnail
+     */
+    public Product(int id, String name, String description, String location,
+                   ArrayList<String> categories, String siUnit, String customUnit,
+                   String pricePerUnit, String displayPrice, String currencyCode,
+                   Integer quantity, Date expiration, Uri thumbnail, ArrayList<Uri> auxImages,
+                   int status, int numPendingOrders, int numProcessingOrders) {
+        mId = id;
+        mName = name;
+        mDescription = description;
+        mLocation = location;
+        mCategories = categories;
+        mSIUnit = siUnit;
+        mCustomUnit = customUnit;
+        mPricePerUnit = pricePerUnit;
+        mDisplayPrice = displayPrice;
+        mCurrencyCode = currencyCode;
+        mQuantity = quantity;
+        mExpiration = expiration;
+        mThumbnail = thumbnail;
+        mAuxImages = auxImages;
+        mStatus = status;
+        mPendingOrders = numPendingOrders;
+        mProcessingOrders = numProcessingOrders;
     }
 
     public int getStatus() {
@@ -141,6 +182,49 @@ public class Product implements Parcelable {
         mLocation = location;
         mCategories = categoryList;
         mSIUnit = siUnit;
+        mPricePerUnit = pricePerUnit;
+        mDisplayPrice = displayPrice;
+        mCurrencyCode = currencyCode;
+        mQuantity = quantity;
+        mExpiration = expiration;
+        mThumbnail = thumbnail;
+        mAuxImages = auxImages;
+        mStatus = status;
+        mPendingOrders = numPendingOrders;
+        mProcessingOrders = numProcessingOrders;
+        mCustomUnit = null;
+    }
+
+    /**
+     * Create product with Custom Unit
+     *
+     * @param name         product name (e.g. apples)
+     * @param description  product descriptions (e.g. freshly picked, sweet-sour)
+     * @param location     product location (e.g. 123 fake street)
+     * @param category     product category (e.g. fruits & nuts)
+     * @param siUnit       product si unit measurement (e.g. liter, gram)
+     * @param customUnit   product custom unit not covered in pre-defined units (e.g. cart)
+     * @param pricePerUnit product price per quantity (e.g. $2.5)
+     * @param quantity     product quantity (e.g. 100)
+     * @param expiration   product post expiration (e.g. YYYY-MM-DD)
+     * @param thumbnail    url of the product's thumbnail
+     */
+    public Product(int id, String name, String description, String location, String category,
+                   String siUnit, String customUnit, String pricePerUnit, String displayPrice,
+                   String currencyCode, Integer quantity, Date expiration, Uri thumbnail,
+                   List<Uri> auxImages, int status, int numPendingOrders,
+                   int numProcessingOrders) {
+
+        ArrayList<String> categoryList = new ArrayList<>();
+        categoryList.add(category);
+
+        mId = id;
+        mName = name;
+        mDescription = description;
+        mLocation = location;
+        mCategories = categoryList;
+        mSIUnit = siUnit;
+        mCustomUnit = customUnit;
         mPricePerUnit = pricePerUnit;
         mDisplayPrice = displayPrice;
         mCurrencyCode = currencyCode;
@@ -273,6 +357,13 @@ public class Product implements Parcelable {
         return mSIUnit;
     }
 
+    public String getCustomUnit() {
+        if (mCustomUnit != null) {
+            return mCustomUnit;
+        }
+        return "";
+    }
+
     public String getPricePerUnit() {
         return mPricePerUnit;
     }
@@ -358,8 +449,13 @@ public class Product implements Parcelable {
     }
 
     public boolean isCompleted() {
+        Boolean isValidUnit = !mSIUnit.isEmpty();
+        if (Integer.valueOf(mSIUnit) == 1) {
+            isValidUnit = !mCustomUnit.equals("");
+        }
+
         return !mName.isEmpty() && !mDescription.isEmpty() && !mLocation.isEmpty() && ! mCategories.isEmpty()
-                && !mSIUnit.isEmpty() && !mPricePerUnit.isEmpty() && !mDisplayPrice.isEmpty() && !mCurrencyCode.isEmpty()
+                && isValidUnit && !mPricePerUnit.isEmpty() && !mDisplayPrice.isEmpty() && !mCurrencyCode.isEmpty()
                 && mExpiration != null && mThumbnail != null;
     }
 
@@ -404,6 +500,10 @@ public class Product implements Parcelable {
         dest.writeString(mLocation);
         dest.writeStringList(mCategories);
         dest.writeString(mSIUnit);
+//        if (mCustomUnit != null) {
+//            dest.writeString(mCustomUnit);
+//        }
+        dest.writeString(mCustomUnit);
         dest.writeString(mPricePerUnit);
         dest.writeString(mDisplayPrice);
         dest.writeString(mCurrencyCode);
