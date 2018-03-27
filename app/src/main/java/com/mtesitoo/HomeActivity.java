@@ -35,6 +35,7 @@ import com.mtesitoo.fragment.InfoFragment;
 import com.mtesitoo.fragment.OrderFragment;
 import com.mtesitoo.fragment.ProductFragment;
 import com.mtesitoo.fragment.ProfileFragment;
+import com.mtesitoo.fragment.ViewProfileFragment;
 import com.mtesitoo.helper.UriAdapter;
 import com.squareup.picasso.Picasso;
 
@@ -186,7 +187,8 @@ public class HomeActivity extends AppCompatActivity {
                             if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_list_products))) {
                                 f = ProductFragment.newInstance(mContext, mSeller.getId());
                             } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_profile_index))) {
-                                f = ProfileFragment.newInstance();
+//                                f = ProfileFragment.newInstance();
+                                f = ViewProfileFragment.newInstance();
                             } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_order_index))) {
                                 f = OrderFragment.newInstance(mContext, mSeller.getId());
                             } else if (drawerItem.getIdentifier() == Integer.parseInt(mContext.getString(R.string.menu_item_add_product_index))) {

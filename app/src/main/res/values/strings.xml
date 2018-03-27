@@ -108,4 +108,7 @@
     <string name="product_add_error">Error submitting product. Please try again</string>
     <string name="product_add_done">New Product Added</string>
 
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
 </resources>

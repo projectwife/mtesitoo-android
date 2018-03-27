@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+android:layout_width="match_parent"
+android:layout_height="wrap_content"
+android:background="@color/gray_background"
+android:descendantFocusability="beforeDescendants"
+android:focusableInTouchMode="true">
+
+<LinearLayout
+    android:id="@+id/view_profile_relative_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/activity_vertical_margin"
+    android:background="@color/md_white_1000"
+    android:orientation="vertical"
+    android:padding="@dimen/activity_horizontal_margin">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin">
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical">
+
+            <ImageView
+                android:id="@+id/profileImage"
+                android:layout_width="@dimen/profile_picture_size"
+                android:layout_height="@dimen/profile_picture_size"
+                android:src="@drawable/ic_launcher" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="2"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/ProfileFirstTextTitleTheme"
+                android:text="@string/profile_name_label" />
+
+            <EditText
+                android:id="@+id/etFirstName"
+                style="@style/ProfileEditTextSingleLine"
+                android:focusable="false"
+                android:hint="@string/profile_name_label" />
+
+            <TextView
+                style="@style/ProfileTextTitleTheme"
+                android:text="@string/profile_last_name_label" />
+
+            <EditText
+                android:id="@+id/etLastName"
+                style="@style/ProfileEditTextSingleLine"
+                android:focusable="false"
+                android:hint="@string/profile_last_name_label" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingEnd="@dimen/activity_horizontal_margin"
+        android:paddingStart="@dimen/activity_horizontal_margin">
+
+        <TextView
+            style="@style/ProfileTextTitleTheme"
+            android:text="@string/profile_business_label" />
+
+        <EditText
+            android:id="@+id/etBusiness"
+            style="@style/ProfileEditTextSingleLine"
+            android:focusable="false"
+            android:hint="@string/profile_default_business" />
+
+        <TextView
+            style="@style/ProfileTextTitleTheme"
+            android:text="@string/profile_description_label" />
+
+        <EditText
+            android:id="@+id/etDescription"
+            style="@style/ProfileEditTextTheme"
+            android:hint="@string/profile_description_label_hint"
+            android:focusable="false"
+            android:inputType="textMultiLine" />
+
+        <TextView
+            style="@style/ProfileTextTitleTheme"
+            android:text="@string/profile_phone_label" />
+
+        <EditText
+            android:id="@+id/etPhone"
+            style="@style/ProfileEditTextSingleLine"
+            android:focusable="false"
+            android:inputType="phone" />
+
+        <TextView
+            style="@style/ProfileTextTitleTheme"
+            android:text="@string/profile_email_label" />
+
+        <EditText
+            android:id="@+id/etEmail"
+            style="@style/ProfileEditTextSingleLine"
+            android:enabled="false"
+            android:hint="@string/profile_email_label_hint"
+            android:focusable="false"
+            android:inputType="textEmailAddress" />
+
+        <TextView
+            style="@style/ProfileTextTitleTheme"
+            android:text="@string/profile_address_label" />
+
+        <EditText
+            android:id="@+id/etAddress1"
+            style="@style/ProfileEditTextSingleLine"
+            android:focusable="false"
+            android:hint="@string/profile_address_label_hint" />
+
+
+        <TextView
+            style="@style/ProfileTextTitleTheme"
+            android:text="@string/profile_city_label" />
+
+        <EditText
+            android:id="@+id/etCity"
+            style="@style/ProfileEditTextSingleLine"
+            android:focusable="false"
+            android:hint="@string/profile_city_label" />
+
+        <TextView
+            style="@style/ProfileTextTitleTheme"
+            android:text="@string/profile_region_label" />
+
+        <EditText
+            android:id="@+id/etState"
+            style="@style/ProfileEditTextSingleLine"
+            android:focusable="false"
+            android:hint="@string/profile_region_label" />
+
+        <!--<Spinner-->
+            <!--android:id="@+id/spinnerState"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:ellipsize="end"-->
+            <!--android:hint="@string/profile_region_label"-->
+            <!--android:maxLines="1"-->
+            <!--android:textColor="@color/profile_text_colour" />-->
+
+
+        <TextView
+            style="@style/ProfileTextTitleTheme"
+            android:text="@string/profile_country_label" />
+
+        <EditText
+            android:id="@+id/etCountry"
+            style="@style/ProfileEditTextSingleLine"
+            android:focusable="false"
+            android:hint="@string/profile_country_label" />
+
+        <!--<Spinner-->
+            <!--android:id="@+id/spinnerCountry"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:ellipsize="end"-->
+            <!--android:textAppearance="@style/TextAppearance.AppCompat.Medium"-->
+            <!--android:textColor="@color/profile_text_colour" />-->
+    </LinearLayout>
+</LinearLayout>
+
+</android.support.v4.widget.NestedScrollView>
