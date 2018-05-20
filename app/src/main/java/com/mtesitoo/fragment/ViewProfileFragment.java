@@ -25,6 +25,7 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.gson.Gson;
@@ -46,6 +47,8 @@ import com.mtesitoo.model.ImageFile;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import org.w3c.dom.Text;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -65,26 +68,26 @@ public class ViewProfileFragment extends AbstractPermissionFragment {
 
     @BindView(R.id.profileImage)
     ImageView mProfileImage;
-    @BindView(R.id.etFirstName)
-    EditText mFirstName;
-    @BindView(R.id.etLastName)
-    EditText mLastName;
-    @BindView(R.id.etPhone)
-    EditText mProfileTelephone;
-    @BindView(R.id.etEmail)
-    EditText mProfileEmail;
-    @BindView(R.id.etBusiness)
-    EditText mProfileCompanyName;
-    @BindView(R.id.etDescription)
-    EditText mProfileDescription;
-    @BindView(R.id.etAddress1)
-    EditText mProfileAddress1;
-    @BindView(R.id.etCity)
-    EditText mProfileCity;
-    @BindView(R.id.etState)
-    EditText mProfileState;
-    @BindView(R.id.etCountry)
-    EditText mProfileCountry;
+    @BindView(R.id.tvFirstName)
+    TextView mFirstName;
+    @BindView(R.id.tvLastName)
+    TextView mLastName;
+    @BindView(R.id.tvPhone)
+    TextView mProfileTelephone;
+    @BindView(R.id.tvEmail)
+    TextView mProfileEmail;
+    @BindView(R.id.tvBusiness)
+    TextView mProfileCompanyName;
+    @BindView(R.id.tvDescription)
+    TextView mProfileDescription;
+    @BindView(R.id.tvAddress1)
+    TextView mProfileAddress1;
+    @BindView(R.id.tvCity)
+    TextView mProfileCity;
+    @BindView(R.id.tvState)
+    TextView mProfileState;
+    @BindView(R.id.tvCountry)
+    TextView mProfileCountry;
 
     private Uri newProfileImageUri = null;
     private int selectedStatePosition = -1;

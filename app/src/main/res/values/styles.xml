@@ -92,5 +92,17 @@
         <item name="android:textSize">18sp</item>
     </style>
 
+    <!-- The themes are swapped for the View only mode to make the title bigger than the value -->
+    <style name="ProfileTextViewOnlyTitleTheme" parent="@style/ProfileEditTextTheme">
+        <item name="android:layout_marginTop">@dimen/profile_labels_margin</item>
+    </style>
+
+    <style name="ProfileTextViewOnlySingleLine" parent="@style/ProfileFirstTextTitleTheme">
+        <item name="android:lines">1</item>
+    </style>
+
+    <style name="ProfileTextViewOnlyTitleThemeCenter" parent="@style/ProfileFirstTextTitleTheme">
+        <item name="android:layout_width">wrap_content</item>
+    </style>
 
 </resources>

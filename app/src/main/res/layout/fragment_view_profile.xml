@@ -18,50 +18,25 @@ android:focusableInTouchMode="true">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:orientation="vertical"
         android:paddingEnd="@dimen/activity_horizontal_margin"
-        android:paddingStart="@dimen/activity_horizontal_margin">
+        android:paddingStart="@dimen/activity_horizontal_margin"
+        android:paddingBottom="@dimen/activity_vertical_margin">
 
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:orientation="vertical">
+        <ImageView
+            android:id="@+id/profileImage"
+            android:layout_width="@dimen/profile_picture_size"
+            android:layout_height="@dimen/profile_picture_size"
+            android:src="@drawable/ic_launcher" />
 
-            <ImageView
-                android:id="@+id/profileImage"
-                android:layout_width="@dimen/profile_picture_size"
-                android:layout_height="@dimen/profile_picture_size"
-                android:src="@drawable/ic_launcher" />
+        <TextView
+            android:id="@+id/tvFirstName"
+            style="@style/ProfileTextViewOnlyTitleThemeCenter" />
 
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="2"
-            android:orientation="vertical">
-
-            <TextView
-                style="@style/ProfileFirstTextTitleTheme"
-                android:text="@string/profile_name_label" />
-
-            <EditText
-                android:id="@+id/etFirstName"
-                style="@style/ProfileEditTextSingleLine"
-                android:focusable="false"
-                android:hint="@string/profile_name_label" />
-
-            <TextView
-                style="@style/ProfileTextTitleTheme"
-                android:text="@string/profile_last_name_label" />
-
-            <EditText
-                android:id="@+id/etLastName"
-                style="@style/ProfileEditTextSingleLine"
-                android:focusable="false"
-                android:hint="@string/profile_last_name_label" />
-        </LinearLayout>
+        <TextView
+            android:id="@+id/tvLastName"
+            style="@style/ProfileTextViewOnlyTitleThemeCenter" />
     </LinearLayout>
 
     <LinearLayout
@@ -72,78 +47,61 @@ android:focusableInTouchMode="true">
         android:paddingStart="@dimen/activity_horizontal_margin">
 
         <TextView
-            style="@style/ProfileTextTitleTheme"
+            style="@style/ProfileTextViewOnlyTitleTheme"
             android:text="@string/profile_business_label" />
 
-        <EditText
-            android:id="@+id/etBusiness"
-            style="@style/ProfileEditTextSingleLine"
-            android:focusable="false"
-            android:hint="@string/profile_default_business" />
+        <TextView
+            android:id="@+id/tvBusiness"
+            style="@style/ProfileTextViewOnlySingleLine" />
 
         <TextView
-            style="@style/ProfileTextTitleTheme"
+            style="@style/ProfileTextViewOnlyTitleTheme"
             android:text="@string/profile_description_label" />
 
-        <EditText
-            android:id="@+id/etDescription"
-            style="@style/ProfileEditTextTheme"
-            android:hint="@string/profile_description_label_hint"
-            android:focusable="false"
-            android:inputType="textMultiLine" />
+        <TextView
+            android:id="@+id/tvDescription"
+            style="@style/ProfileEditTextTheme" />
 
         <TextView
-            style="@style/ProfileTextTitleTheme"
+            style="@style/ProfileTextViewOnlyTitleTheme"
             android:text="@string/profile_phone_label" />
 
-        <EditText
-            android:id="@+id/etPhone"
-            style="@style/ProfileEditTextSingleLine"
-            android:focusable="false"
-            android:inputType="phone" />
+        <TextView
+            android:id="@+id/tvPhone"
+            style="@style/ProfileTextViewOnlySingleLine" />
 
         <TextView
-            style="@style/ProfileTextTitleTheme"
+            style="@style/ProfileTextViewOnlyTitleTheme"
             android:text="@string/profile_email_label" />
 
-        <EditText
-            android:id="@+id/etEmail"
-            style="@style/ProfileEditTextSingleLine"
-            android:enabled="false"
-            android:hint="@string/profile_email_label_hint"
-            android:focusable="false"
-            android:inputType="textEmailAddress" />
+        <TextView
+            android:id="@+id/tvEmail"
+            style="@style/ProfileTextViewOnlySingleLine" />
 
         <TextView
-            style="@style/ProfileTextTitleTheme"
+            style="@style/ProfileTextViewOnlyTitleTheme"
             android:text="@string/profile_address_label" />
 
-        <EditText
-            android:id="@+id/etAddress1"
-            style="@style/ProfileEditTextSingleLine"
-            android:focusable="false"
-            android:hint="@string/profile_address_label_hint" />
+        <TextView
+            android:id="@+id/tvAddress1"
+            style="@style/ProfileTextViewOnlySingleLine" />
 
 
         <TextView
-            style="@style/ProfileTextTitleTheme"
+            style="@style/ProfileTextViewOnlyTitleTheme"
             android:text="@string/profile_city_label" />
 
-        <EditText
-            android:id="@+id/etCity"
-            style="@style/ProfileEditTextSingleLine"
-            android:focusable="false"
-            android:hint="@string/profile_city_label" />
+        <TextView
+            android:id="@+id/tvCity"
+            style="@style/ProfileTextViewOnlySingleLine" />
 
         <TextView
-            style="@style/ProfileTextTitleTheme"
+            style="@style/ProfileTextViewOnlyTitleTheme"
             android:text="@string/profile_region_label" />
 
-        <EditText
-            android:id="@+id/etState"
-            style="@style/ProfileEditTextSingleLine"
-            android:focusable="false"
-            android:hint="@string/profile_region_label" />
+        <TextView
+            android:id="@+id/tvState"
+            style="@style/ProfileTextViewOnlySingleLine" />
 
         <!--<Spinner-->
             <!--android:id="@+id/spinnerState"-->
@@ -156,14 +114,12 @@ android:focusableInTouchMode="true">
 
 
         <TextView
-            style="@style/ProfileTextTitleTheme"
+            style="@style/ProfileTextViewOnlyTitleTheme"
             android:text="@string/profile_country_label" />
 
-        <EditText
-            android:id="@+id/etCountry"
-            style="@style/ProfileEditTextSingleLine"
-            android:focusable="false"
-            android:hint="@string/profile_country_label" />
+        <TextView
+            android:id="@+id/tvCountry"
+            style="@style/ProfileTextViewOnlySingleLine" />
 
         <!--<Spinner-->
             <!--android:id="@+id/spinnerCountry"-->
