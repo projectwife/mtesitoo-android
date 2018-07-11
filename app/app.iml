@@ -63,13 +63,6 @@
       <sourceFolder url="file://$MODULE_DIR$/src/main/java" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/rs" isTestSource="false" />
       <sourceFolder url="file://$MODULE_DIR$/src/main/shaders" isTestSource="false" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/res" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/assets" type="java-test-resource" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/aidl" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/rs" isTestSource="true" />
-      <sourceFolder url="file://$MODULE_DIR$/src/test/shaders" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/res" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/resources" type="java-test-resource" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/assets" type="java-test-resource" />
@@ -77,6 +70,13 @@
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/java" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/rs" isTestSource="true" />
       <sourceFolder url="file://$MODULE_DIR$/src/androidTest/shaders" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/res" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/assets" type="java-test-resource" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/aidl" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/java" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/rs" isTestSource="true" />
+      <sourceFolder url="file://$MODULE_DIR$/src/test/shaders" isTestSource="true" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/assets" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/blame" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/builds" />
@@ -91,7 +91,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/multi-dex" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/pre-dexed" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/reload-dex" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/res" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/restart-dex" />
@@ -101,97 +100,96 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/symbols" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/transforms" />
       <excludeFolder url="file://$MODULE_DIR$/build/outputs" />
-      <excludeFolder url="file://$MODULE_DIR$/build/reports" />
       <excludeFolder url="file://$MODULE_DIR$/build/tmp" />
     </content>
     <orderEntry type="jdk" jdkName="Android API 25 Platform" jdkType="Android SDK" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-panorama-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-safetynet-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-drive-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-plus-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:mediarouter-v7-24.0.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-appindexing-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.alexbbb:uploadservice-1.5" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.mikepenz:materialdrawer-4.0.5" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: org.apache.httpcomponents:httpclient-android:4.3.5.1@jar" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-media-compat-25.1.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: io.fabric.sdk.android:fabric-1.4.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-base-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:multidex-1.0.1" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-auth-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.mikepenz:materialize-0.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-config-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-maps-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.crashlytics.sdk.android:crashlytics-core-2.4.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-places-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-storage-common-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-ads-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-appinvite-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-auth-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-messaging-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-analytics-impl-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-fitness-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-cast-framework-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.mikepenz:fontawesome-typeface-4.4.0.1" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-wearable-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-vector-drawable-25.1.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-core-ui-25.1.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:cardview-v7-25.1.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-v4-25.1.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-location-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-crash-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:recyclerview-v7-25.1.0" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="Gradle: com.android.support:multidex-instrumentation-1.0.1" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.jakewharton:butterknife-annotations:8.6.0@jar" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.crashlytics.sdk.android:beta-1.2.6" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:design-25.1.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-iid-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-analytics-impl-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-core-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-core-utils-25.1.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-cast-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-analytics-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-basement-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-database-connection-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-storage-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-vision-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-tagmanager-v4-impl-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-fragment-25.1.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.crashlytics.sdk.android:crashlytics-2.7.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-auth-base-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.mikepenz:iconics-core-1.7.5" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-identity-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-instantapps-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.jakewharton:butterknife-8.6.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-common-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:appcompat-v7-25.1.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-compat-25.1.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:animated-vector-drawable-25.1.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.code.gson:gson:2.3.1@jar" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.daimajia.slider:library-1.1.5" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-ads-lite-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:support-annotations:25.1.0@jar" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:palette-v7-24.0.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-tagmanager-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-clearcut-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-database-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.android.support:transition-25.1.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-awareness-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.nineoldandroids:library:2.4.0@jar" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.firebase:firebase-iid-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-gass-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-analytics-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-wallet-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-gcm-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-tagmanager-api-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.mikepenz:google-material-typeface-1.2.0.1" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-tasks-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.squareup.picasso:picasso:2.5.2@jar" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-nearby-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.google.android.gms:play-services-games-10.2.0" level="project" />
-    <orderEntry type="library" exported="" name="Gradle: com.crashlytics.sdk.android:answers-1.4.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-base-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:multidex-1.0.1" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-tagmanager-v4-impl-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:cardview-v7-25.1.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-location-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.firebase:firebase-analytics-impl-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-fitness-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.daimajia.slider:library-1.1.5" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:support-core-ui-25.1.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.firebase:firebase-iid-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-drive-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.firebase:firebase-appindexing-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.nineoldandroids:library:2.4.0@jar" level="project" />
+    <orderEntry type="library" exported="" name="com.google.firebase:firebase-auth-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-gcm-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:support-media-compat-25.1.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-tagmanager-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.mikepenz:fontawesome-typeface-4.4.0.1" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:support-v4-25.1.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-instantapps-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-wearable-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-panorama-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-ads-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-vision-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-tasks-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.firebase:firebase-database-connection-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-identity-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-analytics-impl-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.firebase:firebase-common-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-games-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:design-25.1.0" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:transition-25.1.0" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:palette-v7-24.0.0" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:support-compat-25.1.0" level="project" />
+    <orderEntry type="library" exported="" name="com.crashlytics.sdk.android:crashlytics-2.7.0" level="project" />
+    <orderEntry type="library" exported="" name="com.squareup.picasso:picasso:2.5.2@jar" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-plus-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-auth-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-cast-framework-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.firebase:firebase-core-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:recyclerview-v7-25.1.0" level="project" />
+    <orderEntry type="library" exported="" name="com.crashlytics.sdk.android:answers-1.4.0" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:support-vector-drawable-25.1.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-wallet-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.firebase:firebase-analytics-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-clearcut-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-cast-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-analytics-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.mikepenz:materialize-0.2.0" level="project" />
+    <orderEntry type="library" exported="" scope="TEST" name="com.android.support:multidex-instrumentation-1.0.1" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-places-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-gass-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.firebase:firebase-database-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.alexbbb:uploadservice-1.5" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-appinvite-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-auth-base-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:support-annotations:25.1.0@jar" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-ads-lite-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.mikepenz:materialdrawer-4.0.5" level="project" />
+    <orderEntry type="library" exported="" name="com.google.firebase:firebase-storage-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:support-fragment-25.1.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.firebase:firebase-storage-common-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.firebase:firebase-config-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-basement-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:mediarouter-v7-24.0.0" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:support-core-utils-25.1.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-iid-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:animated-vector-drawable-25.1.0" level="project" />
+    <orderEntry type="library" exported="" name="com.jakewharton:butterknife-8.6.0" level="project" />
+    <orderEntry type="library" exported="" name="io.fabric.sdk.android:fabric-1.4.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-tagmanager-api-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.android.support:appcompat-v7-25.1.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.code.gson:gson:2.3.1@jar" level="project" />
+    <orderEntry type="library" exported="" name="com.mikepenz:google-material-typeface-1.2.0.1" level="project" />
+    <orderEntry type="library" exported="" name="com.crashlytics.sdk.android:crashlytics-core-2.4.0" level="project" />
+    <orderEntry type="library" exported="" name="org.apache.httpcomponents:httpclient-android:4.3.5.1@jar" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-nearby-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.mikepenz:iconics-core-1.7.5" level="project" />
+    <orderEntry type="library" exported="" name="com.crashlytics.sdk.android:beta-1.2.6" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-safetynet-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.firebase:firebase-messaging-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.firebase:firebase-crash-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-awareness-10.2.0" level="project" />
+    <orderEntry type="library" exported="" name="com.jakewharton:butterknife-annotations:8.6.0@jar" level="project" />
+    <orderEntry type="library" exported="" name="com.google.android.gms:play-services-maps-10.2.0" level="project" />
     <orderEntry type="module" module-name="wizardpager" exported="" />
     <orderEntry type="module" module-name="mtesitoo-backend-api" exported="" />
   </component>

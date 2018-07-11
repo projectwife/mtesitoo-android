@@ -249,7 +249,7 @@ public class HomeActivity extends AppCompatActivity {
         Seller seller = gson.fromJson(sharedPreferences.getString(Constants.LOGGED_IN_USER_DATA, ""), Seller.class);
 
         if (profile.getIcon().getUri() != null && !profile.getIcon().getUri().equals(seller.getmThumbnail())
-                || profile.getIcon().getIcon() != null && !seller.getmThumbnail().getPath().equals("null")) {
+                || profile.getIcon().getIcon() != null && seller != null && !seller.getmThumbnail().getPath().equals("null")) {
             if (!seller.getmThumbnail().getPath().equals("null")) {
                 profile.withIcon(seller.getmThumbnail());
             } else {
