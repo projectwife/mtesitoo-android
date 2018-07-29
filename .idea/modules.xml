@@ -5,9 +5,7 @@
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
       <module fileurl="file://$PROJECT_DIR$/mtesitoo-android.iml" filepath="$PROJECT_DIR$/mtesitoo-android.iml" />
       <module fileurl="file://$PROJECT_DIR$/libs/mtesitoo-backend-api/mtesitoo-backend-api.iml" filepath="$PROJECT_DIR$/libs/mtesitoo-backend-api/mtesitoo-backend-api.iml" />
-      <module fileurl="file://C:\Users\gwenp\Desktop\Tesitoo4-15\mtesitoo-android\libs\mtesitoo-backend-api\mtesitoo-backend-api.iml" filepath="C:\Users\gwenp\Desktop\Tesitoo4-15\mtesitoo-android\libs\mtesitoo-backend-api\mtesitoo-backend-api.iml" />
       <module fileurl="file://$PROJECT_DIR$/libs/wizardpager/wizardpager.iml" filepath="$PROJECT_DIR$/libs/wizardpager/wizardpager.iml" />
-      <module fileurl="file://C:\Users\gwenp\Desktop\Tesitoo4-15\mtesitoo-android\libs\wizardpager\wizardpager.iml" filepath="C:\Users\gwenp\Desktop\Tesitoo4-15\mtesitoo-android\libs\wizardpager\wizardpager.iml" />
     </modules>
   </component>
 </project>
