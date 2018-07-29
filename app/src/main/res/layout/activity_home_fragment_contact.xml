@@ -38,9 +38,11 @@
         android:id="@+id/lblPhone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/lblEmail"
-        android:layout_marginLeft="@dimen/activity_horizontal_margin"
-        android:layout_marginStart="@dimen/activity_horizontal_margin"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/lblEmail"
+        android:layout_marginLeft="15dp"
+        android:layout_marginStart="15dp"
         android:padding="@dimen/activity_horizontal_margin"
         android:text="TELEPHONE"
         android:textAlignment="textStart"
@@ -77,6 +79,91 @@
         android:padding="@dimen/activity_horizontal_margin"
         android:textIsSelectable="true"
         android:text="@string/admin_phone_line2"
+        android:typeface="normal" />
+
+    <TextView
+        android:id="@+id/lblAddress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/admin_address_line1"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_alignStart="@+id/admin_address_line1"
+        android:layout_below="@+id/admin_phone_line2"
+        android:layout_marginLeft="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_toLeftOf="@+id/admin_phone_line2"
+        android:layout_toStartOf="@+id/admin_phone_line2"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:text="ADDRESS"
+        android:textAlignment="textStart"
+        android:textStyle="bold"
+        android:typeface="normal" />
+
+
+
+
+    <TextView
+
+        android:id="@+id/admin_address_line1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/admin_phone_line2"
+        android:layout_alignStart="@+id/admin_phone_line2"
+        android:layout_below="@+id/admin_phone_line2"
+        android:text="@string/admin_address_line1"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_toRightOf="@id/lblPhone"
+        android:inputType="none"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:typeface="normal"/>
+
+    <TextView
+        android:id="@+id/admin_address_line2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/admin_address_line1"
+        android:layout_alignStart="@+id/admin_address_line1"
+        android:layout_below="@+id/admin_address_line1"
+        android:text="@string/admin_address_line2"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:typeface="normal"/>
+
+    <TextView
+        android:id="@+id/admin_address_line3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/admin_address_line2"
+        android:layout_alignStart="@+id/admin_address_line2"
+        android:layout_below="@+id/admin_address_line2"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:text="@string/admin_address_line3"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:typeface="normal" />
+
+    <TextView
+        android:id="@+id/admin_address_line4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/admin_address_line3"
+        android:layout_alignStart="@+id/admin_address_line3"
+        android:layout_below="@+id/admin_address_line3"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:text="@string/admin_address_line4"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:typeface="normal" />
 
 </RelativeLayout>

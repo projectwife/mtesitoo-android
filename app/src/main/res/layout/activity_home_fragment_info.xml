@@ -3,4 +3,35 @@
     android:orientation="vertical" android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+    <TextView
+        android:id="@+id/lblEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/lblPhone"
+        android:layout_alignStart="@+id/lblPhone"
+        android:layout_toLeftOf="@+id/admin_phone_line1"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:text="About Us"
+        android:textAlignment="textStart"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:typeface="normal" />
+
+    <TextView
+        android:id="@+id/adminEmail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
+        android:layout_marginEnd="@dimen/activity_horizontal_margin"
+        android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:layout_toRightOf="@id/lblEmail"
+        android:inputType="none"
+        android:padding="@dimen/activity_horizontal_margin"
+        android:text="@string/info_about_us"
+        android:textIsSelectable="true"
+        android:textSize="18sp"
+        android:typeface="normal" />
+
+
 </LinearLayout>

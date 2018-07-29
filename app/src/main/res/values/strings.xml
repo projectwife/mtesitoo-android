@@ -67,8 +67,22 @@
     <string name="forgot_password_request">An email has been sent with password reset instructions.</string>
     <string name="forgot_password_request_error">An error has occurred. Please try again !</string>
     <string name="admin_email">admin@tesitoo.com</string>
-    <string name="admin_phone_line1">+2208902719</string>
-    <string name="admin_phone_line2">+2203533578</string>
+    <string name="admin_phone_line1">+2207150195</string>
+    <string name="admin_phone_line2">+2203243870</string>
+    <string name="admin_address_line1">Jimpex Road, Kanifing,</string>
+    <string name="admin_address_line2">Serekunda</string>
+    <string name="admin_address_line3">KSM</string>
+    <string name="admin_address_line4">The Gambia</string>
+
+    <string name="info_about_us">Tesitoo is a market place provider for agricultural goods in the Gambia.
+        We connect small scale farmers and producers directly to consumers through the Tesitoo app
+        and web base platform. By this, disrupt the unfair traditional market control by intermediaries and
+        put local farmers at the center stage of the value chain of the country’s agriculture industry.
+        Our mission is to create market opportunities for local farmers and producers and ensuring
+        that consumers can buy healthy local products for less leading to tremendous social and economic
+        impact for farmers and consumers alike.
+    </string>
+
     <string name="msg_permission_sorry">Please provide permission to continue !</string>
 
     <string name="registration_terms">I have read and accepted terms and condition</string>
