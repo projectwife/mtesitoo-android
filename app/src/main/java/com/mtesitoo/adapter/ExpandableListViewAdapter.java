@@ -22,20 +22,27 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     Context context;
 
+    String[] questions;
+    String[] answers;
 
-    String[] questions = getResources().getStringArray(R.array.Questions);
-    String[] answers = getResources().getStringArray(R.array.Answers);
+
+//    String[] questions = getResources().getStringArray(R.array.Questions);
+//    String[] answers = getResources().getStringArray(R.array.Answers);
 
  // USED FOR TESTING
-   // String [] questions ={"q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8", "q9", "q10"};
-    // String [] answers = {"answer1","answer2", "answer3", "answer4", "answer5", "answer6", "answer7", "answer8", "answer9", "answer10"};
+//    String [] questions ={"q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8", "q9", "q10"};
+//     String [] answers = {"answer1","answer2", "answer3", "answer4", "answer5", "answer6", "answer7", "answer8", "answer9", "answer10"};
 
     //in the Constructor, pass the context in the parametres
 
 
-    public ExpandableListViewAdapter(Context context) {
+    // The question answers can be an array of Hash maps where each item in the array is a hash map with 2 keys - question, answer
+    // Or we can have a Question class which has 2 string fields - question, answer and we pass an array of these Question objects to the adapter
+    public ExpandableListViewAdapter(Context context, String [] ques, String [] ans) {
 
         this.context = context;
+        this.questions = ques;
+        this.answers = ans;
     }
 
     @Override
@@ -45,8 +52,8 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public int getChildrenCount(int groupPosition) {
-        return answers.length;
-    }
+        return 1;
+    } // Each question has only 1 answer, therefore only 1 child view
 
     @Override
     public Object getGroup(int groupPosition) {
@@ -86,7 +93,12 @@ public class ExpandableListViewAdapter extends BaseExpandableListAdapter {
 
     @Override
     public View getChildView(int groupPosition, int childPosition, boolean isLastChild, View convertView, ViewGroup parent) {
-        return null;
+        TextView textView = new TextView(context);
+        textView.setText(answers[groupPosition]);
+        textView.setPadding(100,0,0,0);
+        textView.setTextColor(Color.RED);
+        textView.setTextSize(20);
+        return textView;
     }
 
     @Override

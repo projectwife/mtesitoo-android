@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ExpandableListView;
 
 import com.mtesitoo.R;
+import com.mtesitoo.adapter.ExpandableListViewAdapter;
 
 import butterknife.ButterKnife;
 
@@ -36,6 +37,12 @@ public class HelpFragment extends Fragment {
         ButterKnife.bind(this, view);
 
         mExpandableListView = (ExpandableListView) view.findViewById(R.id.expandableListView);
+
+        String [] questions ={"q1", "q2", "q3", "q4", "q5", "q6", "q7", "q8", "q9", "q10"};
+        String [] answers = {"answer1","answer2", "answer3", "answer4", "answer5", "answer6", "answer7", "answer8", "answer9", "answer10"};
+
+        ExpandableListViewAdapter adapter = new ExpandableListViewAdapter(getContext(), questions, answers);
+        mExpandableListView.setAdapter(adapter);
 
 
 
