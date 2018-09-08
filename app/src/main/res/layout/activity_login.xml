@@ -86,16 +86,18 @@
         android:layout_centerHorizontal="true"
         android:background="@android:color/white" />
 
-    <android.support.v7.widget.AppCompatButton
+  <!--  <android.support.v7.widget.AppCompatButton-->
+    <Button
         android:id="@+id/login"
+        style="?android:attr/buttonStyleSmall"
         android:layout_width="175dip"
         android:layout_height="wrap_content"
         android:layout_below="@+id/line_break_3"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="60dip"
-        android:text="Login"
-        android:textColor="@color/primary" />
-
+        android:textColor="@color/primary"
+        android:text="@string/login"
+        />
 
     <Button
         android:id="@+id/newUser"
