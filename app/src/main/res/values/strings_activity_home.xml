@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="role_seller">Seller</string>
+    <string name="role_farmer">Farmer</string>
 
     <string name="action_add_product">Add</string>
 

@@ -13,8 +13,8 @@
         android:layout_alignStart="@+id/lblPhone"
         android:layout_toLeftOf="@+id/admin_phone_line1"
         android:padding="@dimen/activity_horizontal_margin"
-        android:text="EMAIL"
-        android:textAlignment="textStart"
+        android:text="@string/email"
+        android:textSize="16sp"
         android:textStyle="bold"
         android:typeface="normal" />
 
@@ -26,6 +26,7 @@
         android:layout_alignParentRight="true"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:textSize="16sp"
         android:layout_toRightOf="@id/lblEmail"
         android:inputType="none"
         android:padding="@dimen/activity_horizontal_margin"
@@ -44,8 +45,8 @@
         android:layout_marginLeft="15dp"
         android:layout_marginStart="15dp"
         android:padding="@dimen/activity_horizontal_margin"
-        android:text="TELEPHONE"
-        android:textAlignment="textStart"
+        android:text="@string/telephone"
+        android:textSize="16sp"
         android:textStyle="bold"
         android:typeface="normal" />
 
@@ -60,6 +61,7 @@
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:layout_toRightOf="@id/lblPhone"
         android:inputType="none"
+        android:textSize="16sp"
         android:padding="@dimen/activity_horizontal_margin"
         android:textIsSelectable="true"
         android:text="@string/admin_phone_line1"
@@ -74,6 +76,7 @@
         android:layout_below="@id/admin_phone_line1"
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
+        android:textSize="16sp"
         android:layout_toRightOf="@id/lblPhone"
         android:inputType="none"
         android:padding="@dimen/activity_horizontal_margin"
@@ -88,6 +91,7 @@
         android:layout_alignLeft="@+id/admin_address_line1"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
+        android:textSize="16sp"
         android:layout_alignStart="@+id/admin_address_line1"
         android:layout_below="@+id/admin_phone_line2"
         android:layout_marginLeft="16dp"
@@ -95,8 +99,7 @@
         android:layout_toLeftOf="@+id/admin_phone_line2"
         android:layout_toStartOf="@+id/admin_phone_line2"
         android:padding="@dimen/activity_horizontal_margin"
-        android:text="ADDRESS"
-        android:textAlignment="textStart"
+        android:text="@string/address"
         android:textStyle="bold"
         android:typeface="normal" />
 
@@ -104,7 +107,6 @@
 
 
     <TextView
-
         android:id="@+id/admin_address_line1"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -119,7 +121,9 @@
         android:layout_toRightOf="@id/lblPhone"
         android:inputType="none"
         android:padding="@dimen/activity_horizontal_margin"
-        android:typeface="normal"/>
+        android:typeface="normal"
+        android:textSize="16sp"
+        />
 
     <TextView
         android:id="@+id/admin_address_line2"
@@ -134,7 +138,9 @@
         android:layout_marginEnd="@dimen/activity_horizontal_margin"
         android:layout_marginRight="@dimen/activity_horizontal_margin"
         android:padding="@dimen/activity_horizontal_margin"
-        android:typeface="normal"/>
+        android:typeface="normal"
+        android:textSize="16sp"
+        />
 
     <TextView
         android:id="@+id/admin_address_line3"
@@ -149,7 +155,9 @@
         android:text="@string/admin_address_line3"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:typeface="normal" />
+        android:typeface="normal"
+        android:textSize="16sp"
+        />
 
     <TextView
         android:id="@+id/admin_address_line4"
@@ -164,6 +172,8 @@
         android:text="@string/admin_address_line4"
         android:layout_alignParentEnd="true"
         android:layout_alignParentRight="true"
-        android:typeface="normal" />
+        android:typeface="normal"
+        android:textSize="16sp"
+        />
 
 </RelativeLayout>

@@ -124,6 +124,11 @@
 
 
     <!-- FAQ Strings -->
+    <string name="text_expanded">Expanded</string>
+    <string name="text_collapsed">Collapsed</string>
+    <string name="other_questions">Do you have any other questions? \n\n Please click here to send us your question</string>
+
+    <!--String Array of Questions-->
     <string-array name="Questions">
     <item>HOW DOES TESITOO WORK?</item>
     <item>WHAT ARE THE STEPS TO POST AND PURCHASE PRODUCTS ON THE TESITOO PLATFORM?</item>
@@ -131,33 +136,40 @@
     <item>WHO CAN JOIN TESITOO?</item>
     <item>HOW ARE PARTNERS PAID?</item>
         <item>WHO CAN PURCHASE PRODUCTS?</item>
-        <item>I PURCHASED A PRODUCCT.  CAN I PICK IT UP MYSELF FROM THE STORE OR FARMLAND?</item>
+        <item>I PURCHASED A PRODUCT.  CAN I PICK IT UP MYSELF FROM THE STORE OR FARMLAND?</item>
     <item>DO YOU DELIVER TO THE ENTIRE COUNTRY?</item>
     <item>WHAT IS THE DURATION OF THE DELIVERY PERIOD?</item>
     <item>HOW CAN I PAY FOR PURCHASED PRODUCTS?</item>
+        <item>MORE QUESTIONS?</item>
+
     </string-array>
 
-    <string-array name="Answers">
-        <item>We work with networks of farmers and dealers to bring local agricultural products to the door steps of consumers
-            in the Gambia. We offer up to date information on the agriculture value chain, including daily market prices.</item>
-        <item>Here are sample steps:
-Step 1: Farmers, dealers or producers post their products online.  This can be done with the help of a Tesitoo agent if needed.
-Step 2: Consumer browses through a list of products and makes an order.
-Step 3: Product is shipped to the consumer or the consumer picks the product up at the stores.
-Step 4: Farmers and consumers receive notification at each step of the transaction from purchase to delivery.
-</item>
-        <item>It’s simple! Browse through the list of products and click purchase. The system will take you through the process.</item>
-        <item>Tesitoo is open to small scale local dealers, farmers or producers of agricultural goods in the Gambia. </item>
-        <item>Partners are paid once the buyer receives the product purchased in the required conditions. The period of payment can be weekly or monthly.
-        </item>
-        <item>Anyone can purchase products on the Tesitoo platform from individuals to businesses such as hotels, supermarkets etc.</item>
-        <item>Yes, on checkout, you have an option to have the product delivered to you for additional charges, or you can go pick it up yourself from the store or farmland.</item>
-        <item>Due to logistical reasons, delivery services for now are only available for Banjul, Kanifing Municipality and West Coast region.</item>
-        <item>Purchased products can reach the buyer within 24 hours during working days. </item>
-        <item>Purchased products at the moment can only be paid by cheque, bank transfer or cash.</item>
-    </string-array>
+    <string name="Answer1">We work with networks of farmers and dealers to bring local agricultural products to the door steps of consumers
+        in the Gambia. We offer up to date information on the agriculture value chain, including daily market prices.</string>
+    <string name="Answer2">Here are sample steps: \n\n
+        Step 1: Farmers, dealers or producers post their products online.  This can be done with the help of a Tesitoo agent if needed.\n\n
+        Step 2: Consumer browses through a list of products and makes an order.\n\n
+        Step 3: Product is shipped to the consumer or the consumer picks the product up at the stores.\n\n
+        Step 4: Farmers and consumers receive notification at each step of the transaction from purchase to delivery.
+        </string>
+    <string name="Answer3">It’s simple! Browse through the list of products and click purchase. The system will take you through the process.</string>
+    <string name="Answer4">Tesitoo is open to small scale local dealers, farmers or producers of agricultural goods in the Gambia. </string>
+    <string name="Answer5">Partners are paid once the buyer receives the product purchased in the required conditions. The period of payment can be weekly or monthly.  </string>
+    <string name="Answer6">Anyone can purchase products on the Tesitoo platform from individuals to businesses such as hotels, supermarkets etc.</string>
+    <string name="Answer7">Yes, on checkout, you have an option to have the product delivered to you for additional charges, or you can go pick it up yourself from the store or farmland.</string>
+    <string name="Answer8">Due to logistical reasons, delivery services for now are only available for Banjul, Kanifing Municipality and West Coast region.</string>
+    <string name="Answer9">Purchased products can reach the buyer within 24 hours during working days. </string>
+    <string name="Answer10">Purchased products at the moment can only be paid by cheque, bank transfer or cash.</string>
+    <string name="Answer11">Contact Us</string>
+
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="faq">FAQ</string>
+    <string name="frequently_asked_questions">Frequently Asked Questions</string>
+    <string name="email">EMAIL</string>
+    <string name="address">ADDRESS</string>
+    <string name="telephone">TELEPHONE</string>
+    <string name="login">Login</string>
 
 </resources>

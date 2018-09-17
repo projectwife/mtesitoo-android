@@ -100,8 +100,11 @@ public class HomeActivity extends AppCompatActivity {
 
         final IProfile profile = new ProfileDrawerItem()
                 .withIdentifier(mSeller.getId())
-                .withName(mSeller.getUsername())
-                .withEmail(getString(R.string.role_seller));
+                .withName(mSeller.getmFirstLastName())
+
+
+              //  .withName(mSeller.getUsername())
+                .withEmail(getString(R.string.role_farmer));
 
         if (!mSeller.getmThumbnail().getPath().equals("null")) {
             profile.withIcon(mSeller.getmThumbnail());
