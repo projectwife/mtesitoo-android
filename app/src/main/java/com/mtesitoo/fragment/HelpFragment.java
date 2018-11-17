@@ -34,7 +34,6 @@ import butterknife.ButterKnife;
 public class HelpFragment extends Fragment {
 
     ExpandableListView mExpandableListView;
-    Button otherQuestions;
     ExpandableListViewAdapter expandableListViewAdapter;
 
     private List<String> listDataGroup;

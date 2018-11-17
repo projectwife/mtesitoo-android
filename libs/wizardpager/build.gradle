@@ -4,12 +4,12 @@ apply plugin: 'maven'
 android {
     compileSdkVersion Integer.parseInt(project.ANDROID_BUILD_SDK_VERSION)
     buildToolsVersion project.ANDROID_BUILD_TOOLS_VERSION
-
     defaultConfig {
-        minSdkVersion Integer.parseInt(project.ANDROID_BUILD_MIN_SDK_VERSION)
+        minSdkVersion 22
         targetSdkVersion Integer.parseInt(project.ANDROID_BUILD_TARGET_SDK_VERSION)
         versionName project.ANDROID_VERSION_NAME
-        versionCode Integer.parseInt(project.ANDROID_VERSION_CODE)
+    }
+    productFlavors {
     }
 }
 

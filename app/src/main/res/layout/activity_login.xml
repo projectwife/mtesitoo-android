@@ -88,37 +88,59 @@
 
   <!--  <android.support.v7.widget.AppCompatButton-->
     <Button
-        android:id="@+id/login"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="175dip"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/line_break_3"
-        android:layout_centerHorizontal="true"
+        android:layout_height="wrap_content" android:layout_width="wrap_content"
         android:layout_marginTop="60dip"
-        android:textColor="@color/primary"
-        android:text="@string/login"
-        />
+        android:layout_centerHorizontal="true"
+        android:id="@+id/login"
+        android:layout_below="@+id/line_break_3"
+        android:text="LOGIN"
+        style="?android:attr/buttonStyleSmall"/>
 
     <Button
+        android:layout_height="wrap_content"
+        android:layout_width="wrap_content"
         android:id="@+id/newUser"
+        android:text="New User"
         style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignEnd="@+id/password_holder"
-        android:layout_alignParentBottom="true"
         android:layout_alignRight="@+id/password_holder"
-        android:text="New User" />
+        android:layout_alignParentBottom="true"
+        android:layout_alignEnd="@+id/password_holder"/>
 
     <Button
-        android:id="@+id/forgotPassword"
-        style="?android:attr/buttonStyleSmall"
-        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/password_holder"
+        android:layout_width="wrap_content"
+        android:id="@+id/forgotPassword"
+        android:text="Forgot Password"
+        style="?android:attr/buttonStyleSmall"
         android:layout_alignParentBottom="true"
+        android:onClick="onClick(LoginActivity)"
         android:layout_alignStart="@+id/password_holder"
-        android:onClick="onClick (LoginActivity)"
-        android:text="Forgot Password" />
+        android:layout_alignLeft="@+id/password_holder"/>
+    <!--
+       <ImageButton
+             android:id="@+id/newUser"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_alignEnd="@+id/password_holder"
+             android:layout_alignParentBottom="true"
+             android:layout_alignRight="@+id/password_holder"
+             android:layout_toEndOf="@+id/login"
+             android:layout_toRightOf="@+id/login"
+
+             android:background="@null"
+             android:src="@drawable/button_newuser" />
+
+         <ImageButton
+             android:id="@+id/forgotPassword"
+             android:src="@drawable/button_forgotpass"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_alignLeft="@+id/password_holder"
+             android:layout_alignParentBottom="true"
+             android:layout_alignStart="@+id/password_holder"
+             android:background="@null"
+
+             />-->
 
     <include layout="@layout/loading_progress" />
 
