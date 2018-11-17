@@ -4,6 +4,8 @@ import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import java.util.Locale;
+
 /**
  * Model object for a Mtesitoo farmer/seller.
  */
@@ -102,6 +104,11 @@ public class Seller implements Parcelable {
 
     public String getmLastName() {
         return mLastName;
+    }
+
+    public String getmFirstLastName()
+    {
+        return mFirstName.toUpperCase() + " " + mLastName.toUpperCase();
     }
 
     public String getmPhoneNumber() {

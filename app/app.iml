@@ -90,7 +90,6 @@
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/instant-run-support" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/jniLibs" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/manifests" />
-      <excludeFolder url="file://$MODULE_DIR$/build/intermediates/multi-dex" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/reload-dex" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/res" />
       <excludeFolder url="file://$MODULE_DIR$/build/intermediates/restart-dex" />
@@ -154,7 +153,6 @@
     <orderEntry type="library" exported="" name="com.google.android.gms:play-services-cast-10.2.0" level="project" />
     <orderEntry type="library" exported="" name="com.google.android.gms:play-services-analytics-10.2.0" level="project" />
     <orderEntry type="library" exported="" name="com.mikepenz:materialize-0.2.0" level="project" />
-    <orderEntry type="library" exported="" scope="TEST" name="com.android.support:multidex-instrumentation-1.0.1" level="project" />
     <orderEntry type="library" exported="" name="com.google.android.gms:play-services-places-10.2.0" level="project" />
     <orderEntry type="library" exported="" name="com.google.android.gms:play-services-gass-10.2.0" level="project" />
     <orderEntry type="library" exported="" name="com.google.firebase:firebase-database-10.2.0" level="project" />
