@@ -170,24 +170,27 @@ public class RegisterActivity extends AppCompatActivity {
 
             @Override
             public void onError(Exception e) {
-
-                VolleyError err = (VolleyError) e;
-
                 String errorMsg = "";
-                if (err.networkResponse.data != null) {
-                    try {
-                        String body = new String(err.networkResponse.data, "UTF-8");
-                        Log.e("REG_ERR", body);
-                        JSONObject jsonErrors = new JSONObject(body);
-                        JSONObject error = jsonErrors.getJSONArray("errors").getJSONObject(0);
-                        errorMsg = error.getString("message");
-                    } catch (UnsupportedEncodingException encErr) {
-                        encErr.printStackTrace();
-                    } catch (JSONException jErr) {
-                        jErr.printStackTrace();
+                if (e != null && e instanceof VolleyError) {
+
+                    VolleyError err = (VolleyError) e;
+
+                    if (err.networkResponse != null) {
+                        if (err.networkResponse.data != null) {
+                            try {
+                                String body = new String(err.networkResponse.data, "UTF-8");
+                                Log.e("REG_ERR", body);
+                                JSONObject jsonErrors = new JSONObject(body);
+                                JSONObject error = jsonErrors.getJSONArray("errors").getJSONObject(0);
+                                errorMsg = error.getString("message");
+                            } catch (UnsupportedEncodingException encErr) {
+                                encErr.printStackTrace();
+                            } catch (JSONException jErr) {
+                                jErr.printStackTrace();
+                            }
+                        }
                     }
                 }
-
                 if (errorMsg.equals("")) {
                     errorMsg = "Error registering account";
                 }
